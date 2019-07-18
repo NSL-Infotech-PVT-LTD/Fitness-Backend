@@ -39,7 +39,8 @@ class ApiController extends \App\Http\Controllers\Controller {
     public $successStatus = 200;
     public static $locale = '';
 //    public $requiredParams = ['device_id' => 'required', 'device_token' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
-    public $requiredParams = ['device_id' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
+//    public $requiredParams = ['device_id' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
+    public $requiredParams = [];
     protected static $_allowedURIwithoutAuth = ['api/login', 'api/customer/login', 'api/configuration/{type}', 'api/customer/verify-login', 'api/customer/registeration', 'api/customer/resend-otp'];
 
     public static function validateClientSecret() {
@@ -169,20 +170,30 @@ class ApiController extends \App\Http\Controllers\Controller {
         return response()->json(['status' => true, 'code' => $code, 'data' => (object) $data], $code);
     }
 
-    protected static function sendOTP(User $user) {
+    protected static function sendOTPUser(User $user) {
         $otp = mt_rand(1000, 9999);
         $user->otp = $otp;
         $user->save();
-        return self::sendTextMessage('Your Gas Application Verification code is ' . $otp, $user->mobile_number);
+        return self::sendTextMessage('Your ' . config('app.name') . ' Verification code is ' . $otp, $user->phone);
+    }
+
+    protected static function sendOTP($number) {
+        $otp = mt_rand(1000, 9999);
+        self::sendTextMessage('Your ' . config('app.name') . ' Verification code is ' . $otp, $number);
+        return $otp;
     }
 
     protected static function sendTextMessage($message, $to = '9646848501') {
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_TOKEN');
-        $twilio = new Client($sid, $token);
-//        $return = $twilio->messages->create("+964" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
-        $return = $twilio->messages->create("+91" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
-        return $return;
+        try {
+            $sid = env('TWILIO_SID');
+            $token = env('TWILIO_TOKEN');
+            $twilio = new Client($sid, $token);
+            //$return = $twilio->messages->create("" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
+            $return = $twilio->messages->create("+91" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
+            return $return;
+        } catch (\Twilio\Exceptions\TwilioException $ex) {
+            return true;
+        }
     }
 
     public static function pushNotofication($data = [], $deviceToken) {
@@ -204,6 +215,25 @@ class ApiController extends \App\Http\Controllers\Controller {
         $downstreamResponse = FCM::sendTo($deviceToken, $option, $notification, $data);
 //        $downstreamResponse->numberFailure();
         return $downstreamResponse->numberSuccess() == '1' ? true : false;
+    }
+
+    protected static function __uploadImage($baseEncodeImage, $path = null) {
+        $image = $baseEncodeImage;  // your base64 encoded
+        $fileExtension = 'png';
+        if (strpos($image, 'png') !== false):
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $fileExtension = 'png';
+        endif;
+        if (strpos($image, 'jpeg') !== false):
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $fileExtension = 'jpeg';
+        endif;
+        $image = str_replace(' ', '+', $image);
+        $imageName = str_random(10) . '.' . $fileExtension;
+        if ($path === null)
+            $path = public_path('uploads');
+        \File::put($path . '/' . $imageName, base64_decode($image));
+        return $imageName;
     }
 
 }

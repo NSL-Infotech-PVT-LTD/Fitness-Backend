@@ -51,7 +51,6 @@ class UsersController extends Controller {
     public function create() {
         $roles = Role::select('id', 'name', 'label')->get();
         $roles = $roles->pluck('label', 'name');
-
         return view('admin.users.create', compact('roles'));
     }
 
@@ -79,8 +78,8 @@ class UsersController extends Controller {
         foreach ($request->roles as $role) {
             $user->assignRole($role);
         }
-
-        return redirect(url()->previous())->with('flash_message', 'User added!');
+        return redirect(url()->previous()
+                )->with('flash_message', 'user Added');
     }
 
     /**
@@ -125,7 +124,6 @@ class UsersController extends Controller {
      * @return void
      */
     public function update(Request $request, $id) {
-
         $this->validate(
                 $request,
                 [
@@ -145,8 +143,8 @@ class UsersController extends Controller {
         foreach ($request->roles as $role) {
             $user->assignRole($role);
         }
-
-        return redirect(url()->previous())->with('flash_message', 'User updated!');
+        return redirect(url()->previous()
+                )->with('flash_message', 'User Updated!');
     }
 
     /**
@@ -158,7 +156,6 @@ class UsersController extends Controller {
      */
     public function destroy($id) {
         User::destroy($id);
-
         return redirect(url()->previous())->with('flash_message', 'User deleted!');
     }
 

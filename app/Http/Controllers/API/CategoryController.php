@@ -9,7 +9,6 @@ class CategoryController extends ApiController
 {
     public function index() {
         $category =\App\Category::select('id','name')->with('sub_category')->get();
-       // dd($category->toArray());
          return parent::success($category);
     }
 }

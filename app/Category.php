@@ -48,7 +48,7 @@ class Category extends Model
     }
     
     public function sub_category() {
-        return $this->hasMany('App\Subcategory','categories_id','id')->select('id', 'name','categories_id');
+        return $this->hasMany('App\SubCategory','categories_id','id')->select('id', 'name','categories_id');
     }
     
 }

@@ -91,7 +91,6 @@ class CategoriesController extends Controller {
     public function update(Request $request, $id) {
         $this->validate($request, [
             'name' => 'required',
-            'user_id' => 'required'
         ]);
         $requestData = $request->all();
 

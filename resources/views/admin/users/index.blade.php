@@ -14,7 +14,19 @@
         @include('admin.sidebar')
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header  text-center"><h3 >Users</h3></div>
+                <?php
+                $user = '';
+                if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/1') {
+                    $user = 'Admin User';
+                }
+                if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/2') {
+                    $user = 'Freelancer User';
+                }
+                if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/3') {
+                        $user = 'Client User';
+                    }
+                ?>
+                <div class="card-header  text-center"><h3 >{{$user}}</h3></div>
                 <div class="card-body">
                     <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add New

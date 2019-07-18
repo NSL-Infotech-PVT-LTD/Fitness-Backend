@@ -19,13 +19,16 @@ class CreateUsersTable extends Migration {
             $table->string('email')->unique();
             $table->string('password')->nullable();
             $table->integer('phone')->nullable();
+            $table->integer('otp')->default(0);
             $table->string('profile_pic')->nullable();
-            $table->string('category')->nullable();
-            $table->string('subcategory')->nullable();
+            $table->text('category_id')->nullable();
+            $table->string('experience')->nullable();
+            $table->string('hourly_rate')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->string('portfolio_image')->nullable();
             $table->text('bio')->nullable();
+            $table->integer('state')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
