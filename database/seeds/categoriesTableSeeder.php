@@ -13,18 +13,14 @@ class categoriesTableSeeder extends Seeder {
     public function run() {
         DB::table('categories')->insert([
             [
-              'name' => 'admin',
-              'user_id' => '1',
+                'name' => 'admin',
             ],
             [
-              'name' => 'freelancer',
-              'user_id' => '2',
+                'name' => 'freelancer',
             ],
             [
-              'name' => 'client',
-              'user_id' => '3',
+                'name' => 'client',
             ],
-             
         ]);
     }
 
