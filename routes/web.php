@@ -12,10 +12,10 @@
  */
 Auth::routes();
 Route::get('/', function () {
-    user::find('1')->notify(new testnotification);
+    //return view('welcome');
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 

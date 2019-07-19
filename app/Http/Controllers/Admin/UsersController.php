@@ -78,8 +78,7 @@ class UsersController extends Controller {
         foreach ($request->roles as $role) {
             $user->assignRole($role);
         }
-        return redirect(url()->previous()
-                )->with('flash_message', 'user Added');
+        return redirect(url()->previous())->with('flash_message', 'user Added');
     }
 
     /**
@@ -91,7 +90,6 @@ class UsersController extends Controller {
      */
     public function show($id) {
         $user = User::findOrFail($id);
-
         return view('admin.users.show', compact('user'));
     }
 
@@ -105,7 +103,6 @@ class UsersController extends Controller {
     public function edit($id) {
         $roles = Role::select('id', 'name', 'label')->get();
         $roles = $roles->pluck('label', 'name');
-
         $user = User::with('roles')->select('id', 'firstname', 'lastname', 'email', 'password')->findOrFail($id);
         $user_roles = [];
         foreach ($user->roles as $role) {
@@ -143,8 +140,7 @@ class UsersController extends Controller {
         foreach ($request->roles as $role) {
             $user->assignRole($role);
         }
-        return redirect(url()->previous()
-                )->with('flash_message', 'User Updated!');
+        return redirect(url()->previous())->with('flash_message', 'User Updated!');
     }
 
     /**
