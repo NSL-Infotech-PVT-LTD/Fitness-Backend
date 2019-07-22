@@ -236,4 +236,12 @@ class ApiController extends \App\Http\Controllers\Controller {
         return $imageName;
     }
 
+    public static function getDistanceByTable($lat, $lng, $distance, $tableName) {
+        $latKey = 'latitude';
+        $lngKey = 'longitude';
+        $results = \DB::select(\DB::raw('SELECT id, ( 3959 * acos( cos( radians(' . $lat . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $lng . ') ) + sin( radians(' . $lat . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance FROM ' . $tableName . ' HAVING distance < ' . $distance . ' ORDER BY distance'));
+//        dd($results);
+        return $results;
+    }
+
 }
