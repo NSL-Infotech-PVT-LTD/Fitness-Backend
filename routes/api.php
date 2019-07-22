@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 Route::post('freelancer/register', 'API\RegisterController@frelancerRegister');
 Route::post('client/register', 'API\RegisterController@ClientRegister');
 Route::post('sms', 'API\RegisterController@sendsms');
+Route::post('check-email', 'API\RegisterController@checkEmail');
 Route::get('categories', 'API\CategoryController@index');
 Route::post('login', 'API\RegisterController@phoneLogin');
 Route::post('email', 'API\RegisterController@EmailLogin');

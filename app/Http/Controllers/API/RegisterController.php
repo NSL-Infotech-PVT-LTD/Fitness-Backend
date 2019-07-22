@@ -76,4 +76,17 @@ class RegisterController extends ApiController {
         }
     }
 
+    public function checkEmail(Request $request) {
+        try {
+            $rules = ['email' => 'required|email|unique:users,email'];
+            $validateAttributes = parent::validateAttributes($request, 'POST', array_merge($this->requiredParams, $rules), array_keys($rules), true);
+            if ($validateAttributes):
+                return $validateAttributes;
+            endif;
+            return parent::successCreated(['Message' => 'Please proceed with registeration process']);
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
 }
