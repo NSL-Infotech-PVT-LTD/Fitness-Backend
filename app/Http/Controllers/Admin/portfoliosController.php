@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\portfolio;
 use Illuminate\Http\Request;
 
-class portfoliosController extends Controller {
+class portfoliosController extends AdminController {
 
     /**
      * Display a listing of the resource.

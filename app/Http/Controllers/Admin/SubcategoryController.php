@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\SubCategory;
 use DB;
 
-class SubcategoryController extends Controller {
+class SubcategoryController extends AdminController {
 
     public function index($id) {
         $subcategory = \App\SubCategory::where('categories_id', $id)->get();

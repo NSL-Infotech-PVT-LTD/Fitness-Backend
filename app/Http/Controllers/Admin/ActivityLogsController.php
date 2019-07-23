@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Spatie\Activitylog\Models\Activity;
 use Illuminate\Http\Request;
 
-class ActivityLogsController extends Controller
+class ActivityLogsController extends AdminController
 {
     /**
      * Display a listing of the resource.

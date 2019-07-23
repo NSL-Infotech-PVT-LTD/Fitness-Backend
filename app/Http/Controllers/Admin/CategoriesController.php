@@ -6,7 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Category;
 use Illuminate\Http\Request;
-class CategoriesController extends Controller {
+class CategoriesController extends AdminController {
 
     /**
      * Display a listing of the resource.

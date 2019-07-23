@@ -8,17 +8,19 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\testnotification;
 
-
 class User extends Authenticatable {
-    use HasApiTokens, Notifiable;
-    use  HasRoles;
+
+    use HasApiTokens,
+        Notifiable;
+    use HasRoles;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'firstname','lastname', 'email','password','phone','experience','hourly_rate','latitude','longitude','category_id','profile_pic','portfolio_image','bio'
+        'firstname', 'lastname', 'email', 'password', 'phone', 'experience', 'hourly_rate', 'latitude', 'longitude', 'category_id', 'profile_pic', 'portfolio_image', 'bio'
     ];
 
     /**
@@ -38,5 +40,15 @@ class User extends Authenticatable {
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get the user's portfolio image.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getPortfolioImageAttribute($value) {
+        return json_decode($value);
+    }
 
 }
