@@ -28,7 +28,7 @@ class UserController extends ApiController {
             $data = MyModel::wherein('id', $roleusers);
             //LatLong logic
 //            $data = $data->whereIn('id', $userAllowed);
-            $data = $data->where('category_id', 'like', '%' . $request->category_id . '%');
+//            $data = $data->where('category_id', 'like', '%' . $request->category_id . '%');
             return parent::successCreated($data->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
