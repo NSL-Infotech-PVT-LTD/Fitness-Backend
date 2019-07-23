@@ -40,7 +40,8 @@ class UsersController extends AdminCommonController {
         } else {
             $users = User::wherein('id', $roleusers)->latest()->paginate($perPage);
         }
-        return view('admin.users.index', compact('users'));
+//        dd($role_id);
+        return view('admin.users.index', compact('users','role_id'));
     }
 
     /**
@@ -90,7 +91,12 @@ class UsersController extends AdminCommonController {
      */
     public function show($id) {
         $user = User::findOrFail($id);
-        return view('admin.users.show', compact('user'));
+
+        if ($user->hasRole('freelancer')):
+            return view('admin.users.show.freelancer', compact('user'));
+        else:
+            return view('admin.users.show.client', compact('user'));
+        endif;
     }
 
     /**

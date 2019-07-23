@@ -52,6 +52,15 @@ class User extends Authenticatable {
     }
 
     /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute() {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
+    /**
      * Get the user's Category Id.
      *
      * @param  string  $value

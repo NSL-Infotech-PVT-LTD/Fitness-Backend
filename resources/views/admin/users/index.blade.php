@@ -23,14 +23,18 @@
                     $user = 'Freelancer User';
                 }
                 if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/3') {
-                        $user = 'Client User';
-                    }
+                    $user = 'Client User';
+                }
                 ?>
                 <div class="card-header  text-center"><h3 >{{$user}}</h3></div>
                 <div class="card-body">
-                    <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                    </a>
+                    <?php if (isset($role_id)): ?>
+                        <?php if ($role_id === "1"): ?>
+                            <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                            </a>
+                        <?php endif; ?>
+                    <?php endif; ?>
 
                     {!! Form::open(['method' => 'GET', 'url' => '/admin/users', 'class' => 'form-inline my-2 m-r  pull-right', 'role' => 'search'])  !!}
                     <div class="input-group">

@@ -20,7 +20,7 @@
                     </ul>
                     @endif
 
-                    {!! Form::open(['url' => 'users.store', 'class' => 'form-horizontal']) !!}
+                    {!! Form::open(['route' => 'users.store', 'class' => 'form-horizontal']) !!}
 
 
                     @include ('admin.users.form', ['formMode' => 'create'])
