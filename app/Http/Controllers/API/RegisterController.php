@@ -24,12 +24,12 @@ class RegisterController extends ApiController {
             $input = $request->all();
             $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/freelancer/profile_pic'));
             $portfolioimageName = [];
-            for ($i = 0; $i <= 4; $i++):
+            for ($i = 1; $i <= 4; $i++):
                 $portfolio = 'portfolio_image_' . $i;
                 $portfolioimageName[] = parent::__uploadImage($request->$portfolio, public_path('uploads/freelancer/portfolio'));
             endfor;
             $input['portfolio_image'] = json_encode($portfolioimageName);
-            $input['category_id'] = json_encode($request->category_id);
+            $input['category_id'] = $request->category_id;
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 2)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
@@ -51,8 +51,10 @@ class RegisterController extends ApiController {
                     return parent::error('The phone has already been taken');
             endif;
             $input = $request->all();
+//            var_dump(json_decode($input['category_id']));    
+//            dd('s');
             $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/client/profile_pic'));
-            $input['category_id'] = json_encode($input['category_id']);
+            $input['category_id'] = $input['category_id'];
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;

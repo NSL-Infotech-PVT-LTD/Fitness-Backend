@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Permission;
 use Illuminate\Http\Request;
 
-class PermissionsController extends AdminController
+class PermissionsController extends AdminCommonController
 {
     /**
      * Display a listing of the resource.

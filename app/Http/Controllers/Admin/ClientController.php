@@ -8,7 +8,7 @@ use App\User;
 use Carbon\Carbon;
 use DB;
 
-class ClientController extends AdminController {
+class ClientController extends AdminCommonController {
 
     public function index(Request $request) {
         $keyword = $request->get('search');

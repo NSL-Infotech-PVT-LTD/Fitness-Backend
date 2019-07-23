@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use HasRoles;
 
-class UsersController extends AdminController {
+class UsersController extends AdminCommonController {
 
     /**
      * Display a listing of the resource.

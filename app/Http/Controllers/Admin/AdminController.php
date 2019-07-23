@@ -8,13 +8,8 @@ use App\User;
 use Carbon\Carbon;
 use DB;
 
-class AdminController extends Controller {
+class AdminController extends AdminCommonController {
     
-    public function __construct() {
-//       $user = \Auth::user();
-//       dd($user);
-//        $this->middleware('guest');
-    }
 
     /**
      * Display a listing of the resource.

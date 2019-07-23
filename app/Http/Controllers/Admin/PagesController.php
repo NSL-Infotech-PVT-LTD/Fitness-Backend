@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Page;
 use Illuminate\Http\Request;
 
-class PagesController extends AdminController
+class PagesController extends AdminCommonController
 {
     /**
      * Display a listing of the resource.

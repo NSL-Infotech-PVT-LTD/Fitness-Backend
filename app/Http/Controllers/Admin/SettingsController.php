@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Setting;
 use Illuminate\Http\Request;
 
-class SettingsController extends AdminController
+class SettingsController extends AdminCommonController
 {
     /**
      * Display a listing of the resource.

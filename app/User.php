@@ -51,4 +51,18 @@ class User extends Authenticatable {
         return json_decode($value);
     }
 
+    /**
+     * Get the user's Category Id.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCategoryIdAttribute($value) {
+        try {
+            return Category::where('id', $value)->first()->name;
+        } catch (Exception $ex) {
+            return $value;
+        }
+    }
+
 }
