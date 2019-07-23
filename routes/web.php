@@ -12,6 +12,9 @@
  */
 Auth::routes();
 Route::get('/', function () {
+    if (\Auth::check()) {
+        return redirect('/admin');
+    }
     return view('auth.login');
 });
 

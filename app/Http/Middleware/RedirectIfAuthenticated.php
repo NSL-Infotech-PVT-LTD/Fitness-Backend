@@ -17,14 +17,10 @@ class RedirectIfAuthenticated {
      */
     public function handle($request, Closure $next, $guard = null) {
 //dd(\Auth::check());
-
-        if (\Auth::check()) {
-//            $user = \Auth::user();
-//            dd($user);
-            return redirect('/admin');
+        if (\Auth::check() === false) {
+            return redirect('/');
         }
-        return redirect('/');
-//        return $next($request);
+        return $next($request);
     }
 
 }

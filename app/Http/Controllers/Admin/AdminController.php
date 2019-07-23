@@ -17,7 +17,6 @@ class AdminController extends AdminCommonController {
      * @return void
      */
     public function index() {
-
         $role = \App\Role::where('name', 'freelancer')->first();
         $roleusers = DB::table('role_user')->where('role_id', $role->id)->pluck('user_id');
         $freelancer = User::wherein('id', $roleusers)->get()->count();
