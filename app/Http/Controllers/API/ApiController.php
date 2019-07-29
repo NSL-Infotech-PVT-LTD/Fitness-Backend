@@ -244,4 +244,97 @@ class ApiController extends \App\Http\Controllers\Controller {
         return $results;
     }
 
+    protected static function CURL_API($method, $url, $data, $httpHeaders = []) {
+        $curl = curl_init();
+//        dd($data);
+        switch ($method) {
+            case "POST":
+                curl_setopt($curl, CURLOPT_POST, 1);
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                break;
+            case "PUT":
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                break;
+            default:
+                if ($data)
+                    $url = sprintf("%s?%s", $url, http_build_query($data));
+        }
+        $headers = array_merge(['Content-Type: application/json'], $httpHeaders);
+// OPTIONS:
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+//dd($data);
+//dd($headers);
+// EXECUTE:
+        $result = curl_exec($curl);
+        if (!$result) {
+            die("Connection Failure");
+        }
+        curl_close($curl);
+        return json_decode($result);
+    }
+
+    protected function getTokenQuickBlox() {
+        // Application credentials - change to yours (found in QB Dashboard)
+        DEFINE('APPLICATION_ID', 77979);
+        DEFINE('AUTH_KEY', "xtvZ6Y3P7Sp4Z-Y");
+        DEFINE('AUTH_SECRET', "N6KyLPtvWUqAyCn");
+        // User credentials
+        DEFINE('USER_LOGIN', "emma");
+        DEFINE('USER_PASSWORD', "emma");
+        // Quickblox endpoints
+        DEFINE('QB_API_ENDPOINT', "https://api.quickblox.com");
+        DEFINE('QB_PATH_SESSION', "session.json");
+        // Generate signature
+        $nonce = rand();
+        $timestamp = time(); // time() method must return current timestamp in UTC but seems like hi is return timestamp in current time zone
+        $signature_string = "application_id=" . APPLICATION_ID . "&auth_key=" . AUTH_KEY . "&nonce=" . $nonce . "&timestamp=" . $timestamp;
+//        echo "stringForSignature: " . $signature_string . "<br><br>";
+        $signature = hash_hmac('sha1', $signature_string, AUTH_SECRET);
+        // Build post body
+        $post_body = http_build_query(array(
+            'application_id' => APPLICATION_ID,
+            'auth_key' => AUTH_KEY,
+            'timestamp' => $timestamp,
+            'nonce' => $nonce,
+            'signature' => $signature
+        ));
+        // $post_body = "application_id=" . APPLICATION_ID . "&auth_key=" . AUTH_KEY . "&timestamp=" . $timestamp . "&nonce=" . $nonce . "&signature=" . $signature . "&user[login]=" . USER_LOGIN . "&user[password]=" . USER_PASSWORD;
+//        echo "postBody: " . $post_body . "<br><br>";
+// Configure cURL
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, QB_API_ENDPOINT . '/' . QB_PATH_SESSION); // Full path is - https://api.quickblox.com/session.json
+        curl_setopt($curl, CURLOPT_POST, true); // Use POST
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $post_body); // Setup post body
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true); // Receive server response
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_POSTREDIR, true);
+
+        // Execute request and read response
+        $response = curl_exec($curl);
+
+        // Check errors
+        if ($response) {
+            
+        } else {
+            $error = curl_error($curl) . '(' . curl_errno($curl) . ')';
+            echo $error . "\n";
+        }
+
+        // Close connection
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    protected function registerUserQuickBlox($email) {
+        $response = self::getTokenQuickBlox();
+        $data = self::CURL_API('POST', 'https://api.quickblox.com/users.json', ['user' => ['login' => $email, 'password' => $email, 'email' => $email]], ['QuickBlox-REST-API-Version: 0.1.0', 'QB-Token: ' . $response->session->token]);
+        return true;
+    }
+
 }

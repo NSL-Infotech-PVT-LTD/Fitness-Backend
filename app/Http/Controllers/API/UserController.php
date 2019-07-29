@@ -35,4 +35,19 @@ class UserController extends ApiController {
         }
     }
 
+    public function getUser(Request $request) {
+        $rules = ['user_id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', array_merge($this->requiredParams, $rules), array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+//            dd($request->user_id);
+            $data = MyModel::where('id', $request->user_id);
+            return parent::successCreated($data->first());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
 }
