@@ -92,6 +92,7 @@ class RegisterController extends ApiController {
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
+            parent::registerUserQuickBlox($user->email);
             return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
