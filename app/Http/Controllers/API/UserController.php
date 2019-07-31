@@ -29,7 +29,7 @@ class UserController extends ApiController {
             //LatLong logic
 //            $data = $data->whereIn('id', $userAllowed);
 //            $data = $data->where('category_id', 'like', '%' . $request->category_id . '%');
-            return parent::successCreated($data->get());
+            return parent::success($data->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -44,7 +44,7 @@ class UserController extends ApiController {
         try {
 //            dd($request->user_id);
             $data = MyModel::where('id', $request->user_id);
-            return parent::successCreated($data->first());
+            return parent::success($data->first());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
