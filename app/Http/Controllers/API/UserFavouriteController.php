@@ -46,7 +46,7 @@ class UserFavouriteController extends ApiController {
                 return parent::successCreated('No Favourite Freelancer Found', '203');
 
             $model = \App\User::wherein('id', $client_ids->pluck('freelancer_id')->toArray());
-            if (count($model))
+            if ($model->get()->isEmpty() !== true)
                 return parent::success($model->get());
             else
                 return parent::error('No Data Found');
