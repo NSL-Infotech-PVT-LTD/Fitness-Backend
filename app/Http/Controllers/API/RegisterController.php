@@ -37,7 +37,9 @@ class RegisterController extends ApiController {
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 2)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
-            parent::registerUserQuickBlox($user->email);
+            $quickBlox = parent::registerUserQuickBlox($user->email, $user->firstname);
+            $user->quick_blox_id = $quickBlox->user->id;
+            $user->save();
             return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -62,7 +64,7 @@ class RegisterController extends ApiController {
             endif;
             $input = $request->all();
             $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/freelancer/profile_pic'));
-             $portfolioimageName = [];
+            $portfolioimageName = [];
             for ($i = 1; $i <= 4; $i++):
                 $portfolio = 'portfolio_image_' . $i;
                 if (isset($request->$portfolio))
@@ -87,7 +89,7 @@ class RegisterController extends ApiController {
         if ($validateAttributes):
             return $validateAttributes;
         endif;
-        try {
+//        try {
             if (isset($request->phone)):
                 if (!(\App\User::where('phone', $request->phone)->get()->isEmpty()))
                     return parent::error('The phone has already been taken');
@@ -100,11 +102,13 @@ class RegisterController extends ApiController {
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
-            parent::registerUserQuickBlox($user->email);
+            $quickBlox = parent::registerUserQuickBlox($user->email, $user->firstname . ' ' . $user->lastname);
+            $user->quick_blox_id = $quickBlox->user->id;
+            $user->save();
             return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token]);
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
+//        } catch (\Exception $ex) {
+//            return parent::error($ex->getMessage());
+//        }
     }
 
     public function ClientUpdate(Request $request) {

@@ -68,7 +68,11 @@ class User extends Authenticatable {
      */
     public function getCategoryIdAttribute($value) {
         try {
-            return Category::where('id', $value)->first()->name;
+            $category = Category::where('id', $value)->get();
+            if ($category->isEmpty() !== true)
+                return $category->first()->name;
+            else
+                return $value;
         } catch (Exception $ex) {
             return $value;
         }

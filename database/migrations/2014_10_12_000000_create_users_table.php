@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration {
             $table->string('longitude')->nullable();
             $table->string('portfolio_image')->nullable();
             $table->text('bio')->nullable();
+            $table->integer('quick_blox_id')->nullable();
             $table->integer('state')->default(0);
             $table->rememberToken();
             $table->timestamps();

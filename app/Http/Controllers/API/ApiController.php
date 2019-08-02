@@ -161,9 +161,13 @@ class ApiController extends \App\Http\Controllers\Controller {
         return response()->json(['status' => false, 'data' => (object) [], 'error' => ['code' => $errorCode, 'error_message' => $validatorMessage]], $errorCode);
     }
 
-    public static function success($data, $code = 200) {
+    public static function success($data, $code = 200, $returnType = 'object') {
 //        print_r($data);die;
-        return response()->json(['status' => true, 'code' => $code, 'data' => (object) $data], $code);
+        if ($returnType == 'array')
+            $data = (array) $data;
+        else
+            $data = (object) $data;
+        return response()->json(['status' => true, 'code' => $code, 'data' => $data], $code);
     }
 
     public static function successCreated($data, $code = 201) {
@@ -333,10 +337,12 @@ class ApiController extends \App\Http\Controllers\Controller {
         return json_decode($response);
     }
 
-    protected function registerUserQuickBlox($email) {
+    protected function registerUserQuickBlox($email, $name = null) {
         $response = self::getTokenQuickBlox();
-        $data = self::CURL_API('POST', 'https://api.quickblox.com/users.json', ['user' => ['login' => $email, 'password' => $email, 'email' => $email]], ['QuickBlox-REST-API-Version: 0.1.0', 'QB-Token: ' . $response->session->token]);
-        return true;
+        $data = self::CURL_API('POST', 'https://api.quickblox.com/users.json', ['user' => ['login' => $email, 'password' => $email, 'email' => $email, 'full_name' => $name]], ['QuickBlox-REST-API-Version: 0.1.0', 'QB-Token: ' . $response->session->token]);
+//        dd($data->user->id);
+
+        return $data;
     }
 
 }

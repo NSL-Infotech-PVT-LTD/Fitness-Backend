@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth:api'], function() {
     Route::post('freelancer/users', 'API\UserController@getFreelancers');
     Route::post('user', 'API\UserController@getUser');
+    Route::post('user/images', 'API\UserController@getUserImage');
     Route::post('freelancer/update', 'API\RegisterController@frelancerUpdate');
     Route::post('client/update', 'API\RegisterController@ClientUpdate');
     Route::post('client/favourite/store', 'API\UserFavouriteController@store');
