@@ -40,7 +40,7 @@ class RegisterController extends ApiController {
             $quickBlox = parent::registerUserQuickBlox($user->email, $user->firstname);
             $user->quick_blox_id = $quickBlox->user->id;
             $user->save();
-            return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token]);
+            return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -77,7 +77,7 @@ class RegisterController extends ApiController {
             $input['category_id'] = $request->category_id;
             $user->fill($input);
             $user->save();
-            return parent::successCreated(['Message' => 'Updated Successfully']);
+            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -90,22 +90,22 @@ class RegisterController extends ApiController {
             return $validateAttributes;
         endif;
 //        try {
-            if (isset($request->phone)):
-                if (!(\App\User::where('phone', $request->phone)->get()->isEmpty()))
-                    return parent::error('The phone has already been taken');
-            endif;
-            $input = $request->all();
+        if (isset($request->phone)):
+            if (!(\App\User::where('phone', $request->phone)->get()->isEmpty()))
+                return parent::error('The phone has already been taken');
+        endif;
+        $input = $request->all();
 //            var_dump(json_decode($input['category_id']));    
 //            dd('s');
-            $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/client/profile_pic'));
-            $input['category_id'] = $input['category_id'];
-            $user = \App\User::create($input);
-            $user->assignRole(\App\Role::where('id', 3)->first()->name);
-            $token = $user->createToken('netscape')->accessToken;
-            $quickBlox = parent::registerUserQuickBlox($user->email, $user->firstname . ' ' . $user->lastname);
-            $user->quick_blox_id = $quickBlox->user->id;
-            $user->save();
-            return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token]);
+        $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/client/profile_pic'));
+        $input['category_id'] = $input['category_id'];
+        $user = \App\User::create($input);
+        $user->assignRole(\App\Role::where('id', 3)->first()->name);
+        $token = $user->createToken('netscape')->accessToken;
+        $quickBlox = parent::registerUserQuickBlox($user->email, $user->firstname . ' ' . $user->lastname);
+        $user->quick_blox_id = $quickBlox->user->id;
+        $user->save();
+        return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
 //        } catch (\Exception $ex) {
 //            return parent::error($ex->getMessage());
 //        }
@@ -134,7 +134,7 @@ class RegisterController extends ApiController {
             $input['category_id'] = $input['category_id'];
             $user->fill($input);
             $user->save();
-            return parent::successCreated(['Message' => 'Updated Successfully']);
+            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
