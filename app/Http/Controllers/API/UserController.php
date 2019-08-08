@@ -37,14 +37,20 @@ class UserController extends ApiController {
     }
 
     public function getUser(Request $request) {
-        $rules = ['user_id' => 'required'];
+        $rules = ['user_id' => '', 'quick_blox_id' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', array_merge($this->requiredParams, $rules), array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
+            if (empty($request->user_id) && empty($request->quick_blox_id))
+                return parent::error('One of the id is required');
 //            dd($request->user_id);
-            $data = MyModel::where('id', $request->user_id);
+            if (isset($request->user_id))
+                $data = MyModel::where('id', $request->user_id);
+            if (isset($request->quick_blox_id))
+                $data = MyModel::where('quick_blox_id', $request->quick_blox_id);
+
             return parent::success($data->first());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
