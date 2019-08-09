@@ -115,6 +115,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         if ($request->method() != $formType) {
             return self::error('This method is not allowed.', 409);
         }
+        $params = [];
         if (isset($headers['client_id']) && isset($headers['client_secret'])):
             $params['client_id'] = $headers['client_id'];
             $params['client_secret'] = $headers['client_secret'];

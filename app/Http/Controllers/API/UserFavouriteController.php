@@ -12,16 +12,18 @@ use App\UserFavourite as MyModel;
 class UserFavouriteController extends ApiController {
 
     public function store(Request $request) {
-        $rules = ['client_id' => 'required|exists:users,id', 'freelancer_id' => 'required|exists:users,id'];
+        $rules = ['freelancer_id' => 'required|exists:users,id'];
         $validateAttributes = parent::validateAttributes($request, 'POST', array_merge($this->requiredParams, $rules), array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
+        $clientID = \Auth::id();
+//        dd($clientID);
         try {
-            $checkFavourite = MyModel::where('client_id', $request->client_id)->where('freelancer_id', $request->freelancer_id)->get();
+            $checkFavourite = MyModel::where('client_id', $clientID)->where('freelancer_id', $request->freelancer_id)->get();
             if ($checkFavourite->isEmpty()):
                 $favourite = new MyModel();
-                $favourite->client_id = $request->client_id;
+                $favourite->client_id = $clientID;
                 $favourite->freelancer_id = $request->freelancer_id;
                 $favourite->save();
                 return parent::successCreated('Freelancer Marked as Favourite');
@@ -35,13 +37,14 @@ class UserFavouriteController extends ApiController {
     }
 
     public function getItems(Request $request) {
-        $rules = ['client_id' => 'required|exists:users,id'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', array_merge($this->requiredParams, $rules), array_keys($rules), false);
+//        $rules = ['client_id' => 'required|exists:users,id'];
+        $validateAttributes = parent::validateAttributes($request, 'GET', array_merge($this->requiredParams), [], false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
+        $clientID = \Auth::id();
         try {
-            $client_ids = MyModel::where('client_id', $request->client_id)->get();
+            $client_ids = MyModel::where('client_id', $clientID)->get();
             if ($client_ids->isEmpty() === true)
                 return parent::successCreated('No Favourite Freelancer Found', '203');
 

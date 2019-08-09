@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('freelancer/update', 'API\RegisterController@frelancerUpdate');
     Route::post('client/update', 'API\RegisterController@ClientUpdate');
     Route::post('client/favourite/store', 'API\UserFavouriteController@store');
-    Route::post('client/favourite', 'API\UserFavouriteController@getItems');
+    Route::get('client/favourite', 'API\UserFavouriteController@getItems');
 });
 
 
