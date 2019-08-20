@@ -20,10 +20,18 @@ class CreateAppointmentsTable extends Migration {
             $table->time('end_time')->nullable();
             $table->text('comments')->nullable();
             $table->enum('status', ['accepted', 'rejected', 'hold'])->default('hold');
-
-            $table->bigInteger('salon_user_id')->unsigned()->nullable();
+            if (\App::VERSION() >= '5.8') {
+                $table->bigInteger('salon_user_id')->unsigned()->nullable();
+            } else {
+                $table->integer('salon_user_id')->unsigned()->nullable();
+            }
             $table->foreign('salon_user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->bigInteger('customer_user_id')->unsigned()->nullable();
+            if (\App::VERSION() >= '5.8') {
+                $table->bigInteger('customer_user_id')->unsigned()->nullable();
+            } else {
+                $table->integer('customer_user_id')->unsigned()->nullable();
+            }
+
             $table->foreign('customer_user_id')->references('id')->on('users')->onDelete('cascade');
             \App\Helpers\DbExtender::defaultParams($table);
         });

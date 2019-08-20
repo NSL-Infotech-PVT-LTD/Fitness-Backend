@@ -17,7 +17,11 @@ class CreateServicesTable extends Migration {
             $table->string('hours_take')->nullable();
             $table->float('price')->nullable();
 
-            $table->bigInteger('salon_user_id')->unsigned()->nullable();
+            if (\App::VERSION() >= '5.8') {
+                $table->bigInteger('salon_user_id')->unsigned()->nullable();
+            } else {
+                $table->integer('salon_user_id')->unsigned()->nullable();
+            }
             $table->foreign('salon_user_id')->references('id')->on('users')->onDelete('cascade');
             \App\Helpers\DbExtender::defaultParams($table);
         });

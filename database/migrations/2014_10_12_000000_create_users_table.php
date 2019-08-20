@@ -13,7 +13,11 @@ class CreateUsersTable extends Migration {
      */
     public function up() {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
+            if (\App::VERSION() >= '5.8') {
+                $table->bigIncrements('id');
+            } else {
+                $table->increments('id');
+            }
             $table->string('firstname')->nullable();
             $table->string('lastname')->nullable();
             $table->string('email')->unique();
