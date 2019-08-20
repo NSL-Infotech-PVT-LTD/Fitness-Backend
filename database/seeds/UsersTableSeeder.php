@@ -11,15 +11,24 @@ class UsersTableSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        DB::table('users')->insert([
-            [
-                'firstname' => 'admin',
-                'lastname' => 'admin',
-                'email' => 'admin@wellgellondon.com',
-                'password' => Hash::make('12345678'),
-                'phone' => '98166422'
-            ]
-        ]);
+//        DB::table('users')->insert([
+//            [
+//                'firstname' => 'admin',
+//                'lastname' => 'admin',
+//                'email' => 'admin@wellgellondon.com',
+//                'password' => Hash::make('12345678'),
+//                'phone' => '98166422'
+//            ]
+//        ]);
+        $data = [
+            'firstname' => 'admin',
+            'lastname' => 'admin',
+            'email' => 'admin@wellgellondon.com',
+            'password' => Hash::make('12345678'),
+            'phone' => '98166422'
+        ];
+        $user = \App\User::create($data);
+        $user->assignRole('super admin');
     }
 
 }
