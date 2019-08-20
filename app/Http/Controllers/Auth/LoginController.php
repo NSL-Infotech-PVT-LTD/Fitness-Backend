@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller {
     /*
@@ -35,6 +36,17 @@ use AuthenticatesUsers;
 //        dd(\Auth::check());
 //        
 //        $this->middleware('guest')->except('logout');
+    }
+
+    public function salonAdminCheckAuth(Request $request) {
+        $userdata = array(
+            'email' => $request->email,
+            'password' => $request->password
+        );
+        // attempt to do the login
+        if (\Auth::attempt($userdata)) {
+            return redirect()->route('salon-admin.dashboard');
+        }
     }
 
 }

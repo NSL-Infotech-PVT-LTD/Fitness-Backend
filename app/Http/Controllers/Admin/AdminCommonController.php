@@ -11,8 +11,6 @@ use DB;
 class AdminCommonController extends Controller {
 
     public function __construct() {
-//        $dd = \App\Category::whereIn('id', ['5', '6'])->get()->pluck('name')->toArray();
-//        dd($dd);
         $this->middleware('guest');
     }
 

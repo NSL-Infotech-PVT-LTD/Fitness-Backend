@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder {
             [
                 'firstname' => 'admin',
                 'lastname' => 'admin',
-                'email' => 'admin@admin.com',
+                'email' => 'admin@wellgellondon.com',
                 'password' => Hash::make('12345678'),
                 'phone' => '98166422'
             ]

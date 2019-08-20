@@ -44,28 +44,21 @@ new WOW().init();
                                 <a href="{{ url('/admin') }}"><i class="fa fa-home nav_icon"></i>Dashboard</a>
                             </li>
                             <li>
-                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>Admin Users<span class=""></span></a>
-                            </li>
-                            <li>
-                                <a href="{{ url('admin/users/role/2') }}"><i class="fa fa-user nav_icon"></i>Freelancer Users<span class=""></span></a>
-                            </li>
-                            <li>
-                                <a href="{{ url('admin/users/role/3') }}"><i class="fa fa-user nav_icon"></i>	Client Users<span class=""></span></a>
-                            </li>
-                            <li>
-                                <a href="{{ url('admin/categories') }}"><i class="fa fa-file-text-o nav_icon"></i>Categories</a>
-                                <!--ul class="nav nav-second-level collapse">
+                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>users<span class=""></span></a>
+                                <ul class="nav nav-second-level collapse">
                                     <li>
-                                        <a href="{{ url('admin/categories') }}">All Categories</a>
+                                        <a href="{{ url('admin/users/role/1') }}">Super Admins<span class=""></span></a>
                                     </li>
                                     <li>
-                                        <a href="signup.html">SignUp</a>
+                                        <a href="{{ url('admin/users/role/2') }}">Salon Admins<span class=""></span></a>
                                     </li>
                                     <li>
-                                        <a href="blank-page.html">Blank Page</a>
-                                    </li>
-                                </ul-->
-                                <!-- //nav-second-level -->
+                                        <a href="{{ url('admin/users/role/3') }}">Customers<span class=""></span></a>
+                                    </li>  
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ url('/admin/products') }}"><i class="fa fa-bars nav_icon"></i>Products</a>
                             </li>
                         </ul>
                         <div class="clearfix"> </div>
@@ -83,11 +76,11 @@ new WOW().init();
                     <!--logo -->
                     <div class="logo">
                         <a href="">
-                            <h1>Patchwork</h1>
+                            <h1>{{ config('app.name')}}</h1>
                             <span>AdminPanel</span>
                         </a>
                     </div>
-                 <div class="clearfix"> </div>
+                    <div class="clearfix"> </div>
                 </div>
                 <div class="header-right">
                     <div class="profile_details_left"><!--notifications of menu start -->
@@ -153,10 +146,10 @@ new WOW().init();
                                 <ul class="dropdown-menu drp-mnu">
                                     <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li> 
                                     <li> <a href="#"><i class="fa fa-user"></i> Profile</a> </li> 
-                                      <li>
+                                    <li>
                                         <a class="dropdown-item" href="{{ url('/logout') }}"
                                            onclick="event.preventDefault();
-                                                   document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i>
+    document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i>
                                             Logout
                                         </a>
 
@@ -175,15 +168,15 @@ new WOW().init();
             <!-- main content start-->
             <div id="page-wrapper">
                 <div class="main-page">
-                    <h3 class="title1">Patchwork</h3>
+                    <h3 class="title1">{{ config('app.name')}}</h3>
                     <div class="blank-page widget-shadow scroll" id="style-2 div1">
-                         @yield('content')
+                        @yield('content')
                     </div>
                 </div>
             </div>
             <!--footer-->
             <div class="footer">
-                <p>&copy; 2019 Patchwork Admin Panel. All Rights Reserved | Devloped by netscapelabs <a href="#">Patchwork</a></p>
+                <p>&copy; 2019 {{ config('app.name')}} Admin Panel. All Rights Reserved | Devloped by netscapelabs <a href="#">{{ config('app.name')}}</a></p>
             </div>
             <!--//footer-->
         </div>
@@ -191,20 +184,20 @@ new WOW().init();
         <script src="{{asset('adminMedia/js/classie.js')}}"></script>
         <script>
 var menuLeft = document.getElementById('cbp-spmenu-s1'),
-showLeftPush = document.getElementById('showLeftPush'),
-body = document.body;
+        showLeftPush = document.getElementById('showLeftPush'),
+        body = document.body;
 
 showLeftPush.onclick = function () {
-classie.toggle(this, 'active');
-classie.toggle(body, 'cbp-spmenu-push-toright');
-classie.toggle(menuLeft, 'cbp-spmenu-open');
-disableOther('showLeftPush');
+    classie.toggle(this, 'active');
+    classie.toggle(body, 'cbp-spmenu-push-toright');
+    classie.toggle(menuLeft, 'cbp-spmenu-open');
+    disableOther('showLeftPush');
 };
 
 function disableOther(button) {
-if (button !== 'showLeftPush') {
-classie.toggle(showLeftPush, 'disabled');
-}
+    if (button !== 'showLeftPush') {
+        classie.toggle(showLeftPush, 'disabled');
+    }
 }
         </script>
         <!--scrolling js-->

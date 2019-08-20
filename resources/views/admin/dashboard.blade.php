@@ -1,5 +1,4 @@
 @extends('layouts.backend')
-
 @section('content')
 <div class="container">
     <div class="row">
@@ -14,20 +13,20 @@
                         <div class="col-md-4 widget">
                              <a href="{{url('admin/display')}}"> <div class="stats-left ">
                                 <h5>Today</h5>
-                                <h4>Freelancer</h4>
+                                <h4>SalonAdmin</h4>
                             </div>
                           <div class="stats-right">
-                              <label>{{$freelancer}}</label>
+                              <label>{{$salonadmin}}</label>
                             </div></a>
                             <div class="clearfix"> </div>	
                         </div>
                         <div class="col-md-4 widget states-mdl">
                             <a href="{{url('admin/clientdashboard')}}"><div class="stats-left">
                                 <h5>Today</h5>
-                                <h4>Clients</h4>
+                                <h4>Customer</h4>
                             </div>
                             <div class="stats-right">
-                                <label>{{$clients}}</label>
+                                <label>{{$customers}}</label>
                             </div></a>
                             <div class="clearfix"> </div>	
                         </div>

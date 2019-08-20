@@ -20,7 +20,7 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'firstname', 'lastname', 'email', 'password', 'phone', 'experience', 'hourly_rate', 'latitude', 'longitude', 'category_id', 'profile_pic', 'portfolio_image', 'bio'
+        'firstname', 'lastname', 'email', 'password', 'phone'
     ];
 
     /**
@@ -42,40 +42,12 @@ class User extends Authenticatable {
     ];
 
     /**
-     * Get the user's portfolio image.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function getPortfolioImageAttribute($value) {
-        return json_decode($value);
-    }
-
-    /**
      * Get the user's full name.
      *
      * @return string
      */
     public function getFullNameAttribute() {
         return $this->firstname . ' ' . $this->lastname;
-    }
-
-    /**
-     * Get the user's Category Id.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function getCategoryIdAttribute($value) {
-        try {
-            $category = Category::where('id', $value)->get();
-            if ($category->isEmpty() !== true)
-                return $category->first()->name;
-            else
-                return $value;
-        } catch (Exception $ex) {
-            return $value;
-        }
     }
 
 }

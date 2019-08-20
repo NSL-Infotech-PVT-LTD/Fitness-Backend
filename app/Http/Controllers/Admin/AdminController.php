@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use DB;
 
 class AdminController extends AdminCommonController {
-    
 
     /**
      * Display a listing of the resource.
@@ -17,15 +16,14 @@ class AdminController extends AdminCommonController {
      * @return void
      */
     public function index() {
-        $role = \App\Role::where('name', 'freelancer')->first();
-        $roleusers = DB::table('role_user')->where('role_id', $role->id)->pluck('user_id');
-        $freelancer = User::wherein('id', $roleusers)->get()->count();
-        $role = \App\Role::where('name', 'client')->first();
-        $roleusers = DB::table('role_user')->where('role_id', $role->id)->pluck('user_id');
-        $clients = User::wherein('id', $roleusers)->get()->count();
-        $orders = "4";
+        $roleusersSA = DB::table('role_user')->where('role_id', \App\Role::where('name', 'admin')->first()->id)->pluck('user_id');
+        $salonadmin = User::wherein('id', $roleusersSA)->get()->count();
 
-        return view('admin.dashboard', ['freelancer' => $freelancer, 'clients' => $clients, 'orders' => $orders]);
+        $roleusers = DB::table('role_user')->where('role_id', \App\Role::where('name', 'customer')->first()->id)->pluck('user_id');
+        $customers = User::wherein('id', $roleusers)->get()->count();
+        $orders = "0";
+
+        return view('admin.dashboard', compact('salonadmin', 'customers', 'orders'));
     }
 
     public function display(Request $request) {

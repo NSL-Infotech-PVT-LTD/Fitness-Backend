@@ -13,20 +13,20 @@ class rolesTableSeeder extends Seeder {
         
        DB::table('roles')->insert([
             [
-              'name' => 'admin',
+              'name' => 'super admin',
               'label' => 'Admin',
               'created_at' => \Carbon\Carbon::now(),
               'updated_at' => \Carbon\Carbon::now(),
             ],
            [
-              'name' => 'freelancer',
-              'label' => 'Freelancer',
+              'name' => 'admin',
+              'label' => 'salon-admin',
               'created_at' => \Carbon\Carbon::now(),
               'updated_at' => \Carbon\Carbon::now(),
             ],
            [
-              'name' => 'client',
-              'label' => 'Client',
+              'name' => 'customer',
+              'label' => 'user',
               'created_at' => \Carbon\Carbon::now(),
               'updated_at' => \Carbon\Carbon::now(),
             ],
