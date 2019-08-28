@@ -44,6 +44,31 @@
                             </a>
                             <div class="clearfix"> </div>	
                         </div>
+                        
+                        <div class="col-md-4 widget states-last">
+                            <a href="{{url('salon-admin/appointments')}}">
+                                <div class="stats-left">
+                                    <h5>Today</h5>
+                                    <h4>Appointments</h4>
+                                </div>
+                                <div class="stats-right">
+                                    <label><?= $appointmentsAccepted ?></label>
+                                </div>
+                            </a>
+                            <div class="clearfix"> </div>	
+                        </div>
+                         <div class="col-md-4 widget states-last">
+                            <a href="{{url('salon-admin/appointments')}}">
+                                <div class="stats-left">
+                                    <h5>Cancelled</h5>
+                                    <h4>Appointments</h4>
+                                </div>
+                                <div class="stats-right">
+                                    <label><?= $appointmentsRejected ?></label>
+                                </div>
+                            </a>
+                            <div class="clearfix"> </div>	
+                        </div>
                         <div class="clearfix"> </div>	
                     </div>
                 </div>

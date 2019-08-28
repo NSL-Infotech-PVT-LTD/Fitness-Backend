@@ -65,7 +65,7 @@ $services = [];
 //                    console.log(data.html);
                     if (data.html !== "") {
                         var serviceId = $('#service_id');
-                        serviceId.append(data.html);
+                        serviceId.html(data.html);
                         serviceId.parent().removeClass('hidden');
                         swal.close();
                     } else {

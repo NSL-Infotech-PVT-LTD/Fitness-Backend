@@ -23,7 +23,11 @@ class AdminController extends AdminCommonController {
         $customers = User::wherein('id', $roleusers)->get()->count();
         $orders = \App\Order::get()->count();
 
-        return view('admin.dashboard', compact('salonadmin', 'customers', 'orders'));
+        $appointments = \App\Appointment::where('date', '>=', Carbon::today());
+        $appointmentsAccepted = $appointments->where('status', 'accepted')->get()->count();
+        $appointmentsRejected = $appointments->where('status', 'rejected')->get()->count();
+
+        return view('admin.dashboard', compact('salonadmin', 'customers', 'orders', 'appointmentsAccepted', 'appointmentsRejected'));
     }
 
     public function display(Request $request) {

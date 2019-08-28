@@ -34,6 +34,7 @@ class AppointmentsController extends SalonAdminCommonController {
         }
         $appointments = $appointments->where('salon_user_id', \Auth::user()->id);
         $appointments = $appointments->paginate($perPage);
+//        $appointments = Appointment::whereDate('created_at', Carbon::today())->get();
         return view('salon-admin.appointments.index', compact('appointments'));
     }
 
