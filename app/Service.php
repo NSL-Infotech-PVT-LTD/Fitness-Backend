@@ -28,7 +28,7 @@ class Service extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'hours_take', 'price'];
+    protected $fillable = ['name', 'hours_take', 'price', 'salon_user_id'];
 
     /**
      * Change activity log event description
@@ -40,7 +40,5 @@ class Service extends Model {
     public function getDescriptionForEvent($eventName) {
         return __CLASS__ . " model has been {$eventName}";
     }
-
-  
 
 }

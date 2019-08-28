@@ -4,30 +4,28 @@ namespace App\Http\Controllers\SalonAdmin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Service;
 use Illuminate\Http\Request;
 
-class ServicesController extends SalonAdminCommonController
-{
+class ServicesController extends SalonAdminCommonController {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\View\View
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $keyword = $request->get('search');
         $perPage = 25;
 
         if (!empty($keyword)) {
             $services = Service::where('name', 'LIKE', "%$keyword%")
-                ->orWhere('hours_take', 'LIKE', "%$keyword%")
-                ->orWhere('price', 'LIKE', "%$keyword%")
-                ->latest()->paginate($perPage);
+                    ->orWhere('hours_take', 'LIKE', "%$keyword%")
+                    ->orWhere('price', 'LIKE', "%$keyword%");
         } else {
-            $services = Service::latest()->paginate($perPage);
+            $services = new Service();
         }
+        $services = $services->where('salon_user_id', \Auth::id())->latest()->paginate($perPage);
 
         return view('salon-admin.services.index', compact('services'));
     }
@@ -37,8 +35,7 @@ class ServicesController extends SalonAdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function create()
-    {
+    public function create() {
         return view('salon-admin.services.create');
     }
 
@@ -49,11 +46,10 @@ class ServicesController extends SalonAdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
-    {
-        
+    public function store(Request $request) {
+
         $requestData = $request->all();
-        
+        $requestData['salon_user_id'] = \Auth::id();
         Service::create($requestData);
 
         return redirect('salon-admin/services')->with('flash_message', 'Service added!');
@@ -66,8 +62,7 @@ class ServicesController extends SalonAdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function show($id)
-    {
+    public function show($id) {
         $service = Service::findOrFail($id);
 
         return view('salon-admin.services.show', compact('service'));
@@ -80,8 +75,7 @@ class ServicesController extends SalonAdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $service = Service::findOrFail($id);
 
         return view('salon-admin.services.edit', compact('service'));
@@ -95,11 +89,10 @@ class ServicesController extends SalonAdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, $id)
-    {
-        
+    public function update(Request $request, $id) {
+
         $requestData = $request->all();
-        
+
         $service = Service::findOrFail($id);
         $service->update($requestData);
 
@@ -113,10 +106,10 @@ class ServicesController extends SalonAdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         Service::destroy($id);
 
         return redirect('salon-admin/services')->with('flash_message', 'Service deleted!');
     }
+
 }
