@@ -1,4 +1,4 @@
-@extends('layouts.salon-backend')
+@extends('layouts.backend')
 
 @section('content')
     <div class="container">
@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-header">Edit Appointment #{{ $appointment->id }}</div>
                     <div class="card-body">
-                        <a href="{{ url('/salon-admin/appointments') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/appointments') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <br />
                         <br />
 
@@ -23,12 +23,12 @@
 
                         {!! Form::model($appointment, [
                             'method' => 'PATCH',
-                            'url' => ['/salon-admin/appointments', $appointment->id],
+                            'url' => ['/admin/appointments', $appointment->id],
                             'class' => 'form-horizontal',
                             'files' => true
                         ]) !!}
 
-                        @include ('salon-admin.appointments.form', ['formMode' => 'edit'])
+                        @include ('admin.appointments.form', ['formMode' => 'edit'])
 
                         {!! Form::close() !!}
 

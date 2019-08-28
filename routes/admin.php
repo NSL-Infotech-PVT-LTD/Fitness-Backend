@@ -39,9 +39,17 @@ Route::resource('admin/activitylogs', 'Admin\ActivityLogsController')->only([
 /* * *************************************************************************************************************** */
 
 Route::get('/admin', 'Admin\AdminController@index');
-Route::get('admin/users/role/{role_id}', 'Admin\UsersController@indexByRoleId');
-Route::resource('admin/roles', 'Admin\RolesController');
-Route::resource('admin/users', 'Admin\UsersController');
-Route::get('admin/dashboard', 'Admin\AdminController@index');
-Route::get('admin/display', 'Admin\AdminController@display');
-Route::resource('admin/products', 'Admin\ProductsController');
+
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
+    Route::get('users/role/{role_id}', 'UsersController@indexByRoleId');
+    Route::post('users/change-status', 'UsersController@changeStatus')->name('user.changeStatus');
+    Route::resource('roles', 'RolesController');
+    Route::resource('users', 'UsersController');
+    Route::get('dashboard', 'AdminController@index');
+    Route::get('display', 'AdminController@display');
+    Route::resource('products', 'ProductsController');
+    Route::resource('/appointments', 'AppointmentsController');
+    Route::post('appointments/salon-service', 'AppointmentsController@getServicebySalon')->name('appointment.getservice');
+    Route::resource('orders', 'OrderController');
+    Route::resource('subscriptions', 'SubscriptionController');
+});

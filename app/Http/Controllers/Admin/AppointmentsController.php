@@ -1,17 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\SalonAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Appointment;
 use Illuminate\Http\Request;
 
-class AppointmentsController extends SalonAdminCommonController {
-
-    public function __construct() {
-        $this->middleware('guest');
-    }
+class AppointmentsController extends AdminCommonController {
 
     /**
      * Display a listing of the resource.
@@ -32,9 +28,8 @@ class AppointmentsController extends SalonAdminCommonController {
         } else {
             $appointments = Appointment::latest();
         }
-        $appointments = $appointments->where('salon_user_id', \Auth::user()->id);
         $appointments = $appointments->paginate($perPage);
-        return view('salon-admin.appointments.index', compact('appointments'));
+        return view('admin.appointments.index', compact('appointments'));
     }
 
     /**
@@ -43,7 +38,7 @@ class AppointmentsController extends SalonAdminCommonController {
      * @return \Illuminate\View\View
      */
     public function create() {
-        return view('salon-admin.appointments.create');
+        return view('admin.appointments.create');
     }
 
     /**
@@ -56,10 +51,9 @@ class AppointmentsController extends SalonAdminCommonController {
     public function store(Request $request) {
 
         $requestData = $request->all();
-        $requestData['salon_user_id'] = \Auth::user()->id;
         Appointment::create($requestData);
 
-        return redirect('salon-admin/appointments')->with('flash_message', 'Appointment added!');
+        return redirect('admin/appointments')->with('flash_message', 'Appointment added!');
     }
 
     /**
@@ -72,7 +66,7 @@ class AppointmentsController extends SalonAdminCommonController {
     public function show($id) {
         $appointment = Appointment::findOrFail($id);
 
-        return view('salon-admin.appointments.show', compact('appointment'));
+        return view('admin.appointments.show', compact('appointment'));
     }
 
     /**
@@ -85,7 +79,7 @@ class AppointmentsController extends SalonAdminCommonController {
     public function edit($id) {
         $appointment = Appointment::findOrFail($id);
 
-        return view('salon-admin.appointments.edit', compact('appointment'));
+        return view('admin.appointments.edit', compact('appointment'));
     }
 
     /**
@@ -103,7 +97,7 @@ class AppointmentsController extends SalonAdminCommonController {
         $appointment = Appointment::findOrFail($id);
         $appointment->update($requestData);
 
-        return redirect('salon-admin/appointments')->with('flash_message', 'Appointment updated!');
+        return redirect('admin/appointments')->with('flash_message', 'Appointment updated!');
     }
 
     /**
@@ -131,7 +125,15 @@ class AppointmentsController extends SalonAdminCommonController {
     public function destroy($id) {
         Appointment::destroy($id);
 
-        return redirect('salon-admin/appointments')->with('flash_message', 'Appointment deleted!');
+        return redirect('admin/appointments')->with('flash_message', 'Appointment deleted!');
+    }
+
+    public function getServicebySalon(Request $request) {
+        $html = '';
+        foreach (\App\Service::where('salon_user_id', $request->id)->get() as $service):
+            $html .= '<option value="' . $service->id . '">' . $service->name . '</option>';
+        endforeach;
+        return response()->json(["success" => true, 'html' => $html]);
     }
 
 }

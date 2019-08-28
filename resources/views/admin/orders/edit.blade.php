@@ -7,9 +7,9 @@
 
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Create New Appointment</div>
+                    <div class="card-header">Edit Order #{{ $order->id }}</div>
                     <div class="card-body">
-                        <a href="{{ url('/admin/appointments') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/orders') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <br />
                         <br />
 
@@ -21,9 +21,14 @@
                             </ul>
                         @endif
 
-                        {!! Form::open(['url' => '/admin/appointments', 'class' => 'form-horizontal', 'files' => true]) !!}
+                        {!! Form::model($order, [
+                            'method' => 'PATCH',
+                            'url' => ['/admin/orders', $order->id],
+                            'class' => 'form-horizontal',
+                            'files' => true
+                        ]) !!}
 
-                        @include ('admin.appointments.form', ['formMode' => 'create'])
+                        @include ('admin.orders.form', ['formMode' => 'edit'])
 
                         {!! Form::close() !!}
 

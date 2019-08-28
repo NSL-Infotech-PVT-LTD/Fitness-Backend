@@ -18,36 +18,9 @@ use Illuminate\Http\Request;
 //});
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('freelancer/users', 'API\UserController@getFreelancers');
-    Route::post('user', 'API\UserController@getUser');
-    Route::post('user/images', 'API\UserController@getUserImage');
-    Route::post('freelancer/update', 'API\RegisterController@frelancerUpdate');
-    Route::post('client/update', 'API\RegisterController@ClientUpdate');
-    Route::post('client/favourite/store', 'API\UserFavouriteController@store');
-    Route::get('client/favourite', 'API\UserFavouriteController@getItems');
 });
 
 
 
-Route::post('freelancer/register', 'API\RegisterController@frelancerRegister');
-Route::post('client/register', 'API\RegisterController@ClientRegister');
-Route::post('sms', 'API\RegisterController@sendsms');
-Route::post('check-email', 'API\RegisterController@checkEmail');
-Route::get('categories', 'API\CategoryController@index');
-Route::post('login', 'API\RegisterController@phoneLogin');
-Route::post('email', 'API\RegisterController@EmailLogin');
-Route::post('otp', 'API\RegisterController@verifyotp');
 
 
-
-
-
-//Route::post('login', 'API\UserController@login');
-//Route::post('freelancer', 'API\UserController@FreelancerRegister');
-//Route::post('client', 'API\UserController@ClientRegister');
-//Route::group(['middleware' => 'auth:api'], function() {
-    //Route::post('freelancers', 'API\UserController@FreelancerList');
-    //Route::post('portfolio', 'API\UserController@Portfolio');
-   // Route::post('phone', 'API\UserController@PhoneVerification');
-   // Route::post('linkdin', 'API\UserController@connectLinkedIn');
-//});

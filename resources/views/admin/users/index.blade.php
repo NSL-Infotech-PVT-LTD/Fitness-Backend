@@ -16,13 +16,13 @@
             <div class="card">
                 <?php
                 $user = '';
-                if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/1') {
+                if ($role_id == '1') {
                     $user = 'Admin User';
                 }
-                if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/2') {
+                if ($role_id == '2') {
                     $user = 'Freelancer User';
                 }
-                if (\Request::fullUrl() == 'http://localhost/patchwork/public/admin/users/role/3') {
+                if ($role_id == '3') {
                     $user = 'Client User';
                 }
                 ?>
@@ -69,6 +69,13 @@
                                 <td>{{ $item->lastname }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
+                                    <?php if ($role_id != '1'): ?>
+                                        <?php if ($item->state == '0'): ?>
+                                            <button class="btn btn-success btn-sm" title="UnBlock" onclick="changeStatus({{$item->id}}, 'UnBlock')">UnBlock / Active</button>
+                                        <?php else: ?>
+                                            <button class="btn btn-danger btn-sm" title="Block" onclick="changeStatus({{$item->id}}, 'Block')">Block / Inactive</button>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                     <a href="{{ url('/admin/users/' . $item->id) }}" title="View User"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
                                     <a href="{{ url('/admin/users/' . $item->id . '/edit') }}" title="Edit User"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
                                     {!! Form::open([
@@ -94,4 +101,47 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    function changeStatus(id, status) {
+    Swal.fire({
+    title: 'Are you sure you wanted to change status?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, ' + status + ' it!'
+    }).then((result) => {
+    Swal.showLoading();
+    if (result.value) {
+    var form_data = new FormData();
+    form_data.append("id", id);
+    form_data.append("status", status);
+    form_data.append("_token", $('meta[name="csrf-token"]').attr('content'));
+    $.ajax({
+    url: "{{route('user.changeStatus')}}",
+            method: "POST",
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function () {
+//                        Swal.showLoading();
+            },
+            success: function (data)
+            {
+            Swal.fire(
+                    status + ' !',
+                    'User has been ' + status + ' .',
+                    'success'
+                    ).then(() => {
+            location.reload();
+            });
+            }
+    });
+    }
+    });
+    }
+</script>
 @endsection

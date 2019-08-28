@@ -25,8 +25,9 @@ Route::get('/salon-admin/login', function () {
     return view('auth.salon-admin-login');
 })->name('salon-admin.login');
 
-Route::get('salon-admin/dashboard', 'SalonAdmin\SalonAdminController@index')->name('salon-admin.dashboard');
-
-Route::resource('salon-admin/services', 'SalonAdmin\\ServicesController');
-Route::resource('salon-admin/appointments', 'SalonAdmin\\AppointmentsController');
-
+Route::group(['prefix' => 'salon-admin', 'namespace' => 'SalonAdmin'], function () {
+    Route::get('/dashboard', 'SalonAdminController@index')->name('salon-admin.dashboard');
+    Route::resource('/services', 'ServicesController');
+    Route::resource('/appointments', 'AppointmentsController');
+    Route::post('/appointments/change-status/', 'AppointmentsController@changeStatus')->name('appointment.changeStatus');
+});

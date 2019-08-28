@@ -25,17 +25,8 @@ class CreateUsersTable extends Migration {
             $table->string('phone')->nullable();
             $table->integer('otp')->default(0);
             $table->string('profile_pic')->nullable();
-            $table->text('category_id')->nullable();
-            $table->string('experience')->nullable();
-            $table->string('hourly_rate')->nullable();
-            $table->string('latitude')->nullable();
-            $table->string('longitude')->nullable();
-            $table->string('portfolio_image')->nullable();
-            $table->text('bio')->nullable();
-            $table->integer('quick_blox_id')->nullable();
-            $table->integer('state')->default(0);
             $table->rememberToken();
-            $table->timestamps();
+            \App\Helpers\DbExtender::defaultParams($table);
         });
     }
 

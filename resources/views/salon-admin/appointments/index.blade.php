@@ -37,10 +37,18 @@
                                     <td>{{ $item->date }}</td>
                                     <td>{{ $item->start_time }}</td>
                                     <td>{{ $item->end_time }}</td>
-                                    <td>{{ $item->status }}</td>
+                                    <td>
+                                        <?php if ($item->status == 'hold'): ?>
+                                            <button class="btn btn-success btn-sm" title="accepted" onclick="changeStatus({{$item->id}}, 'accepted')"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                            <button class="btn btn-danger btn-sm" title="rejected" onclick="changeStatus({{$item->id}}, 'rejected')"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                        <?php else: ?>
+                                            {{$item->status}}
+                                        <?php endif; ?>
+
+                                    </td>
                                     <td>
                                         <a href="{{ url('/salon-admin/appointments/' . $item->id) }}" title="View Appointment"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
-                                        
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -54,4 +62,46 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function changeStatus(id, status) {
+    Swal.fire({
+    title: 'Are you sure you wanted to change status?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, ' + status + ' it!'
+    }).then((result) => {
+    Swal.showLoading();
+    if (result.value) {
+    var form_data = new FormData();
+    form_data.append("id", id);
+    form_data.append("status", status);
+    form_data.append("_token", $('meta[name="csrf-token"]').attr('content'));
+    $.ajax({
+    url: "{{route('appointment.changeStatus')}}",
+            method: "POST",
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            beforeSend: function () {
+//                        Swal.showLoading();
+            },
+            success: function (data)
+            {
+            Swal.fire(
+                    status + ' !',
+                    'Appointment has been ' + status + ' .',
+                    'success'
+                    ).then(() => {
+            location.reload();
+            });
+            }
+    });
+    }
+    });
+    }
+</script>
 @endsection

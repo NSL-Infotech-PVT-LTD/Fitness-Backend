@@ -21,7 +21,7 @@ class AdminController extends AdminCommonController {
 
         $roleusers = DB::table('role_user')->where('role_id', \App\Role::where('name', 'customer')->first()->id)->pluck('user_id');
         $customers = User::wherein('id', $roleusers)->get()->count();
-        $orders = "0";
+        $orders = \App\Order::get()->count();
 
         return view('admin.dashboard', compact('salonadmin', 'customers', 'orders'));
     }

@@ -1,10 +1,12 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title> </title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="keywords" content="" />
+        <title>{{ config('app.name', 'Laravel') }} | Admin</title>
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
         <!-- Bootstrap Core CSS -->
         <link href="{{asset('adminMedia/css/bootstrap.css')}}" rel='stylesheet' type='text/css' />
@@ -59,6 +61,9 @@ new WOW().init();
                             </li>
                             <li>
                                 <a href="{{ url('/admin/products') }}"><i class="fa fa-bars nav_icon"></i>Products</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/admin/orders') }}"><i class="fa fa-bars nav_icon"></i>Orders</a>
                             </li>
                         </ul>
                         <div class="clearfix"> </div>
@@ -206,5 +211,6 @@ function disableOther(button) {
         <!--//scrolling js-->
         <!-- Bootstrap Core JavaScript -->
         <script src="{{asset('adminMedia/js/bootstrap.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     </body>
 </html>

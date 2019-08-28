@@ -41,7 +41,7 @@ class UsersController extends AdminCommonController {
             $users = User::wherein('id', $roleusers)->latest()->paginate($perPage);
         }
 //        dd($role_id);
-        return view('admin.users.index', compact('users','role_id'));
+        return view('admin.users.index', compact('users', 'role_id'));
     }
 
     /**
@@ -159,6 +159,21 @@ class UsersController extends AdminCommonController {
     public function destroy($id) {
         User::destroy($id);
         return redirect(url()->previous())->with('flash_message', 'User deleted!');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param  int  $id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function changeStatus(Request $request) {
+        $appointment = User::findOrFail($request->id);
+        $appointment->state = $request->status == 'Block' ? '0' : '1';
+        $appointment->save();
+        return response()->json(["success" => true, 'message' => 'User updated!']);
     }
 
 }
