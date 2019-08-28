@@ -1,6 +1,7 @@
 <?php
 $roleusers = \DB::table('role_user')->where('role_id', '2')->pluck('user_id');
 $users = [];
+$users[] = 'Please select Users';
 foreach (App\User::wherein('id', $roleusers)->get() as $user):
     $users[$user->id] = $user->full_name;
 endforeach;
@@ -45,8 +46,11 @@ $services = [];
 <script type="text/javascript">
     $(function () {
         $('#salon_user_id').on('change', function () {
-            console.log($(this).val());
+//            console.log($(this).val());
             var id = $(this).val();
+            if (id == 0) {
+                return false;
+            }
             swal.showLoading();
             var form_data = new FormData();
             form_data.append("id", id);
