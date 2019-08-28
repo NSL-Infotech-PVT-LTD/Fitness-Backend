@@ -46,7 +46,7 @@
                         </div>
                         
                         <div class="col-md-4 widget states-last">
-                            <a href="{{url('salon-admin/appointments')}}">
+                            <a href="{{url('admin/appointments')}}">
                                 <div class="stats-left">
                                     <h5>Today</h5>
                                     <h4>Appointments</h4>
@@ -58,7 +58,7 @@
                             <div class="clearfix"> </div>	
                         </div>
                          <div class="col-md-4 widget states-last">
-                            <a href="{{url('salon-admin/appointments')}}">
+                            <a href="{{url('admin/appointments')}}">
                                 <div class="stats-left">
                                     <h5>Cancelled</h5>
                                     <h4>Appointments</h4>
