@@ -21,11 +21,11 @@ class UsersTableSeeder extends Seeder {
 //            ]
 //        ]);
         $data = [
-            'firstname' => 'admin',
-            'lastname' => 'admin',
+            'name' => 'admin',
             'email' => 'admin@wellgellondon.com',
             'password' => Hash::make('12345678'),
-            'phone' => '98166422'
+            'phone' => '98166422',
+            
         ];
         $user = \App\User::create($data);
         $user->assignRole('super admin');

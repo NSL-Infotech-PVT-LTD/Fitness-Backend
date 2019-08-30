@@ -18,13 +18,14 @@ class CreateUsersTable extends Migration {
             } else {
                 $table->increments('id');
             }
-            $table->string('firstname')->nullable();
-            $table->string('lastname')->nullable();
+            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->string('password')->nullable();
             $table->string('phone')->nullable();
-            $table->integer('otp')->default(0);
-            $table->string('profile_pic')->nullable();
+            $table->string('country')->nullable();
+            $table->string('address')->nullable();
+            $table->text('profile_image')->nullable();
+            
             $table->rememberToken();
             \App\Helpers\DbExtender::defaultParams($table);
         });
