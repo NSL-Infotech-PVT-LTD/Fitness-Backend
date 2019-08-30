@@ -40,7 +40,7 @@ class ApiController extends \App\Http\Controllers\Controller {
     public static $locale = '';
 //    public $requiredParams = ['device_id' => 'required', 'device_token' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
 //    public $requiredParams = ['device_id' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
-    public $requiredParams = [];
+    public $requiredParams = ['device_type' => 'required', 'device_token' => 'required'];
     protected static $_allowedURIwithoutAuth = ['api/login', 'api/customer/login', 'api/configuration/{type}', 'api/customer/verify-login', 'api/customer/registeration', 'api/customer/resend-otp'];
 
     public static function validateClientSecret() {
@@ -121,11 +121,11 @@ class ApiController extends \App\Http\Controllers\Controller {
             $params['client_secret'] = $headers['client_secret'];
         endif;
 //        if (isset($headers['device_id']) && isset($headers['device_token']) && isset($headers['device_type'])):
-        if (isset($headers['device_id']) && isset($headers['device_type'])):
-            $params['device_id'] = $headers['device_id'];
-//            $params['device_token'] = $headers['device_token'];
-            $params['device_type'] = $headers['device_type'];
-        endif;
+//        if (isset($headers['device_id']) && isset($headers['device_type'])):
+//            $params['device_id'] = $headers['device_id'];
+////            $params['device_token'] = $headers['device_token'];
+//            $params['device_type'] = $headers['device_type'];
+//        endif;
         foreach ($attributes as $attribute):
             $params[$attribute] = $request->$attribute;
         endforeach;
@@ -138,9 +138,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //                return self::error('Please select one of the paramter.', 409);
 //            endif;
         endif;
-//        echo'<pre>';
-//        print_r($params);
-//        die;
+//        dd($params);
         $validator = Validator::make($params, $attributeValidate);
         if ($validator->fails()) {
             $errors = [];
@@ -222,6 +220,47 @@ class ApiController extends \App\Http\Controllers\Controller {
         $downstreamResponse = FCM::sendTo($deviceToken, $option, $notification, $data);
 //        $downstreamResponse->numberFailure();
         return $downstreamResponse->numberSuccess() == '1' ? true : false;
+    }
+
+    public function pushNotificationiOS($data, $devicetokens, $customData = null) {
+        foreach ($devicetokens as $devicetoken):
+            self::pushNotifyiOS($data, $devicetoken, $customData);
+        endforeach;
+        return true;
+    }
+
+    private function pushNotifyiOS($data, $devicetoken, $customData = null) {
+        //return true;
+        $deviceToken = $devicetoken;
+        $ctx = stream_context_create();
+        // ck.pem is your certificate file
+        stream_context_set_option($ctx, 'ssl', 'local_cert', public_path('apn/key.pem'));
+        stream_context_set_option($ctx, 'ssl', 'passphrase', '');
+        // Open a connection to the APNS server
+        $fp = stream_socket_client(
+                'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
+        if (!$fp)
+            exit("Failed to connect: $err $errstr" . PHP_EOL);
+        // Create the payload body
+        $body['aps'] = ['alert' => ['title' => $data['title'], 'body' => $data['message']], 'sound' => 'default'];
+        if ($customData !== null)
+            $body['extraPayLoad'] = ['custom' => $customData];
+        // Encode the payload as JSON
+        $payload = json_encode($body);
+        // Build the binary notification
+        $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
+        // Send it to the server
+        $result = fwrite($fp, $msg, strlen($msg));
+
+        // Close the connection to the server
+        // $this->saveNotification($data);
+        fclose($fp);
+
+        if (!$result)
+            return 'Message not delivered' . PHP_EOL;
+        else
+            return 'Message successfully delivered' . PHP_EOL;
+        //die();
     }
 
     protected static function __uploadImage($baseEncodeImage, $path = null) {
@@ -344,6 +383,17 @@ class ApiController extends \App\Http\Controllers\Controller {
 //        dd($data->user->id);
 
         return $data;
+    }
+
+    protected function addUserDeviceData(User $user, $request) {
+        if (\App\UserDevice::where('token', $request->device_token)->get()->isEmpty() === true):
+            $userDevice = new \App\UserDevice;
+            $userDevice->user_id = $user->id;
+            $userDevice->type = $request->device_type;
+            $userDevice->token = $request->device_token;
+            $userDevice->save();
+        endif;
+        return true;
     }
 
 }

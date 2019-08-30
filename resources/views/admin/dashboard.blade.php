@@ -13,7 +13,7 @@
                         <div class="col-md-4 widget">
                             <a href="{{url('admin/users/role/2')}}"> <div class="stats-left ">
                                     <h5>Today</h5>
-                                    <h4>SalonAdmin</h4>
+                                    <h4>Salon Admin</h4>
                                 </div>
                                 <div class="stats-right">
                                     <label>{{$salonadmin}}</label>
