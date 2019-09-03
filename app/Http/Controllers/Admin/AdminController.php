@@ -16,18 +16,14 @@ class AdminController extends AdminCommonController {
      * @return void
      */
     public function index() {
-        $roleusersSA = DB::table('role_user')->where('role_id', \App\Role::where('name', 'admin')->first()->id)->pluck('user_id');
-        $salonadmin = User::wherein('id', $roleusersSA)->get()->count();
-
-        $roleusers = DB::table('role_user')->where('role_id', \App\Role::where('name', 'customer')->first()->id)->pluck('user_id');
-        $customers = User::wherein('id', $roleusers)->get()->count();
-        $orders = \App\Order::get()->count();
-
-        $appointments = \App\Appointment::where('date', '>=', Carbon::today());
-        $appointmentsAccepted = $appointments->where('status', 'accepted')->get()->count();
-        $appointmentsRejected = $appointments->where('status', 'rejected')->get()->count();
-
-        return view('admin.dashboard', compact('salonadmin', 'customers', 'orders', 'appointmentsAccepted', 'appointmentsRejected'));
+        $users = [];
+        foreach (\App\Role::all() as $role):
+            if($role->name=='super admin')
+                continue;
+            $users[$role->name]['role_id'] = $role->id;
+            $users[$role->name]['count'] = User::wherein('id', DB::table('role_user')->where('role_id', $role->id)->pluck('user_id'))->get()->count();
+        endforeach;
+        return view('admin.dashboard', compact('users'));
     }
 
     public function display(Request $request) {

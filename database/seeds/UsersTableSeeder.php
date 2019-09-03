@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder {
 //        ]);
         $data = [
             'name' => 'admin',
-            'email' => 'admin@wellgellondon.com',
+            'email' => 'admin@utrain.com',
             'password' => Hash::make('12345678'),
             'phone' => '98166422',
             

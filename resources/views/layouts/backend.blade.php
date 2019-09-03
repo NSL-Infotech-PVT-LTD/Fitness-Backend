@@ -46,27 +46,14 @@ new WOW().init();
                                 <a href="{{ url('/admin') }}"><i class="fa fa-home nav_icon"></i>Dashboard</a>
                             </li>
                             <li>
-                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>users<span class=""></span></a>
+                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>users<span class=""></span></a>              
                                 <ul class="nav nav-second-level collapse">
-                                    <li>
-                                        <a href="{{ url('admin/users/role/1') }}">Super Admins<span class=""></span></a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('admin/users/role/2') }}">Salon Admins<span class=""></span></a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('admin/users/role/3') }}">Customers<span class=""></span></a>
-                                    </li>  
+                                    <?php foreach (\App\Role::all() as $role): ?>
+                                        <li>
+                                            <a href="{{ url('admin/users/role/'.$role->id) }}">{{$role->name}}<span class=""></span></a>
+                                        </li>  
+                                    <?php endforeach; ?>
                                 </ul>
-                            </li>
-                            <li>
-                                <a href="{{ url('/admin/products') }}"><i class="fa fa-bars nav_icon"></i>Products</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('/admin/orders') }}"><i class="fa fa-bars nav_icon"></i>Orders</a>
-                            </li>
-                             <li>
-                                <a href="{{ url('/admin/appointments') }}"><i class="fa fa-bars nav_icon"></i>Appointments</a>
                             </li>
                         </ul>
                         <div class="clearfix"> </div>
