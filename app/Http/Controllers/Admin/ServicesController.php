@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Service;
 use Illuminate\Http\Request;
 
-class ServicesController extends Controller {
+class ServicesController extends AdminCommonController {
 
     public static $_basePath = '/public/uploads/services/';
     public static $_urlPath = '/uploads/services/';

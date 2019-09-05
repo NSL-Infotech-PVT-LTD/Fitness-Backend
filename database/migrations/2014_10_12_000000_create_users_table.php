@@ -33,8 +33,6 @@ class CreateUsersTable extends Migration {
             $table->float('expertise_years')->nullable();
             $table->integer('hourly_rate')->nullable();
             $table->text('portfolio_image')->nullable();
-            
-            
             $table->rememberToken();
             \App\Helpers\DbExtender::defaultParams($table);
         });
