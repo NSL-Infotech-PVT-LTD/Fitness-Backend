@@ -31,8 +31,8 @@ class rolesTableSeeder extends Seeder {
               'updated_at' => \Carbon\Carbon::now(),
             ],
            [
-              'name' => 'organization',
-              'label' => 'organization',
+              'name' => 'organizer',
+              'label' => 'organizer',
               'created_at' => \Carbon\Carbon::now(),
               'updated_at' => \Carbon\Carbon::now(),
             ],
