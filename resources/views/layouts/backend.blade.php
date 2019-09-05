@@ -55,6 +55,9 @@ new WOW().init();
                                     <?php endforeach; ?>
                                 </ul>
                             </li>
+                            <li>
+                               <a href="{{ url('/admin/services') }}"><i class="fa fa-send-o"></i>Services</a>
+                            </li>
                         </ul>
                         <div class="clearfix"> </div>
                         <!-- //sidebar-collapse -->
