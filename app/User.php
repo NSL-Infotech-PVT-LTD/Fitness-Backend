@@ -20,8 +20,8 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone','country','address','profile_image'
-    ];
+        'name', 'email', 'password', 'phone', 'address', 'profile_image', 'location','business_hour', 'bio', 'profession','expertise_years', 'hourly_rate', 'portfolio_image','service_ids','latitude','longitude'
+        ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -47,7 +47,7 @@ class User extends Authenticatable {
      * @return string
      */
     public function getFullNameAttribute() {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->name;
     }
 
 }

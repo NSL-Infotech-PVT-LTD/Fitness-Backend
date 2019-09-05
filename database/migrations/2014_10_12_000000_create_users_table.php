@@ -22,9 +22,18 @@ class CreateUsersTable extends Migration {
             $table->string('email')->unique();
             $table->string('password')->nullable();
             $table->string('phone')->nullable();
-            $table->string('country')->nullable();
             $table->string('address')->nullable();
             $table->text('profile_image')->nullable();
+            $table->string('location')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->integer('business_hour')->nullable();
+            $table->text('bio')->nullable();
+            $table->text('service_ids')->nullable();
+            $table->float('expertise_years')->nullable();
+            $table->integer('hourly_rate')->nullable();
+            $table->text('portfolio_image')->nullable();
+            
             
             $table->rememberToken();
             \App\Helpers\DbExtender::defaultParams($table);
