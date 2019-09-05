@@ -30,6 +30,6 @@ Route::post('organiser/register', 'API\AuthController@OrganiserRegister');
 Route::post('login', 'API\AuthController@Login');
 Route::post('reset-password', 'API\AuthController@resetPassword');
 
-
+Route::post('services', 'API\ServicesController@getitems');
 
 
