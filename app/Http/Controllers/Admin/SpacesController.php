@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Space;
 use Illuminate\Http\Request;
 
-class SpacesController extends Controller
+class SpacesController extends AdminCommonController
 {
     /**
      * Display a listing of the resource.

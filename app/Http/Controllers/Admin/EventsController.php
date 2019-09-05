@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Event;
 use Illuminate\Http\Request;
 
-class EventsController extends Controller
+class EventsController extends AdminCommonController
 {
     /**
      * Display a listing of the resource.
