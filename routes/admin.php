@@ -52,4 +52,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('appointments/salon-service', 'AppointmentsController@getServicebySalon')->name('appointment.getservice');
     Route::resource('orders', 'OrderController');
     Route::resource('subscriptions', 'SubscriptionController');
+    Route::resource('events', 'EventsController');
+    Route::resource('services', 'ServicesController');
+    Route::resource('spaces', 'SpacesController');
 });
