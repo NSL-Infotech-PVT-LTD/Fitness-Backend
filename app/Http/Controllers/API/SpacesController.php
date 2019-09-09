@@ -27,7 +27,7 @@ class SpacesController extends ApiController {
                 for($i=1;$i<=5;$i++):
                     $var = 'images_'.$i;
                 if(isset($var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces/images'));
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
                 endfor;
                 
                 if(count($images)>0)
@@ -72,7 +72,7 @@ class SpacesController extends ApiController {
                 for($i=1;$i<=5;$i++):
                     $var = 'images_'.$i;
                 if(isset($var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces/images'));
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
                 endfor;
                 
                 if(count($images)>0)
