@@ -29,7 +29,7 @@ class Space extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_weekly'];
+    protected $fillable = ['name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily'];
 
     
 
