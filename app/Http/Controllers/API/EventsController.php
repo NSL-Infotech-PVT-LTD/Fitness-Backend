@@ -8,11 +8,13 @@ use App\Event as MyModel;
 use Twilio\Rest\Client;
 use Validator;
 use DB;
+use Auth;
 
 class EventsController extends ApiController {
 
     public function store(Request $request) {
-        $rules = ['name' => 'required', 'description' => 'required', 'start_at' => 'required', 'end_at' => 'required', 'location' => 'required', 'latitude' => 'required','longitude' => 'required','service_id' => 'required','organizer_id' => 'required','guest_allowed' => 'required','equipment_required' => 'required'];
+        
+        $rules = ['name' => 'required', 'description' => 'required', 'start_at' => 'required', 'end_at' => 'required', 'location' => 'required', 'latitude' => 'required','longitude' => 'required','service_id' => 'required','guest_allowed' => 'required','equipment_required' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -20,8 +22,8 @@ class EventsController extends ApiController {
         try {
             $input = $request->all();
             $input['organizer_id'] = \Auth::id();
-            $address = MyModel::create($input);
-            return parent::successCreated(['message' => 'Created Successfully', 'address' => $address]);
+            $event = MyModel::create($input);
+            return parent::successCreated(['message' => 'Created Successfully', 'event' => $event]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -66,7 +68,7 @@ class EventsController extends ApiController {
     }
 
     
-    }
+    
 
 
 }

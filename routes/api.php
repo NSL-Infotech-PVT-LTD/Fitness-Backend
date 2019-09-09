@@ -21,6 +21,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('coach/update', 'API\AuthController@CoachUpdate');
     Route::post('athlete/update', 'API\AuthController@AtheleteUpdate');
     Route::post('organiser/update', 'API\AuthController@OrganiserUpdate');
+    Route::post('events/store', 'API\EventsController@store');
+    Route::get('events/list', 'API\EventsController@read');
+    Route::post('events/update', 'API\EventsController@Update');
 
 });
 
@@ -31,5 +34,6 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('reset-password', 'API\AuthController@resetPassword');
 
 Route::post('services', 'API\ServicesController@getitems');
+
 
 
