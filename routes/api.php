@@ -24,6 +24,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('events/store', 'API\EventsController@store');
     Route::get('events/list', 'API\EventsController@read');
     Route::post('events/update', 'API\EventsController@Update');
+    Route::post('spaces/create', 'API\SpacesController@store');
+    Route::get('spaces/read', 'API\SpacesController@read');
+    Route::post('spaces/update', 'API\SpacesController@Update');
+    Route::post('spaces/delete', 'API\SpacesController@destroy');
 
 });
 
