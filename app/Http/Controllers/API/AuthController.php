@@ -67,7 +67,7 @@ class AuthController extends ApiController {
     }
 
     public function AtheleteRegister(Request $request) {
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'address' => 'required','latitude'=>'required','longitude'=>'required'];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'address' => 'required','latitude'=>'required','longitude'=>'required','profile_image' => ''];
 
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -77,6 +77,7 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
@@ -94,7 +95,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('athlete') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'password' => '', 'phone' => '', 'address' => '','latitude'=>'','longitude'=>''];
+        $rules = ['name' => '', 'password' => '', 'phone' => '', 'address' => '','latitude'=>'','longitude'=>'','profile_image' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -102,6 +103,8 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
+            
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
 //            var_dump(json_decode($input['category_id']));    
 //            dd('s');
             $user->fill($input);
