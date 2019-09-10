@@ -27,7 +27,8 @@ class CreateUsersTable extends Migration {
             $table->string('location')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
-            $table->integer('business_hour')->nullable();
+            $table->time('business_hour_starts')->nullable();
+            $table->time('business_hour_ends')->nullable();
             $table->text('bio')->nullable();
             $table->text('service_ids')->nullable();
             $table->float('expertise_years')->nullable();
