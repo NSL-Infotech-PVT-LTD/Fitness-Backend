@@ -117,7 +117,7 @@ class SpacesController extends ApiController {
         endif;
         try {
             $model = new MyModel();
-            $model = $model->where('athlete_id', \Auth::id())->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
