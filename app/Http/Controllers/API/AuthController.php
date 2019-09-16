@@ -25,11 +25,19 @@ class AuthController extends ApiController {
         endif;
         try {
             $input = $request->all();
+//            dd(json_decode($request->service_ids));
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'));
 
             $user = \App\User::create($input);
-            //Assign role to created user
+            //Assign role to created user[1=>10,2=>20,]
+            foreach (json_decode($request->service_ids) as $service => $price):
+                $userservice = new \App\UserService();
+                $userservice->service_id = $service;
+                $userservice->price = $price;
+                $userservice->user_id = $user->id;
+                $userservice->save();
+            endforeach;
             $user->assignRole(\App\Role::where('id', 2)->first()->name);
             // create user token for authorization
             $token = $user->createToken('netscape')->accessToken;
@@ -47,7 +55,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'password' => '', 'phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => 'required', 'expertise_years' => '', 'hourly_rate' => ''];
+        $rules = ['name' => '', 'password' => '', 'phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -55,9 +63,15 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'));
-
+            if (isset($request->service_ids))
+                foreach (json_decode($request->service_ids) as $service => $price):
+                    $userservice = new \App\UserService();
+                    $userservice->service_id = $service;
+                    $userservice->price = $price;
+                    $userservice->user_id = $user->id;
+                    $userservice->save();
+                endforeach;
             $user->fill($input);
             $user->save();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
@@ -104,7 +118,6 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
 //            var_dump(json_decode($input['category_id']));    
 //            dd('s');
@@ -139,6 +152,13 @@ class AuthController extends ApiController {
             if (count($portfolio_image) > 0)
                 $input['portfolio_image'] = json_encode($portfolio_image);
             $user = \App\User::create($input);
+            foreach (json_decode($request->service_ids) as $service => $price):
+                $userservice = new \App\UserService();
+                $userservice->service_id = $service;
+                $userservice->price = $price;
+                $userservice->user_id = $user->id;
+                $userservice->save();
+            endforeach;
             $user->assignRole(\App\Role::where('id', 4)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
             // Add user device details for firbase
@@ -179,6 +199,14 @@ class AuthController extends ApiController {
 
             if (count($portfolio_image) > 0)
                 $input['portfolio_image'] = json_encode($portfolio_image);
+            if (isset($request->service_ids))
+                foreach (json_decode($request->service_ids) as $service => $price):
+                    $userservice = new \App\UserService();
+                    $userservice->service_id = $service;
+                    $userservice->price = $price;
+                    $userservice->user_id = $user->id;
+                    $userservice->save();
+                endforeach;
             $user->fill($input);
             $user->save();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
