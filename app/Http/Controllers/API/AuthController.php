@@ -15,6 +15,21 @@ use Illuminate\Mail\Message;
 
 class AuthController extends ApiController {
 
+    private function addservices($service_ids, $userId) {
+        foreach (json_decode($service_ids) as $service):
+            $userservice = \App\UserService::where('service_id', $service->id)->where('user_id', $userId)->get();
+            if ($userservice->isEmpty())
+                $userservice = new \App\UserService();
+            else
+                $userservice = \App\UserService::findOrFail($userservice->id);
+
+            $userservice->service_id = $service->id;
+            $userservice->price = $service->price;
+            $userservice->user_id = $userId;
+            $userservice->save();
+        endforeach;
+    }
+
     public function CoachRegister(Request $request) {
 //        dd(implode(',',\App\Currency::get()->pluck('id')->toArray()));
         $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required'];
@@ -31,13 +46,9 @@ class AuthController extends ApiController {
 
             $user = \App\User::create($input);
             //Assign role to created user[1=>10,2=>20,]
-            foreach (json_decode($request->service_ids) as $service => $price):
-                $userservice = new \App\UserService();
-                $userservice->service_id = $service;
-                $userservice->price = $price;
-                $userservice->user_id = $user->id;
-                $userservice->save();
-            endforeach;
+
+            self::addservices($request->service_ids, $user->id);
+
             $user->assignRole(\App\Role::where('id', 2)->first()->name);
             // create user token for authorization
             $token = $user->createToken('netscape')->accessToken;
@@ -64,14 +75,11 @@ class AuthController extends ApiController {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'));
+
+            //add service module start
             if (isset($request->service_ids))
-                foreach (json_decode($request->service_ids) as $service => $price):
-                    $userservice = new \App\UserService();
-                    $userservice->service_id = $service;
-                    $userservice->price = $price;
-                    $userservice->user_id = $user->id;
-                    $userservice->save();
-                endforeach;
+                self::addservices($request->service_ids, $user->id);
+            //add service module end
             $user->fill($input);
             $user->save();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
@@ -152,13 +160,9 @@ class AuthController extends ApiController {
             if (count($portfolio_image) > 0)
                 $input['portfolio_image'] = json_encode($portfolio_image);
             $user = \App\User::create($input);
-            foreach (json_decode($request->service_ids) as $service => $price):
-                $userservice = new \App\UserService();
-                $userservice->service_id = $service;
-                $userservice->price = $price;
-                $userservice->user_id = $user->id;
-                $userservice->save();
-            endforeach;
+            //add service module start
+            self::addservices($request->service_ids, $user->id);
+            //add service module end
             $user->assignRole(\App\Role::where('id', 4)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
             // Add user device details for firbase
@@ -199,14 +203,11 @@ class AuthController extends ApiController {
 
             if (count($portfolio_image) > 0)
                 $input['portfolio_image'] = json_encode($portfolio_image);
+
+            //add service module start
             if (isset($request->service_ids))
-                foreach (json_decode($request->service_ids) as $service => $price):
-                    $userservice = new \App\UserService();
-                    $userservice->service_id = $service;
-                    $userservice->price = $price;
-                    $userservice->user_id = $user->id;
-                    $userservice->save();
-                endforeach;
+                self::addservices($request->service_ids, $user->id);
+            //add service module end
             $user->fill($input);
             $user->save();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
