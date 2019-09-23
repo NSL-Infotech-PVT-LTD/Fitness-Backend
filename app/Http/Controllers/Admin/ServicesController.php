@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Service;
 use Illuminate\Http\Request;
+use DataTables;
 
 class ServicesController extends AdminCommonController {
 
     public static $_basePath = '/public/uploads/services/';
     public static $_urlPath = '/uploads/services/';
+    protected $__rulesforindex = ['name' => 'required', 'image' => 'required'];
 
     /**
      * Display a listing of the resource.
@@ -18,20 +19,20 @@ class ServicesController extends AdminCommonController {
      * @return \Illuminate\View\View
      */
     public function index(Request $request) {
-        $keyword = $request->get('search');
-        $perPage = 25;
-
-        if (!empty($keyword)) {
-            $services = Service::where('name', 'LIKE', "%$keyword%")
-                            ->orWhere('price', 'LIKE', "%$keyword%")
-                            ->orWhere('image', 'LIKE', "%$keyword%")
-                            ->orWhere('description', 'LIKE', "%$keyword%")
-                            ->latest()->paginate($perPage);
-        } else {
-            $services = Service::latest()->paginate($perPage);
+        if ($request->ajax()) {
+            $services = Service::all();
+            return Datatables::of($services)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($item) {
+//                                $return = 'return confirm("Confirm delete?")';
+                                return " <a href=" . url('/admin/services/' . $item->id) . " title='View Service'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                        <a href=" . url('/admin/services/' . $item->id . '/edit') . " title='Edit Service'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
+                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/services/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
         }
-
-        return view('admin.services.index', compact('services'));
+        return view('admin.services.index', ['rules' => array_keys($this->__rulesforindex)]);
     }
 
     /**
@@ -124,9 +125,12 @@ class ServicesController extends AdminCommonController {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id) {
-        Service::destroy($id);
-
-        return redirect('admin/services')->with('flash_message', 'Service deleted!');
+        if (Service::destroy($id)) {
+            $data = 'Success';
+        } else {
+            $data = 'Failed';
+        }
+        return response()->json($data);
     }
 
 }

@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use HasRoles;
+use DataTables;
 
 class UsersController extends AdminCommonController {
 
@@ -16,6 +17,8 @@ class UsersController extends AdminCommonController {
      *
      * @return void
      */
+    protected $__rulesforindex = ['name' => 'required', 'email' => 'required'];
+
     public function index(Request $request) {
         $keyword = $request->get('search');
         $perPage = 15;
@@ -31,17 +34,43 @@ class UsersController extends AdminCommonController {
     }
 
     public function indexByRoleId(Request $request, $role_id) {
-        $keyword = $request->get('search');
-        $perPage = 5;
+//        $keyword = $request->get('search');
+//        $perPage = 5;
+//
+//        $roleusers = \DB::table('role_user')->where('role_id', $role_id)->pluck('user_id');
+//        if (!empty($keyword)) {
+//            $users = User::wherein('id', $roleusers)->where('firstname', 'LIKE', "%$keyword%")->orWhere('email', 'LIKE', "%$keyword%")->latest()->paginate($perPage);
+//        } else {
+//            $users = User::wherein('id', $roleusers)->latest()->paginate($perPage);
+//        }
+////        dd($role_id);
+//        return view('admin.users.index', compact('users', 'role_id'));
 
-        $roleusers = \DB::table('role_user')->where('role_id', $role_id)->pluck('user_id');
-        if (!empty($keyword)) {
-            $users = User::wherein('id', $roleusers)->where('firstname', 'LIKE', "%$keyword%")->orWhere('email', 'LIKE', "%$keyword%")->latest()->paginate($perPage);
-        } else {
-            $users = User::wherein('id', $roleusers)->latest()->paginate($perPage);
+
+        if ($request->ajax()) {
+            $roleusers = \DB::table('role_user')->where('role_id', $role_id)->pluck('user_id');
+            $users = User::wherein('id', $roleusers)->latest();
+            return Datatables::of($users)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($item)use($role_id) {
+//                                $return = 'return confirm("Confirm delete?")';
+                                $return = '';
+                                if ($role_id != '1'):
+                                    if ($item->state == '0'):
+                                        $return .= "<button class='btn btn-success btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
+                                    else:
+                                        $return .= "<button class='btn btn-danger btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
+                                    endif;
+                                endif;
+                                $return .= "<a href=" . url('/admin/users/' . $item->id) . " title='View User'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                        <a href=" . url('/admin/users/' . $item->id . '/edit') . " title='Edit User'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
+                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/users/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                return $return;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
         }
-//        dd($role_id);
-        return view('admin.users.index', compact('users', 'role_id'));
+        return view('admin.users.index', ['rules' => array_keys($this->__rulesforindex), 'role_id' => $role_id]);
     }
 
     /**
@@ -157,8 +186,13 @@ class UsersController extends AdminCommonController {
      * @return void
      */
     public function destroy($id) {
-        User::destroy($id);
-        return redirect(url()->previous())->with('flash_message', 'User deleted!');
+//        return redirect('admin/products')->with('flash_message', 'Product deleted!');
+        if (User::destroy($id)) {
+            $data = 'Success';
+        } else {
+            $data = 'Failed';
+        }
+        return response()->json($data);
     }
 
     /**
