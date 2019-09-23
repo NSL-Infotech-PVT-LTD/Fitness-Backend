@@ -41,7 +41,7 @@ Route::resource('admin/activitylogs', 'Admin\ActivityLogsController')->only([
 Route::get('/admin', 'Admin\AdminController@index');
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
-    Route::get('users/role/{role_id}', 'UsersController@indexByRoleId');
+    Route::get('users/role/{role_id}', 'UsersController@indexByRoleId')->name('users-role');
     Route::post('users/change-status', 'UsersController@changeStatus')->name('user.changeStatus');
     Route::resource('roles', 'RolesController');
     Route::resource('users', 'UsersController');

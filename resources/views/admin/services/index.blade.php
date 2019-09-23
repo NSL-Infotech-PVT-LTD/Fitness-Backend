@@ -1,69 +1,93 @@
 @extends('layouts.backend')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            @include('admin.sidebar')
+<div class="container">
+    <div class="row">
+        @include('admin.sidebar')
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header">Services</div>
+                <div class="card-body">
+                    <a href="{{ url('/admin/services/create') }}" class="btn btn-success btn-sm" title="Add New Service">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Add New
+                    </a>
 
-            <div class="col-md-9">
-                <div class="card">
-                    <div class="card-header">Services</div>
-                    <div class="card-body">
-                        <a href="{{ url('/admin/services/create') }}" class="btn btn-success btn-sm" title="Add New Service">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                        </a>
-
-                        {!! Form::open(['method' => 'GET', 'url' => '/admin/services', 'class' => 'form-inline my-2 my-lg-0 float-right', 'role' => 'search'])  !!}
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="search" placeholder="Search..." value="{{ request('search') }}">
-                            <span class="input-group-append">
-                                <button class="btn btn-secondary" type="submit">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                        {!! Form::close() !!}
-
-                        <br/>
-                        <br/>
-                        <div class="table-responsive">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th>#</th><th>Name</th><th>Image</th><th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($services as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->name }}</td><td>{{ $item->image }}</td>
-                                        <td>
-                                            <a href="{{ url('/admin/services/' . $item->id) }}" title="View Service"><button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button></a>
-                                            <a href="{{ url('/admin/services/' . $item->id . '/edit') }}" title="Edit Service"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>
-                                            {!! Form::open([
-                                                'method' => 'DELETE',
-                                                'url' => ['/admin/services', $item->id],
-                                                'style' => 'display:inline'
-                                            ]) !!}
-                                                {!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>', array(
-                                                        'type' => 'submit',
-                                                        'class' => 'btn btn-danger btn-sm',
-                                                        'title' => 'Delete Service',
-                                                        'onclick'=>'return confirm("Confirm delete?")'
-                                                )) !!}
-                                            {!! Form::close() !!}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                            <div class="pagination-wrapper"> {!! $services->appends(['search' => Request::get('search')])->render() !!} </div>
-                        </div>
-
+                    <br/>
+                    <br/>
+                    <div class="table-responsive">
+                        <table class="table table-borderless data-table">
+                            <thead>
+                                <tr> 
+                                    <th>ID</th>
+                                    <?php foreach ($rules as $rule): ?>
+                                        <th>{{ucfirst($rule)}}</th>
+                                    <?php endforeach; ?>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        var table = $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('services.index') }}",
+            columns: [
+                {data: 'id', name: 'id'},
+<?php foreach ($rules as $rule): ?>
+                    {data: "{{$rule}}", name: "{{$rule}}"},
+<?php endforeach; ?>
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+            ]
+        });
+
+//deleting data
+        $('.data-table').on('click', '.btnDelete[data-remove]', function (e) {
+            e.preventDefault();
+            var url = $(this).data('remove');
+            swal({
+                title: "Are you sure want to remove this item?",
+                text: "Data will be Temporary Deleted!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Confirm",
+                cancelButtonText: "Cancel",
+                closeOnConfirm: false,
+                closeOnCancel: false,
+            },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                url: url,
+                                type: 'DELETE',
+                                dataType: 'json',
+                                data: {method: '_DELETE', submit: true, _token: '{{csrf_token()}}'},
+                                success: function (data) {
+                                    if (data == 'Success') {
+                                        swal("Deleted!", "Service has been deleted", "success");
+                                        table.ajax.reload(null, false);
+                                    }
+                                }
+                            });
+                        } else {
+
+                            swal("Cancelled", "You Cancelled", "error");
+                        }
+
+                    });
+        });
+
+
+    });
+</script>
+
 @endsection
