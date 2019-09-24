@@ -24,7 +24,7 @@ class UsersController extends AdminCommonController {
         $perPage = 15;
 
         if (!empty($keyword)) {
-            $users = User::where('firstname', 'LIKE', "%$keyword%")->orWhere('email', 'LIKE', "%$keyword%")
+            $users = User::where('name', 'LIKE', "%$keyword%")->orWhere('email', 'LIKE', "%$keyword%")
                             ->latest()->paginate($perPage);
         } else {
             $users = User::latest()->paginate($perPage);
@@ -95,8 +95,7 @@ class UsersController extends AdminCommonController {
         $this->validate(
                 $request,
                 [
-                    'firstname' => 'required',
-                    'lastname' => 'required',
+                    'name' => 'required',
                     'email' => 'required|string|max:255|email|unique:users',
                     'password' => 'required',
                 ]
@@ -138,7 +137,7 @@ class UsersController extends AdminCommonController {
     public function edit($id) {
         $roles = Role::select('id', 'name', 'label')->get();
         $roles = $roles->pluck('label', 'name');
-        $user = User::with('roles')->select('id', 'firstname', 'lastname', 'email', 'password')->findOrFail($id);
+        $user = User::with('roles')->select('id', 'name', 'email', 'password')->findOrFail($id);
         $user_roles = [];
         foreach ($user->roles as $role) {
             $user_roles[] = $role->name;
@@ -159,8 +158,7 @@ class UsersController extends AdminCommonController {
         $this->validate(
                 $request,
                 [
-                    'firstname' => 'required',
-                    'lastname' => 'required',
+                    'name' => 'required',
                     'email' => 'required|string|max:255|email|unique:users,email,' . $id,
                     'roles' => 'required'
                 ]
@@ -175,7 +173,11 @@ class UsersController extends AdminCommonController {
         foreach ($request->roles as $role) {
             $user->assignRole($role);
         }
-        return redirect(url()->previous())->with('flash_message', 'User Updated!');
+//         $role_id = \DB::table('role_user')->select('role_id')->get();
+        
+        $role_id = $user->roles->first()->id;
+//        dd($role_id);
+        return redirect('admin/users/role/'.$role_id)->with('flash_message', 'User Updated!');
     }
 
     /**
@@ -186,7 +188,6 @@ class UsersController extends AdminCommonController {
      * @return void
      */
     public function destroy($id) {
-//        return redirect('admin/products')->with('flash_message', 'Product deleted!');
         if (User::destroy($id)) {
             $data = 'Success';
         } else {
