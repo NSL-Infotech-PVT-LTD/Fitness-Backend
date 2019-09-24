@@ -99,7 +99,6 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-            if (isset($request->profile_image))
                 $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
