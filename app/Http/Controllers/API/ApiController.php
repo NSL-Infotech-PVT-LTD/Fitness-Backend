@@ -41,7 +41,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //    public $requiredParams = ['device_id' => 'required', 'device_token' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
 //    public $requiredParams = ['device_id' => 'required', 'device_type' => 'in:ios,android|required', 'client_id' => 'required', 'client_secret' => 'required'];
     public $requiredParams = ['device_type' => 'required', 'device_token' => 'required'];
-    protected static $_allowedURIwithoutAuth = ['api/login', 'api/customer/login', 'api/configuration/{type}', 'api/customer/verify-login', 'api/customer/registeration', 'api/customer/resend-otp','api/salon/register','api/salon/{id}','api/customer/register','api/customer/{id}'];
+    protected static $_allowedURIwithoutAuth = ['api/login', 'api/customer/login', 'api/configuration/{type}', 'api/customer/verify-login', 'api/customer/registeration', 'api/customer/resend-otp', 'api/salon/register', 'api/salon/{id}', 'api/customer/register', 'api/customer/{id}'];
 
     public static function validateClientSecret() {
         $headers = getallheaders();
@@ -263,22 +263,11 @@ class ApiController extends \App\Http\Controllers\Controller {
         //die();
     }
 
-    protected static function __uploadImage($baseEncodeImage, $path = null) {
-        $image = $baseEncodeImage;  // your base64 encoded
-        $fileExtension = 'png';
-        if (strpos($image, 'png') !== false):
-            $image = str_replace('data:image/png;base64,', '', $image);
-            $fileExtension = 'png';
-        endif;
-        if (strpos($image, 'jpeg') !== false):
-            $image = str_replace('data:image/jpeg;base64,', '', $image);
-            $fileExtension = 'jpeg';
-        endif;
-        $image = str_replace(' ', '+', $image);
-        $imageName = str_random(10) . '.' . $fileExtension;
+    protected static function __uploadImage($image, $path = null) {
         if ($path === null)
             $path = public_path('uploads');
-        \File::put($path . '/' . $imageName, base64_decode($image));
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $image->move($path, $imageName);
         return $imageName;
     }
 
