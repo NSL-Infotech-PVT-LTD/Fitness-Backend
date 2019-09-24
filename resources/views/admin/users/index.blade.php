@@ -68,7 +68,7 @@
         $('.data-table').on('click', '.btnDelete[data-remove]', function (e) {
             e.preventDefault();
             var url = $(this).data('remove');
-            swal({
+            swal.fire({
                 title: "Are you sure want to remove this item?",
                 text: "Data will be Temporary Deleted!",
                 type: "warning",
@@ -76,29 +76,23 @@
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Confirm",
                 cancelButtonText: "Cancel",
-                closeOnConfirm: false,
-                closeOnCancel: false,
-            },
-                    function (isConfirm) {
-                        if (isConfirm) {
-                            $.ajax({
-                                url: url,
-                                type: 'DELETE',
-                                dataType: 'json',
-                                data: {method: '_DELETE', submit: true, _token: '{{csrf_token()}}'},
-                                success: function (data) {
-                                    if (data == 'Success') {
-                                        swal("Deleted!", "Service has been deleted", "success");
-                                        table.ajax.reload(null, false);
-                                    }
-                                }
-                            });
-                        } else {
-
-                            swal("Cancelled", "You Cancelled", "error");
+            }).then((result) => {
+                Swal.showLoading();
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        dataType: 'json',
+                        data: {method: '_DELETE', submit: true, _token: '{{csrf_token()}}'},
+                        success: function (data) {
+                            if (data == 'Success') {
+                                swal.fire("Deleted!", "User has been deleted", "success");
+                                table.ajax.reload(null, false);
+                            }
                         }
-
                     });
+                }
+            });
         });
 
 

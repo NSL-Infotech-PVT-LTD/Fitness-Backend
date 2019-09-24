@@ -1,13 +1,9 @@
-<div class="form-group{{ $errors->has('firstname') ? ' has-error' : ''}}">
-    {!! Form::label('firstname', 'Name: ', ['class' => 'control-label']) !!}
-    {!! Form::text('firstname', null, ['class' => 'form-control', 'required' => 'required']) !!}
-    {!! $errors->first('firstname', '<p class="help-block">:message</p>') !!}
+<div class="form-group{{ $errors->has('name') ? ' has-error' : ''}}">
+    {!! Form::label('name', 'Name: ', ['class' => 'control-label']) !!}
+    {!! Form::text('name', null, ['class' => 'form-control', 'required' => 'required']) !!}
+    {!! $errors->first('name', '<p class="help-block">:message</p>') !!}
 </div>
-<div class="form-group{{ $errors->has('lastname') ? ' has-error' : ''}}">
-    {!! Form::label('lastname', 'Lastname: ', ['class' => 'control-label']) !!}
-    {!! Form::text('lastname', null, ['class' => 'form-control', 'required' => 'required']) !!}
-    {!! $errors->first('lastname', '<p class="help-block">:message</p>') !!}
-</div>
+
 <div class="form-group{{ $errors->has('email') ? ' has-error' : ''}}">
     {!! Form::label('email', 'Email: ', ['class' => 'control-label']) !!}
     {!! Form::email('email', null, ['class' => 'form-control', 'required' => 'required']) !!}
