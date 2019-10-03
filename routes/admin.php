@@ -44,6 +44,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::get('users/role/{role_id}', 'UsersController@indexByRoleId')->name('users-role');
     Route::post('users/change-status', 'UsersController@changeStatus')->name('user.changeStatus');
     Route::post('services/change-status', 'ServicesController@changeStatus')->name('service.changeStatus');
+    Route::post('events/change-status', 'EventsController@changeStatus')->name('events.changeStatus');
+    Route::post('spaces/change-status', 'SpacesController@changeStatus')->name('spaces.changeStatus');
     Route::resource('roles', 'RolesController');
     Route::resource('users', 'UsersController');
     Route::get('dashboard', 'AdminController@index');

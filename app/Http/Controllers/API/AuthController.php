@@ -99,7 +99,7 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
@@ -152,7 +152,7 @@ class AuthController extends ApiController {
 
             for ($i = 1; $i <= 4; $i++):
                 $var = 'portfolio_image_' . $i;
-                if (isset($var))
+                if (isset($request->$var))
                     $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'));
             endfor;
 
@@ -196,7 +196,7 @@ class AuthController extends ApiController {
 
             for ($i = 1; $i <= 4; $i++):
                 $var = 'portfolio_image_' . $i;
-                if (isset($var))
+                if (isset($request->$var))
                     $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'));
             endfor;
 
@@ -271,5 +271,50 @@ class AuthController extends ApiController {
         }
         return parent::error('Something Went');
     }
+
+    public function getOrganisers(Request $request) {
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+            $model = new \App\User();
+            $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
+            $model = $model->wherein('users.id', $roleusersSA)
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image');
+
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+    
+    public function getCoaches(Request $request) {
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+            $model = new \App\User();
+            $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
+            $model = $model->wherein('users.id', $roleusersSA)
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image');
+
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
 
 }

@@ -26,7 +26,7 @@ class SpacesController extends ApiController {
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
-                if (isset($var))
+                if (isset($request->$var))
                     $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
             endfor;
 
@@ -34,23 +34,6 @@ class SpacesController extends ApiController {
                 $input['images'] = json_encode($images);
             $space = MyModel::create($input);
             return parent::successCreated(['message' => 'Created Successfully', 'space' => $space]);
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
-
-    public function read(Request $request) {
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        // dd($category_id);
-        try {
-//            $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
-
-            return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -71,7 +54,7 @@ class SpacesController extends ApiController {
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
-                if (isset($var))
+                if (isset($request->$var))
                     $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
             endfor;
 
@@ -103,7 +86,46 @@ class SpacesController extends ApiController {
         }
     }
 
-    public function getItems(Request $request) {
+    public function getOrganiserSpaces(Request $request) {
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+//            $model = new MyModel();
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+    
+     public function getCoachSpaces(Request $request) {
+        //Validating attributes
+        $user = \App\User::findOrFail(\Auth::id());
+        if ($user->get()->isEmpty())
+            return parent::error('User Not found');
+        if ($user->hasRole('coach') === false)
+            return parent::error('Please use valid token');
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+           
+            $model = new MyModel();
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function getAthleteSpaces(Request $request) {
         //Validating attributes
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())

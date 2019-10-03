@@ -266,7 +266,8 @@ class ApiController extends \App\Http\Controllers\Controller {
     protected static function __uploadImage($image, $path = null) {
         if ($path === null)
             $path = public_path('uploads');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $digits = 3;
+        $imageName = time() .rand(pow(10, $digits-1), pow(10, $digits)-1). '.' . $image->getClientOriginalExtension();
         $image->move($path, $imageName);
         return $imageName;
     }
