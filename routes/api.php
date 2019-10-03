@@ -34,6 +34,13 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
     Route::get('organisers/list', 'API\AuthController@getOrganisers');
     Route::get('coach/list', 'API\AuthController@getCoaches');
+     Route::post('session/store', 'API\SessionController@store');
+     Route::post('session/update', 'API\SessionController@Update');
+    Route::post('session/delete', 'API\SessionController@destroy');
+     Route::get('session/organiser/list','API\SessionController@getOrganiserSession');
+    Route::post('session/athlete/list', 'API\SessionController@getAthleteSession');
+    Route::get('session/coach/list', 'API\SessionController@getCoachSession');
+    
 });
 
 Route::post('coach/register', 'API\AuthController@CoachRegister');

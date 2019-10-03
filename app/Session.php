@@ -31,7 +31,7 @@ class Session extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone'];
+    protected $fillable = ['name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by'];
 
     
 
