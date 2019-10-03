@@ -1,69 +1,67 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Space as MyModel;
+use App\Session as MyModel;
 use Twilio\Rest\Client;
 use Validator;
 use DB;
 use Auth;
 
-class SpacesController extends ApiController {
+class SessionController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'description' => 'required', 'price_hourly' => 'required', 'availability_week' => 'required', 'price_daily' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required','business_hour' => 'required','date' => 'required', 'hourly_rate' => 'required','images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '',  'phone' => 'required|unique:sessions','max_occupancy'=> 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
             $input = $request->all();
-            $input['organizer_id'] = \Auth::id();
+            $input['created_by'] = \Auth::id();
             $images = [];
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
             endfor;
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
-            $space = MyModel::create($input);
-            return parent::successCreated(['message' => 'Created Successfully', 'space' => $space]);
+            $session = MyModel::create($input);
+            return parent::successCreated(['message' => 'Created Successfully', 'session' => $session]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
 
     public function Update(Request $request) {
-        $rules = ['name' => 'required', 'images_1' => '','images_2' => '','images_3' => '','images_4' => '','images_5' => '','description' => '', 'price_hourly' => '', 'availability_week' => '', 'price_daily' => ''];
+        $rules = ['name' => 'required', 'description' => '', 'business_hour' => '', 'date' => '', 'hourly_rate' => '', 'images_1' => '','images_2' => '','images_3' => '','images_4' => '','images_5' => '','phone'=>'','max_occupancy'=>'','created_by'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
-            if (MyModel::where('id', $request->id)->where('organizer_id', \Auth::id())->get()->isEmpty() === true)
-                return parent::error('Please use valid organizer id');
+            if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
+                return parent::error('Please use valid id');
             $input = $request->all();
-            $input['organizer_id'] = \Auth::id();
             $images = [];
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
             endfor;
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
-            $space = MyModel::findOrFail($request->id);
-            $space->fill($input);
-            $space->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'space' => $space]);
+            $session = MyModel::findOrFail($request->id);
+            $session->fill($input);
+            $session->save();
+            return parent::successCreated(['Message' => 'Updated Successfully', 'session' => $session]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -77,8 +75,8 @@ class SpacesController extends ApiController {
         endif;
 //         dd($id);
         try {
-            if (MyModel::where('id', $request->id)->where('organizer_id', \Auth::id())->get()->isEmpty() === true)
-                return parent::error('Please use valid organizer id');
+            if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
+                return parent::error('Please use valid id');
             MyModel::destroy($request->id);
             return parent::success(['message' => 'Deleted Successfully']);
         } catch (\Exception $ex) {
@@ -86,7 +84,7 @@ class SpacesController extends ApiController {
         }
     }
 
-    public function getOrganiserSpaces(Request $request) {
+    public function getOrganiserSession(Request $request) {
         $rules = [];
         $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -95,7 +93,7 @@ class SpacesController extends ApiController {
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by');
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
@@ -103,7 +101,7 @@ class SpacesController extends ApiController {
         }
     }
     
-     public function getCoachSpaces(Request $request) {
+     public function getCoachSession(Request $request) {
         //Validating attributes
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
@@ -118,14 +116,14 @@ class SpacesController extends ApiController {
         try {
            
             $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
 
-    public function getAthleteSpaces(Request $request) {
+    public function getAthleteSession(Request $request) {
         //Validating attributes
         $rules = ['order_by' => 'required|in:price_high,price_low,latest'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -144,10 +142,10 @@ class SpacesController extends ApiController {
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             switch ($request->order_by):
                 case 'price_high':
-                    $model = $model->orderBy('price_hourly', 'desc');
+                    $model = $model->orderBy('hourly_rate', 'desc');
                     break;
                 case 'price_low':
-                    $model = $model->orderBy('price_hourly', 'asc');
+                    $model = $model->orderBy('hourly_rate', 'asc');
                     break;
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
@@ -156,7 +154,7 @@ class SpacesController extends ApiController {
                     $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
-            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
