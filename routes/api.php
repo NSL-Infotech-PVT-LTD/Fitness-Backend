@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('events/athlete/list', 'API\EventsController@getAthleteEvents');
     Route::get('events/coach/list', 'API\EventsController@getCoachEvents');
     Route::get('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');
-    Route::get('spaces/athlete/list', 'API\SpacesController@getAthleteSpaces');
+    Route::post('spaces/athlete/list', 'API\SpacesController@getAthleteSpaces');
     Route::get('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
     Route::get('organisers/list', 'API\AuthController@getOrganisers');
     Route::get('coach/list', 'API\AuthController@getCoaches');
