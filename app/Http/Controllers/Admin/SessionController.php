@@ -15,7 +15,7 @@ class SessionController extends Controller {
      *
      * @return \Illuminate\View\View
      */
-    protected $__rulesforindex = ['name' => 'required', 'business_hour' => 'required', 'hourly_rate' => 'required', 'phone' => 'required'];
+    protected $__rulesforindex = ['name' => 'required', 'hourly_rate' => 'required', 'phone' => 'required'];
 
     public function index(Request $request) {
         if ($request->ajax()) {
