@@ -29,25 +29,6 @@ class EventsController extends ApiController {
         }
     }
 
-    public function read(Request $request) {
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        // dd($category_id);
-        try {
-
-
-//            $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
-
-            return parent::success($model->get());
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
-
     public function Update(Request $request) {
         $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_at' => '', 'end_at' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -67,12 +48,33 @@ class EventsController extends ApiController {
         }
     }
 
-    public function getItems(Request $request) {
+    public function getOrganiserEvents(Request $request) {
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+
+
+            $model = new MyModel();
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+   
+
+    public function getCoachEvents(Request $request) {
         //Validating attributes
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
             return parent::error('User Not found');
-        if ($user->hasRole('athlete') === false)
+        if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
         $rules = [];
         $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
@@ -80,9 +82,42 @@ class EventsController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+           
             $model = new MyModel();
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+    
+    
+     public function getAthleteEvents(Request $request) {
+        $rules = ['radius' => 'required', 'order_by' => 'required|in:distance'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            //Validating attributes
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->get()->isEmpty())
+                return parent::error('User Not found');
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+
+            $model = new MyModel();
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+
+            $latKey = 'latitude';
+            $lngKey = 'longitude';
             $model = $model->select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id',
-                    'organizer_id', 'guest_allowed', 'equipment_required');
+                    'organizer_id', 'guest_allowed', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+           
+            $model = $model->havingRaw('distance < ' . $request->radius . '');
+            $model = $model->orderBy('distance');
+//           
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

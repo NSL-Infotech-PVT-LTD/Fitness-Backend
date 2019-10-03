@@ -148,7 +148,7 @@ class ServicesController extends AdminCommonController {
         $appointment = Service::findOrFail($request->id);
         $appointment->state = $request->status == 'Block' ? '0' : '1';
         $appointment->save();
-        return response()->json(["success" => true, 'message' => 'User updated!']);
+        return response()->json(["success" => true, 'message' => 'Service updated!']);
     }
 
 }

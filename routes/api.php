@@ -22,15 +22,18 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('athlete/update', 'API\AuthController@AtheleteUpdate');
     Route::post('organiser/update', 'API\AuthController@OrganiserUpdate');
     Route::post('events/store', 'API\EventsController@store');
-    Route::get('events/list', 'API\EventsController@read');
     Route::post('events/update', 'API\EventsController@Update');
     Route::post('spaces/create', 'API\SpacesController@store');
-    Route::get('spaces/read', 'API\SpacesController@read');
     Route::post('spaces/update', 'API\SpacesController@Update');
     Route::post('spaces/delete', 'API\SpacesController@destroy');
-    Route::get('events', 'API\EventsController@getItems');
-    Route::get('spaces', 'API\SpacesController@getItems');
-
+    Route::get('events/organiser/list', 'API\EventsController@getOrganiserEvents');
+    Route::post('events/athlete/list', 'API\EventsController@getAthleteEvents');
+    Route::get('events/coach/list', 'API\EventsController@getCoachEvents');
+    Route::get('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');
+    Route::get('spaces/athlete/list', 'API\SpacesController@getAthleteSpaces');
+    Route::get('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
+    Route::get('organisers/list', 'API\AuthController@getOrganisers');
+    Route::get('coach/list', 'API\AuthController@getCoaches');
 });
 
 Route::post('coach/register', 'API\AuthController@CoachRegister');

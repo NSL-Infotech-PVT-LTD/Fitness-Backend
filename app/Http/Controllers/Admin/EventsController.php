@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Event;
 use Illuminate\Http\Request;
+use DataTables;
 
 class EventsController extends AdminCommonController
 {
@@ -15,29 +15,30 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
+     protected $__rulesforindex = ['name' => 'required', 'location' => 'required','guest_allowed'=>'required'];
     public function index(Request $request)
     {
-        $keyword = $request->get('search');
-        $perPage = 25;
+        if ($request->ajax()) {
+            $events = Event::all();
+            return Datatables::of($events)
+                            ->addIndexColumn()
+                            ->addColumn('action', function($item) {
+                                $return = '';
 
-        if (!empty($keyword)) {
-            $events = Event::where('name', 'LIKE', "%$keyword%")
-                ->orWhere('description', 'LIKE', "%$keyword%")
-                ->orWhere('start_at', 'LIKE', "%$keyword%")
-                ->orWhere('end_at', 'LIKE', "%$keyword%")
-                ->orWhere('location', 'LIKE', "%$keyword%")
-                ->orWhere('latitude', 'LIKE', "%$keyword%")
-                ->orWhere('longitude', 'LIKE', "%$keyword%")
-                ->orWhere('service_id', 'LIKE', "%$keyword%")
-                ->orWhere('organizer_id', 'LIKE', "%$keyword%")
-                ->orWhere('guest_allowed', 'LIKE', "%$keyword%")
-                ->orWhere('equipment_required', 'LIKE', "%$keyword%")
-                ->latest()->paginate($perPage);
-        } else {
-            $events = Event::latest()->paginate($perPage);
+                                if ($item->state == '0'):
+                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
+                                else:
+                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
+                                endif;
+                                $return .= "<a href=" . url('/admin/events/' . $item->id) . " title='View Event'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                        <a href=" . url('/admin/events/' . $item->id . '/edit') . " title='Edit Event'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
+                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/events/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                return $return;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
         }
-
-        return view('admin.events.index', compact('events'));
+        return view('admin.events.index', ['rules' => array_keys($this->__rulesforindex)]);
     }
 
     /**
@@ -142,5 +143,12 @@ class EventsController extends AdminCommonController
         Event::destroy($id);
 
         return redirect('admin/events')->with('flash_message', 'Event deleted!');
+    }
+    
+     public function changeStatus(Request $request) {
+        $appointment = Event::findOrFail($request->id);
+        $appointment->state = $request->status == 'Block' ? '0' : '1';
+        $appointment->save();
+        return response()->json(["success" => true, 'message' => 'Event updated!']);
     }
 }
