@@ -14,7 +14,7 @@ class EventsController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'start_at' => 'required', 'end_at' => 'required', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_at' => 'required', 'end_at' => 'required', 'price'=> 'required','location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -59,15 +59,13 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at','price', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-
-   
 
     public function getCoachEvents(Request $request) {
         //Validating attributes
@@ -82,18 +80,17 @@ class EventsController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-           
+
             $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at','price', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-    
-    
-     public function getAthleteEvents(Request $request) {
-        $rules = ['radius' => 'required', 'order_by' => 'required|in:distance'];
+
+    public function getAthleteEvents(Request $request) {
+        $rules = ['radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -109,12 +106,25 @@ class EventsController extends ApiController {
             $model = new MyModel();
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
-
+            switch ($request->order_by):
+                case 'price_high':
+                    $model = $model->orderBy('price', 'desc');
+                    break;
+                case 'price_low':
+                    $model = $model->orderBy('price', 'asc');
+                    break;
+                case 'latest':
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+                default :
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+            endswitch;
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'description', 'start_at', 'end_at', 'location', 'latitude', 'longitude', 'service_id',
+            $model = $model->select('id', 'name', 'description', 'start_at', 'end_at', 'price','location', 'latitude', 'longitude', 'service_id',
                     'organizer_id', 'guest_allowed', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
-           
+
             $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
 //           

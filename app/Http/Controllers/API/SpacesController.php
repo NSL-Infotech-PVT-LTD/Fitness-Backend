@@ -127,18 +127,35 @@ class SpacesController extends ApiController {
 
     public function getAthleteSpaces(Request $request) {
         //Validating attributes
+        $rules = ['order_by' => 'required|in:price_high,price_low,latest'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
             return parent::error('User Not found');
         if ($user->hasRole('athlete') === false)
             return parent::error('Please use valid token');
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        try {
+        
             $model = new MyModel();
+             if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+            switch ($request->order_by):
+                case 'price_high':
+                    $model = $model->orderBy('price_hourly', 'desc');
+                    break;
+                case 'price_low':
+                    $model = $model->orderBy('price_hourly', 'asc');
+                    break;
+                case 'latest':
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+                default :
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+            endswitch;
             $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
             return parent::success($model->get());
         } catch (\Exception $ex) {
