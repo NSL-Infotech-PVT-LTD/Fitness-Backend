@@ -58,4 +58,5 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('events', 'EventsController');
     Route::resource('services', 'ServicesController');
     Route::resource('spaces', 'SpacesController');
+    Route::resource('session', 'SessionController');
 });
