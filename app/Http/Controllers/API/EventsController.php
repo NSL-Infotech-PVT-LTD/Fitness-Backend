@@ -14,7 +14,7 @@ class EventsController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'start_at' => 'required', 'end_at' => 'required', 'price'=> 'required','images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '','location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_at' => 'required', 'end_at' => 'required', 'price' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -22,7 +22,7 @@ class EventsController extends ApiController {
         try {
             $input = $request->all();
             $input['organizer_id'] = \Auth::id();
-             $images = [];
+            $images = [];
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
@@ -40,7 +40,7 @@ class EventsController extends ApiController {
     }
 
     public function Update(Request $request) {
-        $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_at' => '', 'end_at' => '', 'price'=>'','images_1' => '','images_2' => '','images_3' => '','images_4' => '','images_5' => '','location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => ''];
+        $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_at' => '', 'end_at' => '', 'price' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -49,7 +49,7 @@ class EventsController extends ApiController {
             if (MyModel::where('id', $request->id)->where('organizer_id', \Auth::id())->get()->isEmpty() === true)
                 return parent::error('Please use valid id');
             $input = $request->all();
-             $images = [];
+            $images = [];
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
@@ -79,7 +79,7 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at','price','images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
@@ -102,7 +102,7 @@ class EventsController extends ApiController {
         try {
 
             $model = new MyModel();
-            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at','price', 'images','location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'description', 'start_at', 'end_at', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -110,7 +110,7 @@ class EventsController extends ApiController {
     }
 
     public function getAthleteEvents(Request $request) {
-        $rules = ['radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest'];
+        $rules = ['search' => '', 'radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -124,6 +124,8 @@ class EventsController extends ApiController {
                 return parent::error('Please use valid token');
 
             $model = new MyModel();
+            $perPage = isset($request->limit) ? $request->limit : 20;
+
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             switch ($request->order_by):
@@ -142,13 +144,13 @@ class EventsController extends ApiController {
             endswitch;
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'description', 'start_at', 'end_at', 'price','images','location', 'latitude', 'longitude', 'service_id',
+            $model = $model->select('id', 'name', 'description', 'start_at', 'end_at', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
                     'organizer_id', 'guest_allowed', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
             $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
 //           
-            return parent::success($model->get());
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
