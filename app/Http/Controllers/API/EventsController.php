@@ -147,7 +147,7 @@ class EventsController extends ApiController {
             $model = $model->select('id', 'name', 'description', 'start_at', 'end_at', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
                     'organizer_id', 'guest_allowed', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
-            $model = $model->havingRaw('distance < ' . $request->radius . '');
+//            $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
 //           
             return parent::success($model->paginate($perPage));
