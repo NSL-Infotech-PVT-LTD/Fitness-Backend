@@ -110,7 +110,7 @@ class EventsController extends ApiController {
     }
 
     public function getAthleteEvents(Request $request) {
-        $rules = ['radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => ''];
+        $rules = ['search' => '', 'radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
