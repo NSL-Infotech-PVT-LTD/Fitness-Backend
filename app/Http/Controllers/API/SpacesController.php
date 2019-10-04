@@ -40,7 +40,7 @@ class SpacesController extends ApiController {
     }
 
     public function Update(Request $request) {
-        $rules = ['name' => 'required', 'images_1' => '','images_2' => '','images_3' => '','images_4' => '','images_5' => '','description' => '', 'price_hourly' => '', 'availability_week' => '', 'price_daily' => ''];
+        $rules = ['name' => 'required', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'description' => '', 'price_hourly' => '', 'availability_week' => '', 'price_daily' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -102,8 +102,8 @@ class SpacesController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-    
-     public function getCoachSpaces(Request $request) {
+
+    public function getCoachSpaces(Request $request) {
         //Validating attributes
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
@@ -116,7 +116,7 @@ class SpacesController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-           
+
             $model = new MyModel();
             $model = MyModel::where('organizer_id', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
             return parent::success($model->get());
@@ -127,20 +127,22 @@ class SpacesController extends ApiController {
 
     public function getAthleteSpaces(Request $request) {
         //Validating attributes
-        $rules = ['order_by' => 'required|in:price_high,price_low,latest'];
+        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
-        $user = \App\User::findOrFail(\Auth::id());
-        if ($user->get()->isEmpty())
-            return parent::error('User Not found');
-        if ($user->hasRole('athlete') === false)
-            return parent::error('Please use valid token');
-        
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->get()->isEmpty())
+                return parent::error('User Not found');
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+
             $model = new MyModel();
-             if (isset($request->search))
+            $perPage = isset($request->limit) ? $request->limit : 20;
+
+            if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             switch ($request->order_by):
                 case 'price_high':
@@ -157,7 +159,7 @@ class SpacesController extends ApiController {
                     break;
             endswitch;
             $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
-            return parent::success($model->get());
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

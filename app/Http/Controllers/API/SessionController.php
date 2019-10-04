@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Session as MyModel;
@@ -13,7 +14,7 @@ class SessionController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'description' => 'required','business_hour' => 'required','date' => 'required', 'hourly_rate' => 'required','images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '',  'phone' => 'required|unique:sessions','max_occupancy'=> 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required', 'date' => 'required', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required|unique:sessions', 'max_occupancy' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -39,7 +40,7 @@ class SessionController extends ApiController {
     }
 
     public function Update(Request $request) {
-        $rules = ['name' => 'required', 'description' => '', 'business_hour' => '', 'date' => '', 'hourly_rate' => '', 'images_1' => '','images_2' => '','images_3' => '','images_4' => '','images_5' => '','phone'=>'','max_occupancy'=>'','created_by'=>''];
+        $rules = ['name' => 'required', 'description' => '', 'business_hour' => '', 'date' => '', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'max_occupancy' => '', 'created_by' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -93,15 +94,15 @@ class SessionController extends ApiController {
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-    
-     public function getCoachSession(Request $request) {
+
+    public function getCoachSession(Request $request) {
         //Validating attributes
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
@@ -114,9 +115,9 @@ class SessionController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-           
+
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -125,20 +126,22 @@ class SessionController extends ApiController {
 
     public function getAthleteSession(Request $request) {
         //Validating attributes
-        $rules = ['order_by' => 'required|in:price_high,price_low,latest'];
+        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
-        $user = \App\User::findOrFail(\Auth::id());
-        if ($user->get()->isEmpty())
-            return parent::error('User Not found');
-        if ($user->hasRole('athlete') === false)
-            return parent::error('Please use valid token');
-        
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->get()->isEmpty())
+                return parent::error('User Not found');
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+
             $model = new MyModel();
-             if (isset($request->search))
+            $perPage = isset($request->limit) ? $request->limit : 20;
+
+            if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             switch ($request->order_by):
                 case 'price_high':
@@ -154,8 +157,8 @@ class SessionController extends ApiController {
                     $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
-            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone','max_occupancy','created_by');
-            return parent::success($model->get());
+            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
