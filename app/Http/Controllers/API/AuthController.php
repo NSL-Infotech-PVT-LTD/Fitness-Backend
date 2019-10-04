@@ -89,7 +89,7 @@ class AuthController extends ApiController {
     }
 
     public function AtheleteRegister(Request $request) {
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'address' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => ''];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'address' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required'];
 
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
