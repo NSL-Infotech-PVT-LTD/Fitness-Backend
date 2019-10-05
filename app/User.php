@@ -52,6 +52,10 @@ class User extends Authenticatable {
 
     protected $appends = array('roles');
 
+    public function getServiceIdsAttribute($value) {
+        return $value == null ? [] : json_decode($value);
+    }
+
     public function getRolesAttribute() {
         try {
             $rolesID = \DB::table('role_user')->where('user_id', $this->id)->pluck('role_id');
