@@ -158,7 +158,7 @@ class SpacesController extends ApiController {
                     $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
-            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily', 'location', 'latitude', 'longitude');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
