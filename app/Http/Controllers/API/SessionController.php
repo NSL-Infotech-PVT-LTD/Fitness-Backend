@@ -157,7 +157,7 @@ class SessionController extends ApiController {
                     $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
-            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
+            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'location', 'latitude', 'longitude', 'images', 'phone', 'max_occupancy', 'created_by');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
