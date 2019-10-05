@@ -5,10 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-class Space extends Model
-{
+class Space extends Model {
+
     use LogsActivity;
-    
 
     /**
      * The database table used by the model.
@@ -18,10 +17,10 @@ class Space extends Model
     protected $table = 'spaces';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -31,8 +30,6 @@ class Space extends Model
      */
     protected $fillable = ['name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily'];
 
-    
-
     /**
      * Change activity log event description
      *
@@ -40,8 +37,12 @@ class Space extends Model
      *
      * @return string
      */
-    public function getDescriptionForEvent($eventName)
-    {
+    public function getDescriptionForEvent($eventName) {
         return __CLASS__ . " model has been {$eventName}";
     }
+
+    public function getDistanceAttribute($value) {
+        return $value == null ? '0' : number_format((float) $value, 2, '.', '');
+    }
+
 }
