@@ -126,7 +126,7 @@ class SessionController extends ApiController {
 
     public function getAthleteSession(Request $request) {
         //Validating attributes
-        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest', 'limit' => ''];
+        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest,distance', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -140,7 +140,10 @@ class SessionController extends ApiController {
 
             $model = new MyModel();
             $perPage = isset($request->limit) ? $request->limit : 20;
-
+            $latKey = 'latitude';
+            $lngKey = 'longitude';
+            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'location', 'latitude', 'longitude', 'images', 'phone', 'max_occupancy', 'created_by', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+//            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             switch ($request->order_by):
@@ -153,11 +156,13 @@ class SessionController extends ApiController {
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
                     break;
+                case 'distance':
+                    $model = $model->orderBy('distance');
+                    break;
                 default :
-                    $model = $model->orderBy('created_at', 'desc');
+                    $model = $model->orderBy('distance');
                     break;
             endswitch;
-            $model = $model->select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

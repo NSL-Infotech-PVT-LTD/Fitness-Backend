@@ -20,8 +20,8 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'address', 'profile_image', 'location','business_hour_starts','business_hour_ends', 'bio', 'profession','expertise_years', 'hourly_rate', 'portfolio_image','service_ids','latitude','longitude'
-        ];
+        'name', 'email', 'password', 'phone', 'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio', 'profession', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids', 'latitude', 'longitude'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -48,6 +48,26 @@ class User extends Authenticatable {
      */
     public function getFullNameAttribute() {
         return $this->name;
+    }
+
+    protected $appends = array('roles');
+
+    public function getServiceIdsAttribute($value) {
+        return $value == null ? [] : json_decode($value);
+    }
+
+    public function getRolesAttribute() {
+        try {
+            $rolesID = \DB::table('role_user')->where('user_id', $this->id)->pluck('role_id');
+            if ($rolesID->isEmpty() !== true):
+                $role = Role::whereIn('id', $rolesID);
+                if ($role->get()->isEmpty() !== true)
+                    return $role->select('name')->get();
+            endif;
+            return [];
+        } catch (Exception $ex) {
+            return [];
+        }
     }
 
 }

@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Event extends Model
-{
+class Event extends Model {
+
     use LogsActivity;
     use SoftDeletes;
-    
 
     /**
      * The database table used by the model.
@@ -20,10 +19,10 @@ class Event extends Model
     protected $table = 'events';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -31,9 +30,7 @@ class Event extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'start_at', 'end_at','price','images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required'];
-
-    
+    protected $fillable = ['name', 'description', 'start_at', 'end_at', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required'];
 
     /**
      * Change activity log event description
@@ -42,8 +39,12 @@ class Event extends Model
      *
      * @return string
      */
-    public function getDescriptionForEvent($eventName)
-    {
+    public function getDescriptionForEvent($eventName) {
         return __CLASS__ . " model has been {$eventName}";
     }
+
+    public function getDistanceAttribute($value) {
+        return $value == null ? '0' : number_format((float) $value, 2, '.', '');
+    }
+
 }

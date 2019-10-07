@@ -286,7 +286,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image');
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
 
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
@@ -311,7 +311,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image');
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
