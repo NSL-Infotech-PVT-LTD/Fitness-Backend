@@ -19,8 +19,10 @@ class CreateEventsTable extends Migration {
             }
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->dateTime('start_at')->nullable();
-            $table->dateTime('end_at')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->string('location')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
