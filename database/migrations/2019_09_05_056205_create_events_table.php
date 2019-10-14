@@ -23,6 +23,8 @@ class CreateEventsTable extends Migration {
             $table->date('end_date')->nullable();
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();
+            $table->integer('price')->default('0');
+            $table->text('images')->nullable();
             $table->string('location')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
