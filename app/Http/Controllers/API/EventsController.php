@@ -149,11 +149,31 @@ class EventsController extends ApiController {
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
-//           
+//
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
+
+    public function getitem(Request $request) {
+
+        $rules = ['id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new MyModel();
+            $model = $model->where('id', $request->id);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
+
 
 }

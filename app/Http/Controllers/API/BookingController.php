@@ -29,5 +29,23 @@ class BookingController extends ApiController
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
+
+        public function getOrganisers(Request $request) {
+            $rules = [];
+            $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+            if ($validateAttributes):
+                return $validateAttributes;
+            endif;
+
+            try {
+                $model = new MyModel();
+                $model = \App\Booking::where('created_by', \Auth::id())->Select('type', 'target_id', 'user_id', 'tickets', 'price');
+                $perPage = isset($request->limit) ? $request->limit : 20;
+                return parent::success($model->first());
+                return parent::success($model->paginate($perPage));
+            } catch (\Exception $ex) {
+                return parent::error($ex->getMessage());
+            }
+        }
     }
 }
