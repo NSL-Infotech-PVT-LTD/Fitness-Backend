@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Booking extends Model {
 
     use LogsActivity;
-    use SoftDeletes;
+//    use SoftDeletes;
     /**
      * The database table used by the model.
      *

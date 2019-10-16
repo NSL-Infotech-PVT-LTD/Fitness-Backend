@@ -12,7 +12,8 @@ use Auth;
 
 class BookingController extends ApiController
 {
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $rules = ['type' => 'required', 'target_id' => 'required', 'user_id' => '', 'tickets' => '', 'price' => 'required',
             'payment_details' => ''];
@@ -29,23 +30,21 @@ class BookingController extends ApiController
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
-
-        public function getOrganisers(Request $request) {
+    }
+        public function getBookings(Request $request) {
             $rules = [];
-            $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+            $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
             if ($validateAttributes):
                 return $validateAttributes;
             endif;
 
             try {
-                $model = new MyModel();
-                $model = \App\Booking::where('created_by', \Auth::id())->Select('type', 'target_id', 'user_id', 'tickets', 'price');
-                $perPage = isset($request->limit) ? $request->limit : 20;
-                return parent::success($model->first());
-                return parent::success($model->paginate($perPage));
+                $model = new \App\Booking();
+                $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+
+                return parent::success($model->get());
             } catch (\Exception $ex) {
                 return parent::error($ex->getMessage());
             }
         }
     }
-}
