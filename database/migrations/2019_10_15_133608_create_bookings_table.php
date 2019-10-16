@@ -17,9 +17,12 @@ class CreateBookingsTable extends Migration
             $table->bigIncrements('id');
             $table->enum('type',['event','space','session']);
             $table->integer('target_id');
+            $table->bigInteger('user_id')->unsigned()->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('tickets')->default(1);
             $table->float('price')->default(0.00);
             $table->text('payment_details')->nullable();
+
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }
