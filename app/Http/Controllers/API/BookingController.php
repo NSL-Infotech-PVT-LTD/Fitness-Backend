@@ -11,21 +11,37 @@ use DB;
 use Auth;
 
 class BookingController extends ApiController
+
 {
+    private $_MSGCreate = ['title' => 'Hurray!', 'body' => 'You got new Booking'];
+
     public function store(Request $request)
     {
 
         $rules = ['type' => 'required', 'target_id' => 'required', 'user_id' => '', 'tickets' => '', 'price' => 'required',
-            'payment_details' => ''];
+            'payment_details' => '','token'=>'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
+            if (!isset($request->token))
+                return parent::error('Please add token');
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Charge::create([
+                "amount" => $booking->price * 100,
+                "currency" => config('app.stripe_default_currency'),
+                "source" => $request->token, // obtained with Stripe.js
+                "description" => "Charge for the booking booked through utrain app"
+            ]);
             $input = $request->all();
             $input['user_id'] = \Auth::id();
 
             $booking = \App\Booking::create($input);
+            // Push notification start
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $request->user_id);
+            // Push notification end
+
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
