@@ -19,7 +19,7 @@ class BookingController extends ApiController
     {
 
         $rules = ['type' => 'required', 'target_id' => 'required', 'user_id' => '', 'tickets' => '', 'price' => 'required',
-            'payment_details' => '','token'=>'required'];
+            'payment_details' => '','token'=>'required','status'=>'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;

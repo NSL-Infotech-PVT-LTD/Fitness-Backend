@@ -21,6 +21,8 @@ class CreateBookingsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('tickets')->default(1);
             $table->float('price')->default(0.00);
+            $table->enum('status', ['pending', 'accepted', 'rejected',
+                'completed'])->nullable();
             $table->text('payment_details')->nullable();
 
             \App\Helpers\DbExtender::defaultParams($table);
