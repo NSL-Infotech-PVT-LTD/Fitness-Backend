@@ -27,6 +27,10 @@ class BookingController extends ApiController
         try {
             if (!isset($request->token))
                 return parent::error('Please add token');
+            $input = $request->all();
+            $input['user_id'] = \Auth::id();
+            $booking = \App\Booking::create($input);
+
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             \Stripe\Charge::create([
                 "amount" => $booking->price * 100,
@@ -34,10 +38,7 @@ class BookingController extends ApiController
                 "source" => $request->token, // obtained with Stripe.js
                 "description" => "Charge for the booking booked through utrain app"
             ]);
-            $input = $request->all();
-            $input['user_id'] = \Auth::id();
 
-            $booking = \App\Booking::create($input);
             // Push notification start
             parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $request->user_id);
             // Push notification end
