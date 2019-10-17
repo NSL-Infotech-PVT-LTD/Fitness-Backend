@@ -10,9 +10,11 @@ use Validator;
 use DB;
 use Auth;
 
-class SessionController extends ApiController {
+class SessionController extends ApiController
+{
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required', 'date' => 'required', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required|unique:sessions', 'max_occupancy' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -39,7 +41,8 @@ class SessionController extends ApiController {
         }
     }
 
-    public function Update(Request $request) {
+    public function Update(Request $request)
+    {
         $rules = ['name' => 'required', 'description' => '', 'business_hour' => '', 'date' => '', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'max_occupancy' => '', 'created_by' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -68,7 +71,8 @@ class SessionController extends ApiController {
         }
     }
 
-    public function destroy(Request $request) {
+    public function destroy(Request $request)
+    {
         $rules = ['id' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -85,7 +89,8 @@ class SessionController extends ApiController {
         }
     }
 
-    public function getOrganiserSession(Request $request) {
+    public function getOrganiserSession(Request $request)
+    {
         $rules = [];
         $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -102,7 +107,8 @@ class SessionController extends ApiController {
         }
     }
 
-    public function getCoachSession(Request $request) {
+    public function getCoachSession(Request $request)
+    {
         //Validating attributes
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
@@ -124,7 +130,8 @@ class SessionController extends ApiController {
         }
     }
 
-    public function getAthleteSession(Request $request) {
+    public function getAthleteSession(Request $request)
+    {
         //Validating attributes
         $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest,distance', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -167,6 +174,26 @@ class SessionController extends ApiController {
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
+    }
+
+    public function getitem(Request $request)
+    {
+
+        $rules = ['id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new \App\Session();
+            $model = $model->where('id', $request->id);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+
     }
 
 }

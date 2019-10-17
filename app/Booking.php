@@ -29,6 +29,6 @@ class Booking extends Model {
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ['type','user_id','target_id','tickets','price','status','payment_details'];
 
 }

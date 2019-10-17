@@ -39,8 +39,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('session/delete', 'API\SessionController@destroy');
      Route::get('session/organiser/list','API\SessionController@getOrganiserSession');
     Route::post('session/athlete/list', 'API\SessionController@getAthleteSession');
-    Route::get('session/coach/list', 'API\SessionController@getCoachSession');
-    
+    Route::post('event/details', 'API\EventsController@getitem');
+    Route::post('booking/store', 'API\BookingController@store');
+    Route::get('bookings', 'API\BookingController@getBookings');
+    Route::post('session/details', 'API\SessionController@getitem');
 });
 
 Route::post('coach/register', 'API\AuthController@CoachRegister');
