@@ -48,7 +48,8 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-        public function getBookings(Request $request) {
+
+    public function getBookings(Request $request) {
             $rules = [];
             $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
             if ($validateAttributes):
@@ -63,5 +64,24 @@ class BookingController extends ApiController
             } catch (\Exception $ex) {
                 return parent::error($ex->getMessage());
             }
+     }
+
+
+    public function getBookingsType(Request $request) {
+        $rules = ['type'=>'required|in:event,session,space'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+
+        try {
+            $model = new \App\Booking();
+            $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
         }
     }
+
+}
