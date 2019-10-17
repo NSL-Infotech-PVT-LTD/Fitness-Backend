@@ -201,7 +201,17 @@ class ApiController extends \App\Http\Controllers\Controller {
         }
     }
 
-    public static function pushNotofication($data = [], $deviceToken) {
+    public static function pushNotifications($data = [], $userId) {
+//        dd(\App\UserDevice::whereUserId($userId)->get());
+        foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
+//            dd($userDevice->token);
+//            dd($data);
+            self::pushNotification($data, $userDevice->token);
+        endforeach;
+        return true;
+    }
+
+    public static function pushNotification($data = [], $deviceToken) {
         // FCM
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
@@ -209,7 +219,8 @@ class ApiController extends \App\Http\Controllers\Controller {
         $notificationBuilder->setBody($data['body'])->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['a_data' => 'my_data']);
+        if (isset($data['data']))
+            $dataBuilder->addData(['data' => $data['data']]);
 
         $option = $optionBuilder->build();
         $notification = $notificationBuilder->build();
@@ -238,7 +249,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         stream_context_set_option($ctx, 'ssl', 'passphrase', '');
         // Open a connection to the APNS server
         $fp = stream_socket_client(
-                'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
+            'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
         if (!$fp)
             exit("Failed to connect: $err $errstr" . PHP_EOL);
         // Create the payload body
@@ -356,7 +367,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
         // Check errors
         if ($response) {
-            
+
         } else {
             $error = curl_error($curl) . '(' . curl_errno($curl) . ')';
             echo $error . "\n";
