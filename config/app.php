@@ -35,6 +35,7 @@ return [
       |
      */
     'debug' => env('APP_DEBUG', false),
+    'stripe_default_currency' => 'usd',
     /*
       |--------------------------------------------------------------------------
       | Application URL
