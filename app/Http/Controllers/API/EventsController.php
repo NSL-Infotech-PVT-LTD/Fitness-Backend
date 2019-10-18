@@ -46,7 +46,7 @@ class EventsController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            if (MyModel::where('id', $request->id)->where('organizer_id', \Auth::id())->get()->isEmpty() === true)
+            if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
                 return parent::error('Please use valid id');
             $input = $request->all();
             $images = [];
@@ -69,8 +69,8 @@ class EventsController extends ApiController {
     }
 
     public function getOrganiserEvents(Request $request) {
-        $rules = ['order_by'=>'required|in:upcoming|after_or_equal:\' . \Carbon\Carbon::now(),completed|before_or_equal:\' . \Carbon\Carbon::now()'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -79,7 +79,7 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'equipment_required');
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
@@ -102,7 +102,7 @@ class EventsController extends ApiController {
         try {
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'organizer_id', 'guest_allowed', 'equipment_required');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'equipment_required');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -145,7 +145,7 @@ class EventsController extends ApiController {
             $latKey = 'latitude';
             $lngKey = 'longitude';
             $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
-                    'organizer_id', 'guest_allowed', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+                    'created_by', 'guest_allowed', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
