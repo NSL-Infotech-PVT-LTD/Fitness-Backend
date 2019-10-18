@@ -25,11 +25,11 @@ class CreateSpacesTable extends Migration {
             $table->string('availability_week')->nullable();
 
             if (\App::VERSION() >= '5.8') {
-                $table->bigInteger('organizer_id')->unsigned()->index();
+                $table->bigInteger('created_by')->unsigned()->index();
             } else {
-                $table->integer('organizer_id')->unsigned()->index();
+                $table->integer('created_by')->unsigned()->index();
             }
-            $table->foreign('organizer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }
