@@ -21,7 +21,7 @@ class SpacesController extends ApiController {
         endif;
         try {
             $input = $request->all();
-            $input['organizer_id'] = \Auth::id();
+            $input['created_by'] = \Auth::id();
             $images = [];
 
             for ($i = 1; $i <= 5; $i++):
