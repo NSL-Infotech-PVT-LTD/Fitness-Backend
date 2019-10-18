@@ -26,7 +26,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('spaces/create', 'API\SpacesController@store');
     Route::post('spaces/update', 'API\SpacesController@Update');
     Route::post('spaces/delete', 'API\SpacesController@destroy');
-    Route::get('events/organiser/list', 'API\EventsController@getOrganiserEvents');
+    Route::post('events/organiser/list', 'API\EventsController@getOrganiserEvents');
     Route::post('events/athlete/list', 'API\EventsController@getAthleteEvents');
     Route::get('events/coach/list', 'API\EventsController@getCoachEvents');
     Route::get('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');

@@ -69,19 +69,25 @@ class EventsController extends ApiController {
     }
 
     public function getOrganiserEvents(Request $request) {
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+
+        $rules = ['order_by'=>'required|in:upcoming,completed'];
+
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
+//        dd($rules);
         // dd($category_id);
         try {
 
 
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'equipment_required');
-
-            return parent::success($model->get());
+            if ($request->order_by == 'upcoming')
+$model = $model->where('created_at','>=',\Carbon\Carbon::now());
+            if ($request->order_by == 'completed')
+                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
+            return parent::success($model->first());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -102,7 +108,6 @@ class EventsController extends ApiController {
         try {
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'equipment_required');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
