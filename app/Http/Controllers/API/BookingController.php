@@ -64,25 +64,7 @@ class BookingController extends ApiController
     }
 
     public function getBookings(Request $request) {
-            $rules = ['target_id'=>''];
-            $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
-            if ($validateAttributes):
-                return $validateAttributes;
-            endif;
-
-            try {
-                $model = new \App\Booking();
-                $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-
-                return parent::success($model->get());
-            } catch (\Exception $ex) {
-                return parent::error($ex->getMessage());
-            }
-     }
-
-
-    public function getBookingsType(Request $request) {
-        $rules = ['type'=>'required|in:event,session,space'];
+          $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -91,7 +73,8 @@ class BookingController extends ApiController
         try {
             $model = new \App\Booking();
             $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-
+            $model = $model->with('userDetails');
+            $model = $model->with($request->type);
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -100,7 +83,7 @@ class BookingController extends ApiController
 
     public function getitem(Request $request) {
 
-        $rules = ['id' => 'required'];
+        $rules = ['id' => 'required|exists:bookings,id'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -108,7 +91,9 @@ class BookingController extends ApiController
         // dd($category_id);
         try {
             $model = new \App\Booking();
-            $model = $model->where('id', $request->id);
+            $model = $model->where('id', $request->id)->with('userDetails');
+            $model = $model->with($model->first()->type);
+//            dd($model);
             return parent::success($model->first());
         } catch (\Exception $ex) {
 
