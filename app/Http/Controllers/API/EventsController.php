@@ -69,8 +69,8 @@ class EventsController extends ApiController {
     }
 
     public function getOrganiserEvents(Request $request) {
-        $rules = ['order_by'=>'required|in:upcoming|after_or_equal:\' . \Carbon\Carbon::now(),completed|before_or_equal:\' . \Carbon\Carbon::now()'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
