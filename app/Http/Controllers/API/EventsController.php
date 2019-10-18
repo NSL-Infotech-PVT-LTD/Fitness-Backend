@@ -84,9 +84,9 @@ class EventsController extends ApiController {
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'equipment_required');
             if ($request->order_by == 'upcoming')
-$model = $model->where('created_at','>=',\Carbon\Carbon::now());
+                $model = $model->where('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
+                $model = $model->where('start_date','<',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
