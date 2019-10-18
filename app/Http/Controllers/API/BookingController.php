@@ -64,8 +64,8 @@ class BookingController extends ApiController
     }
 
     public function getBookings(Request $request) {
-            $rules = [];
-            $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+            $rules = ['target_id'=>''];
+            $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
             if ($validateAttributes):
                 return $validateAttributes;
             endif;
@@ -94,6 +94,24 @@ class BookingController extends ApiController
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function getitem(Request $request) {
+
+        $rules = ['id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new \App\Booking();
+            $model = $model->where('id', $request->id);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
             return parent::error($ex->getMessage());
         }
     }

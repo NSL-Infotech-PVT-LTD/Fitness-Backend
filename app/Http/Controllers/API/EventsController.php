@@ -87,7 +87,7 @@ class EventsController extends ApiController {
 $model = $model->where('created_at','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->where('created_at','<=',\Carbon\Carbon::now());
-            return parent::success($model->first());
+            return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -95,19 +95,25 @@ $model = $model->where('created_at','>=',\Carbon\Carbon::now());
 
     public function getCoachEvents(Request $request) {
         //Validating attributes
-        $user = \App\User::findOrFail(\Auth::id());
-        if ($user->get()->isEmpty())
-            return parent::error('User Not found');
-        if ($user->hasRole('coach') === false)
-            return parent::error('Please use valid token');
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
+        $user = \App\User::findOrFail(\Auth::id());
+        if ($user->get()->isEmpty())
+            return parent::error('User Not found');
+        if ($user->hasRole('coach') === false)
+            return parent::error('Please use valid auth token');
+
+
 
             $model = new MyModel();
+            if ($request->order_by == 'upcoming')
+                $model = $model->where('created_at','>=',\Carbon\Carbon::now());
+            if ($request->order_by == 'completed')
+                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

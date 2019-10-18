@@ -28,20 +28,23 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('spaces/delete', 'API\SpacesController@destroy');
     Route::post('events/organiser/list', 'API\EventsController@getOrganiserEvents');
     Route::post('events/athlete/list', 'API\EventsController@getAthleteEvents');
-    Route::get('events/coach/list', 'API\EventsController@getCoachEvents');
-    Route::get('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');
+    Route::post('events/coach/list', 'API\EventsController@getCoachEvents');
+    Route::post('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');
     Route::post('spaces/athlete/list', 'API\SpacesController@getAthleteSpaces');
-    Route::get('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
+    Route::post('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
     Route::post('organisers/list', 'API\AuthController@getOrganisers');
     Route::post('coach/list', 'API\AuthController@getCoaches');
      Route::post('session/store', 'API\SessionController@store');
      Route::post('session/update', 'API\SessionController@Update');
     Route::post('session/delete', 'API\SessionController@destroy');
-     Route::get('session/organiser/list','API\SessionController@getOrganiserSession');
+     Route::post('session/organiser/list','API\SessionController@getOrganiserSession');
+    Route::post('session/coach/list','API\SessionController@getCoachSession');
     Route::post('session/athlete/list', 'API\SessionController@getAthleteSession');
     Route::post('event/details', 'API\EventsController@getitem');
     Route::post('booking/store', 'API\BookingController@store');
-    Route::post('bookings', 'API\BookingController@getBookingsType');
+    Route::post('booking/list', 'API\BookingController@getBookings');
+    Route::post('booking/type', 'API\BookingController@getBookingsType');
+    Route::post('booking/details', 'API\BookingController@getitem');
     Route::post('session/details', 'API\SessionController@getitem');
 });
 
