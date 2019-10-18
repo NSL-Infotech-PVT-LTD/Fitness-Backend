@@ -91,8 +91,8 @@ class SessionController extends ApiController
 
     public function getOrganiserSession(Request $request)
     {
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -100,7 +100,10 @@ class SessionController extends ApiController
         try {
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
-
+            if ($request->order_by == 'upcoming')
+                $model = $model->where('created_at','>=',\Carbon\Carbon::now());
+            if ($request->order_by == 'completed')
+                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -110,20 +113,24 @@ class SessionController extends ApiController
     public function getCoachSession(Request $request)
     {
         //Validating attributes
+        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
         $user = \App\User::findOrFail(\Auth::id());
         if ($user->get()->isEmpty())
             return parent::error('User Not found');
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        try {
 
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
+            if ($request->order_by == 'upcoming')
+                $model = $model->where('created_at','>=',\Carbon\Carbon::now());
+            if ($request->order_by == 'completed')
+                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
