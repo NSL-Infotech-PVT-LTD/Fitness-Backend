@@ -96,10 +96,10 @@ class SpacesController extends ApiController {
         try {
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily');
-            if ($request->order_by == 'upcoming')
-                $model = $model->where('start_date','>=',\Carbon\Carbon::now());
-            if ($request->order_by == 'completed')
-                $model = $model->where('start_date','<',\Carbon\Carbon::now());
+//            if ($request->order_by == 'upcoming')
+//                $model = $model->where('start_date','>=',\Carbon\Carbon::now());
+//            if ($request->order_by == 'completed')
+//                $model = $model->where('start_date','<',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
