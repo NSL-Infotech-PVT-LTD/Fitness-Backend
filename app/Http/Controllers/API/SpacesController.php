@@ -46,8 +46,8 @@ class SpacesController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            if (MyModel::where('id', $request->id)->where('organizer_id', \Auth::id())->get()->isEmpty() === true)
-                return parent::error('Please use valid organizer id');
+            if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
+                return parent::error('Please use valid created_by id');
             $input = $request->all();
             $input['organizer_id'] = \Auth::id();
             $images = [];
@@ -77,8 +77,8 @@ class SpacesController extends ApiController {
         endif;
 //         dd($id);
         try {
-            if (MyModel::where('id', $request->id)->where('organizer_id', \Auth::id())->get()->isEmpty() === true)
-                return parent::error('Please use valid organizer id');
+            if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
+                return parent::error('Please use valid created_by id');
             MyModel::destroy($request->id);
             return parent::success(['message' => 'Deleted Successfully']);
         } catch (\Exception $ex) {
@@ -95,7 +95,7 @@ class SpacesController extends ApiController {
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily');
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
@@ -118,7 +118,7 @@ class SpacesController extends ApiController {
         try {
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -144,7 +144,7 @@ class SpacesController extends ApiController {
 
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'organizer_id', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))
