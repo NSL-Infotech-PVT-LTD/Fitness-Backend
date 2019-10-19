@@ -16,7 +16,7 @@ class SessionController extends ApiController
     public function store(Request $request)
     {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required', 'date' => 'required', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required|unique:sessions', 'max_occupancy' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required|date_format:"Y-m-d H:i"', 'date' => 'required|date_format:"Y-m-d"', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required|unique:sessions', 'max_occupancy' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
