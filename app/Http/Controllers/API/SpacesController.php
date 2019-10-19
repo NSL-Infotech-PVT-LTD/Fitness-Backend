@@ -87,8 +87,8 @@ class SpacesController extends ApiController {
     }
 
     public function getOrganiserSpaces(Request $request) {
-        $rules = ['order_by'=>'required|in:upcoming,completed'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -96,10 +96,7 @@ class SpacesController extends ApiController {
         try {
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily');
-//            if ($request->order_by == 'upcoming')
-//                $model = $model->where('start_date','>=',\Carbon\Carbon::now());
-//            if ($request->order_by == 'completed')
-//                $model = $model->where('start_date','<',\Carbon\Carbon::now());
+//
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -108,8 +105,8 @@ class SpacesController extends ApiController {
 
     public function getCoachSpaces(Request $request) {
         //Validating attributes
-        $rules = ['order_by'=>'required|in:upcoming,completed'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -121,10 +118,7 @@ class SpacesController extends ApiController {
             return parent::error('Please use valid token');
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily');
-            if ($request->order_by == 'upcoming')
-                $model = $model->where('created_at','>=',\Carbon\Carbon::now());
-            if ($request->order_by == 'completed')
-                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
+
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
