@@ -126,7 +126,7 @@ class AuthController extends ApiController {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
-//            var_dump(json_decode($input['category_id']));    
+//            var_dump(json_decode($input['category_id']));
 //            dd('s');
             $user->fill($input);
             $user->save();
@@ -188,7 +188,7 @@ class AuthController extends ApiController {
             $input['password'] = Hash::make($request->password);
             if (isset($request->profile_image))
                 $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'));
-//            var_dump(json_decode($input['category_id']));    
+//            var_dump(json_decode($input['category_id']));
 //            dd('s');
             if (isset($request->profile_image))
                 $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'));
@@ -228,6 +228,7 @@ class AuthController extends ApiController {
             if (Auth::attempt(['email' => request('email'), 'password' => request('password')])):
                 $user = \App\User::find(Auth::user()->id);
                 $token = $user->createToken('netscape')->accessToken;
+                parent::addUserDeviceData($user, $request);
 //                $user = $user->with('roles');
                 // Add user device details for firbase
                 return parent::successCreated(['message' => 'Login Successfully', 'token' => $token, 'user' => $user]);
