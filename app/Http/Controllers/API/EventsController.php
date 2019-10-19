@@ -86,7 +86,7 @@ class EventsController extends ApiController {
             if ($request->order_by == 'upcoming')
                 $model = $model->where('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('start_date','<',\Carbon\Carbon::now());
+                $model = $model->where('start_date','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
