@@ -152,6 +152,7 @@ class SessionController extends ApiController
             if ($user->hasRole('athlete') === false)
                 return parent::error('Please use valid token');
 
+            
             $model = new MyModel();
             $perPage = isset($request->limit) ? $request->limit : 20;
             $latKey = 'latitude';
