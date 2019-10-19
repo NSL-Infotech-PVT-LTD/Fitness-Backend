@@ -14,7 +14,7 @@ class EventsController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"', 'end_date' => 'required', 'start_time' => 'required', 'end_time' => 'required', 'price' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"', 'end_date' => 'required|date_format:"Y-m-d"', 'start_time' => 'required', 'end_time' => 'required', 'price' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
