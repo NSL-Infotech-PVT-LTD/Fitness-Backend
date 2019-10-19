@@ -101,9 +101,9 @@ class SessionController extends ApiController
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
             if ($request->order_by == 'upcoming')
-                $model = $model->where('date','>=',\Carbon\Carbon::now());
+                $model = $model->where('business_hour','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('date','<',\Carbon\Carbon::now());
+                $model = $model->where('business_hour','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -128,9 +128,9 @@ class SessionController extends ApiController
 
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
             if ($request->order_by == 'upcoming')
-                $model = $model->where('date','>=',\Carbon\Carbon::now());
+                $model = $model->where('business_hour','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('date','<=',\Carbon\Carbon::now());
+                $model = $model->where('business_hour','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
