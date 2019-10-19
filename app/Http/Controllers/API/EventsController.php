@@ -14,7 +14,7 @@ class EventsController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"', 'end_date' => 'required', 'start_time' => 'required', 'end_time' => 'required', 'price' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"', 'end_date' => 'required|date_format:"Y-m-d"', 'start_time' => 'required', 'end_time' => 'required', 'price' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -86,7 +86,7 @@ class EventsController extends ApiController {
             if ($request->order_by == 'upcoming')
                 $model = $model->where('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('start_date','<',\Carbon\Carbon::now());
+                $model = $model->where('start_date','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -111,9 +111,9 @@ class EventsController extends ApiController {
 
             $model = new MyModel();
             if ($request->order_by == 'upcoming')
-                $model = $model->where('created_at','>=',\Carbon\Carbon::now());
+                $model = $model->where('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('created_at','<=',\Carbon\Carbon::now());
+                $model = $model->where('start_date','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
