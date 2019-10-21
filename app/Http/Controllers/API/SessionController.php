@@ -16,7 +16,7 @@ class SessionController extends ApiController
     public function store(Request $request)
     {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required|date_format:"Y-m-d H:i"', 'date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'max_occupancy' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required|date_format:"Y-m-d H:i"', 'date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'guest_allowed' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -34,6 +34,7 @@ class SessionController extends ApiController
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
+            $input['guest_allowed_left'] =$request->guest_allowed;
             $session = MyModel::create($input);
             return parent::successCreated(['message' => 'Created Successfully', 'session' => $session]);
         } catch (\Exception $ex) {

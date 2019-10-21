@@ -23,7 +23,7 @@ class CreateSessionsTable extends Migration {
             $table->string('longitude')->nullable();
             $table->text('images')->nullable();
             $table->string('phone')->nullable();
-            $table->integer('max_occupancy')->nullable();
+            $table->integer('guest_allowed')->nullable();
             if (\App::VERSION() >= '5.8') {
                 $table->bigInteger('created_by')->unsigned()->index();
             } else {
