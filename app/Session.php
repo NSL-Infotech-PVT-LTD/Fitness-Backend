@@ -30,7 +30,7 @@ class Session extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by'];
+    protected $fillable = ['name', 'description', 'business_hour', 'date', 'location', 'latitude', 'longitude','hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by'];
 
     /**
      * Change activity log event description
