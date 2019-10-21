@@ -41,9 +41,17 @@ class BookingController extends ApiController
                     $targetModel= new \App\Session();
                     break;
                     endswitch;
-            $targetModel = $targetModel->whereId($request->target_id)->get();
-            if($targetModel->isEmpty())
+            $targetModeldata = $targetModel->whereId($request->target_id)->get();
+            if($targetModeldata->isEmpty())
                 return parent::error('Please use valid target id');
+            if($request->type!='space')
+                if($targetModeldata->first()->guest_allowed_left ==0)
+                    return parent::error('Tickets are sold out, Better luck next time');
+            if($request->type!='space')
+                if($targetModeldata->first()->guest_allowed_left < $request->tickets)
+                    return parent::error('Tickets are greater than left tickets');
+//
+            dd($targetModelupdate);
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -53,8 +61,13 @@ class BookingController extends ApiController
                 "source" => $request->token, // obtained with Stripe.js
                 "description" => "Charge for the booking booked through utrain app"
             ]);
-            // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModel->first()->created_by);
+            /*****target model update start****/
+            $targetModelupdate = $targetModel->findOrFail($request->target_id);
+            $targetModelupdate->guest_allowed_left = $targetModeldata->first()->guest_allowed_left-$request->tickets;
+            $targetModelupdate->save();
+            /*****target model update end****/
+        // Push notification start
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);

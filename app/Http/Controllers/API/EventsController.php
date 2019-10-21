@@ -32,6 +32,7 @@ class EventsController extends ApiController {
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
+            $input['guest_allowed_left'] =$request->guest_allowed;
             $event = MyModel::create($input);
             return parent::successCreated(['message' => 'Created Successfully', 'event' => $event]);
         } catch (\Exception $ex) {
