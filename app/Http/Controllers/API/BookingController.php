@@ -63,7 +63,7 @@ class BookingController extends ApiController
         }
     }
 
-    public function getBookings(Request $request) {
+    public function getBookingsAthlete(Request $request) {
           $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -73,6 +73,50 @@ class BookingController extends ApiController
         try {
             $model = new \App\Booking();
             $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+            $model = $model->with('userDetails');
+            $model = $model->with($request->type);
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function getBookingsOrganiser(Request $request) {
+        $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+
+        try {
+            $model = new \App\Booking();
+            $user = \App\User::find(Auth::user()->id);
+            if ($user->hasRole('organizer') === false)
+                return parent::error('Please use valid auth token');
+            $target = Event::where('created_by',\Auth::id())->pluck('id');
+            $model = MyModel::whereIN('target_id', $target)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+            $model = $model->with('userDetails');
+            $model = $model->with($request->type);
+            return parent::success($model->get());
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function getBookingsCoach(Request $request) {
+        $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+
+        try {
+            $model = new \App\Booking();
+            $user = \App\User::find(Auth::user()->id);
+            if ($user->hasRole('coach') === false)
+                return parent::error('Please use valid auth token');
+            $target = Event::where('created_by',\Auth::id())->pluck('id');
+            $model = MyModel::whereIN('target_id', $target)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
             $model = $model->with('userDetails');
             $model = $model->with($request->type);
             return parent::success($model->get());

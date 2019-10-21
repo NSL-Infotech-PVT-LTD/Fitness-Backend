@@ -135,7 +135,7 @@ class EventsController extends ApiController {
             if ($user->get()->isEmpty())
                 return parent::error('User Not found');
             if ($user->hasRole('athlete') === false)
-                return parent::error('Please use valid token');
+                return parent::error('Please use valid auth token');
 
             $model = new MyModel();
             $perPage = isset($request->limit) ? $request->limit : 20;
