@@ -14,7 +14,7 @@ class SpacesController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'description' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'price_hourly' => 'required', 'availability_week' => 'required', 'price_daily' => 'required'];
+        $rules = ['name' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'description' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'price_hourly' => 'required', 'availability_week' => 'required', 'open_hours_from'=>'required|after_or_equal:\' . \Carbon\Carbon::now()','open_hours_to'=>'required|after_or_equal:\' . \Carbon\Carbon::now()','price_daily' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -40,7 +40,7 @@ class SpacesController extends ApiController {
     }
 
     public function Update(Request $request) {
-        $rules = ['name' => 'required', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location'=>'','latitude'=>'','longitude'=>'','description' => '', 'price_hourly' => '', 'availability_week' => '', 'price_daily' => ''];
+        $rules = ['name' => 'required', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location'=>'','latitude'=>'','longitude'=>'','description' => '', 'price_hourly' => '', 'availability_week' => '', 'open_hours_from'=>'','open_hours_to'=>'','price_daily' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -95,7 +95,7 @@ class SpacesController extends ApiController {
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week', 'created_by', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week','open_hours_from','open_hours_to', 'created_by', 'price_daily');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -116,7 +116,7 @@ class SpacesController extends ApiController {
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week', 'created_by', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week', 'open_hours_from','open_hours_to','created_by', 'price_daily');
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -142,7 +142,7 @@ class SpacesController extends ApiController {
 
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'open_hours_from','open_hours_to','created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))

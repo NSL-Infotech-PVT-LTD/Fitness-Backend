@@ -28,7 +28,7 @@ class Space extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'images', 'description', 'price_hourly', 'availability_week','location', 'latitude', 'longitude', 'created_by', 'price_daily'];
+    protected $fillable = ['name', 'images', 'description', 'price_hourly', 'availability_week','open_hours_from','open_hours_to','location', 'latitude', 'longitude', 'created_by', 'price_daily'];
 
     /**
      * Change activity log event description
