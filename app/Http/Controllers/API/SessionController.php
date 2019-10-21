@@ -16,7 +16,7 @@ class SessionController extends ApiController
     public function store(Request $request)
     {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required|date_format:"Y-m-d H:i"', 'date' => 'required|date_format:"Y-m-d"', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required', 'max_occupancy' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'business_hour' => 'required|date_format:"Y-m-d H:i"', 'date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required', 'max_occupancy' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -43,7 +43,7 @@ class SessionController extends ApiController
 
     public function Update(Request $request)
     {
-        $rules = ['name' => 'required', 'description' => '', 'business_hour' => '', 'date' => '', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'max_occupancy' => '', 'created_by' => ''];
+        $rules = ['name' => 'required', 'description' => '', 'business_hour' => '', 'date' => '|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'max_occupancy' => '', 'created_by' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -101,9 +101,9 @@ class SessionController extends ApiController
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
             if ($request->order_by == 'upcoming')
-                $model = $model->where('business_hour','>=',\Carbon\Carbon::now());
+                $model = $model->whereDate('business_hour','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('business_hour','<=',\Carbon\Carbon::now());
+                $model = $model->whereDate('business_hour','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -128,9 +128,9 @@ class SessionController extends ApiController
 
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'business_hour', 'date', 'hourly_rate', 'images', 'phone', 'max_occupancy', 'created_by');
             if ($request->order_by == 'upcoming')
-                $model = $model->where('business_hour','>=',\Carbon\Carbon::now());
+                $model = $model->whereDate('business_hour','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->where('business_hour','<=',\Carbon\Carbon::now());
+                $model = $model->whereDate('business_hour','<=',\Carbon\Carbon::now());
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
