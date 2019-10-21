@@ -82,7 +82,7 @@ class BookingController extends ApiController
     }
 
     public function getBookingsOrganiser(Request $request) {
-        $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
+        $rules = ['target_id'=>'required','type'=>'required|in:event,session,space'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -93,8 +93,11 @@ class BookingController extends ApiController
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('organizer') === false)
                 return parent::error('Please use valid auth token');
-            $target = Event::where('created_by',\Auth::id())->pluck('id');
-            $model = MyModel::whereIN('target_id', $target)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+//            $target = Event::where('created_by',\Auth::id())->pluck('id');
+            if(Event::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
+                return parent::error('Event not found');
+            $model = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+//            dd($model);
             $model = $model->with('userDetails');
             $model = $model->with($request->type);
             return parent::success($model->get());
@@ -115,8 +118,10 @@ class BookingController extends ApiController
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid auth token');
-            $target = Event::where('created_by',\Auth::id())->pluck('id');
-            $model = MyModel::whereIN('target_id', $target)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+//            $target = Event::where('created_by',\Auth::id())->pluck('id');
+            if(Event::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
+                return parent::error('Event not found');
+            $model = MyModel::where('target_id', $request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
             $model = $model->with('userDetails');
             $model = $model->with($request->type);
             return parent::success($model->get());
