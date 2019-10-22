@@ -77,7 +77,7 @@ class BookingController extends ApiController
     }
 
     public function getBookingsAthlete(Request $request) {
-          $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space,all','order_by'=>'required|in:upcoming,completed,','limit' => ''];
+          $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space','order_by'=>'required_if:type,event|required_if:type,session','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -87,7 +87,6 @@ class BookingController extends ApiController
 
             $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
             $model = $model->with('userDetails')->with($request->type);
-            if($request->type != 'all')
             if($request->type != 'space'):
                 $model= $model->whereHas($request->type, function ($query)use($request) {
                     if($request->type=='event'):
@@ -113,7 +112,7 @@ class BookingController extends ApiController
     }
 
     public function getBookingsOrganiser(Request $request) {
-        $rules = ['search' => '','target_id'=>'required','type'=>'required|in:event,session,space','order_by'=>'required|in:upcoming,completed','limit' => ''];
+        $rules = ['search' => '','target_id'=>'required','type'=>'required|in:event,session,space','order_by'=>'required_if:type,event|required_if:type,session','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -155,7 +154,7 @@ class BookingController extends ApiController
     }
 
     public function getBookingsCoach(Request $request) {
-        $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space','order_by'=>'required|in:upcoming,completed','limit' => ''];
+        $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space','order_by'=>'required_if:type,event|required_if:type,session','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
