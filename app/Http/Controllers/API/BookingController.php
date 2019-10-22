@@ -108,7 +108,7 @@ class BookingController extends ApiController
                 return parent::error('Please use valid auth token');
 //            $target = Event::where('created_by',\Auth::id())->pluck('id');
             if(Event::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
-                return parent::error('Event not found');
+                return parent::error('Not found');
             $model = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
 //            dd($model);
             $model = $model->with('userDetails');

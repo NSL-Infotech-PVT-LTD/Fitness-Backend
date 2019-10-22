@@ -43,7 +43,7 @@ class Booking extends Model {
     }
 
     public function session() {
-        return $this->hasOne(Session::class, 'id', 'target_id')->select('id','name','description','business_hour','date','hourly_rate','images','phone','max_occupancy','created_by');
+        return $this->hasOne(Session::class, 'id', 'target_id')->select('id','name','description','business_hour','date','hourly_rate','images','phone','guest_allowed','created_by');
     }
     public function space() {
         return $this->hasOne(Space::class, 'id', 'target_id')->select('id','name','images','description','price_hourly','availability_week','created_by','price_daily');
