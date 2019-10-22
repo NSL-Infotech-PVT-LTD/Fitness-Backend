@@ -51,7 +51,7 @@ class BookingController extends ApiController
                 if($targetModeldata->first()->guest_allowed_left < $request->tickets)
                     return parent::error('Tickets are greater than left tickets');
 //
-            dd($targetModelupdate);
+//            dd($targetModelupdate);
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
