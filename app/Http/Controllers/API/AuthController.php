@@ -82,6 +82,7 @@ class AuthController extends ApiController {
             //add service module end
             $user->fill($input);
             $user->save();
+            parent::addUserDeviceData($user, $request);
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
