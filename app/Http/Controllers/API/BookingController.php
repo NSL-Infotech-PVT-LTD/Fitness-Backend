@@ -77,17 +77,35 @@ class BookingController extends ApiController
     }
 
     public function getBookingsAthlete(Request $request) {
-          $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
+          $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space,all','order_by'=>'required|in:upcoming,completed,','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
 
         try {
-            $model = new \App\Booking();
+
             $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-            $model = $model->with('userDetails');
-            $model = $model->with($request->type);
+            $model = $model->with('userDetails')->with($request->type);
+            if($request->type != 'all')
+            if($request->type != 'space'):
+                $model= $model->whereHas($request->type, function ($query)use($request) {
+                    if($request->type=='event'):
+                        $targetOrderByKey='end_date';
+                    elseif ($request->type=='session'):
+                         $targetOrderByKey='date';
+                    endif;
+                    if ($request->order_by == 'upcoming'):
+                        $query->whereDate($targetOrderByKey,'>=',\Carbon\Carbon::now());
+                    elseif ($request->order_by == 'completed'):
+                        $query->whereDate($targetOrderByKey,'<',\Carbon\Carbon::now());
+                    endif;
+                });
+            endif;
+
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -95,7 +113,7 @@ class BookingController extends ApiController
     }
 
     public function getBookingsOrganiser(Request $request) {
-        $rules = ['target_id'=>'required','type'=>'required|in:event,session,space'];
+        $rules = ['search' => '','target_id'=>'required','type'=>'required|in:event,session,space','order_by'=>'required|in:upcoming,completed','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -111,8 +129,25 @@ class BookingController extends ApiController
                 return parent::error('Not found');
             $model = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
 //            dd($model);
-            $model = $model->with('userDetails');
-            $model = $model->with($request->type);
+
+            $model = $model->with('userDetails')->with($request->type);
+            if($request->type != 'space'):
+                $model= $model->whereHas($request->type, function ($query)use($request) {
+                    if($request->type=='event'):
+                        $targetOrderByKey='end_date';
+                    elseif ($request->type=='session'):
+                        $targetOrderByKey='date';
+                    endif;
+                    if ($request->order_by == 'upcoming'):
+                        $query->whereDate($targetOrderByKey,'>=',\Carbon\Carbon::now());
+                    elseif ($request->order_by == 'completed'):
+                        $query->whereDate($targetOrderByKey,'<',\Carbon\Carbon::now());
+                    endif;
+                });
+            endif;
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -120,7 +155,7 @@ class BookingController extends ApiController
     }
 
     public function getBookingsCoach(Request $request) {
-        $rules = ['target_id'=>'','type'=>'required|in:event,session,space'];
+        $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space','order_by'=>'required|in:upcoming,completed','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -135,8 +170,25 @@ class BookingController extends ApiController
             if(Event::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
                 return parent::error('Event not found');
             $model = MyModel::where('target_id', $request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-            $model = $model->with('userDetails');
-            $model = $model->with($request->type);
+            $model = $model->with('userDetails')->with($request->type);
+            if($request->type != 'space'):
+                $model= $model->whereHas($request->type, function ($query)use($request) {
+                    if($request->type=='event'):
+                        $targetOrderByKey='end_date';
+                    elseif ($request->type=='session'):
+                        $targetOrderByKey='date';
+                    endif;
+                    if ($request->order_by == 'upcoming'):
+                        $query->whereDate($targetOrderByKey,'>=',\Carbon\Carbon::now());
+                    elseif ($request->order_by == 'completed'):
+                        $query->whereDate($targetOrderByKey,'<',\Carbon\Carbon::now());
+                    endif;
+                });
+            endif;
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
