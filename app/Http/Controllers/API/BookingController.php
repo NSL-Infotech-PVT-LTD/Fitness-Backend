@@ -119,6 +119,9 @@ class BookingController extends ApiController
         endif;
 
         try {
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
             $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('organizer') === false)
@@ -144,9 +147,7 @@ class BookingController extends ApiController
                     endif;
                 });
             endif;
-            $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+
             return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -161,6 +162,9 @@ class BookingController extends ApiController
         endif;
 
         try {
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
             $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('coach') === false)
@@ -184,9 +188,7 @@ class BookingController extends ApiController
                     endif;
                 });
             endif;
-            $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+
 
             return parent::success($model->get());
         } catch (\Exception $ex) {
