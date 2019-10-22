@@ -170,4 +170,22 @@ class SpacesController extends ApiController {
         }
     }
 
+    public function getitem(Request $request) {
+
+        $rules = ['id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new MyModel();
+            $model = $model->where('id', $request->id);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
 }
