@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Twilio\Rest\Client;
+use Intervention\Image\ImageManagerStatic as Image;
 use Validator;
 use DB;
 
@@ -86,7 +87,7 @@ class RegisterController extends ApiController {
                     return parent::error('The phone has already been taken');
             endif;
             $input = $request->all();
-//            var_dump(json_decode($input['category_id']));    
+//            var_dump(json_decode($input['category_id']));
 //            dd('s');
             $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/client/profile_pic'));
             $input['category_id'] = $input['category_id'];
@@ -121,7 +122,7 @@ class RegisterController extends ApiController {
                     return parent::error('The phone has already been taken');
             endif;
             $input = $request->all();
-//            var_dump(json_decode($input['category_id']));    
+//            var_dump(json_decode($input['category_id']));
 //            dd('s');
             $input['profile_pic'] = parent::__uploadImage($request->profile_pic, public_path('uploads/client/profile_pic'));
             $input['category_id'] = $input['category_id'];
