@@ -38,6 +38,11 @@ class Booking extends Model {
     }
 
 
+    public function targetData() {
+//dd($this->type);
+        return $this->hasOne(Event::class, 'id', 'target_id')->select('id','name','description','start_date','end_date','start_time','end_time','price','images','location','latitude','longitude','created_by','guest_allowed','guest_allowed_left','equipment_required');
+    }
+
     public function event() {
         return $this->hasOne(Event::class, 'id', 'target_id')->select('id','name','description','start_date','end_date','start_time','end_time','price','images','location','latitude','longitude','created_by','guest_allowed','guest_allowed_left','equipment_required');
     }

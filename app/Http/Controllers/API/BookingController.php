@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
 use App\Event;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -84,12 +83,9 @@ class BookingController extends ApiController
         endif;
         try {
             $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-            $model = $model->with(['userDetails','event','space','session']);
+            $model = $model->with(['userDetails','targetData']);
             $perPage = isset($request->limit) ? $request->limit : 20;
-//            $model = $model->whereHas('event', function ($query) {
-//                dd($query);
-//                $query->Where('name', 'LIKE', "%$query%");
-//            });
+
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -172,6 +168,7 @@ class BookingController extends ApiController
                 $model = $model->whereHas('userDetails', function ($query)use($request) {
                     $query->Where('name', 'LIKE', "%$request->search%")->orWhere('email', 'LIKE', "%$request->search%");
                 });
+            endif;
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -218,6 +215,7 @@ class BookingController extends ApiController
                 $model = $model->whereHas('userDetails', function ($query)use($request) {
                     $query->Where('name', 'LIKE', "%$request->search%")->orWhere('email', 'LIKE', "%$request->search%");
                 });
+            endif;
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
