@@ -76,15 +76,32 @@ class BookingController extends ApiController
         }
     }
 
+    public function getBookingsAthleteAll(Request $request) {
+        $rules = ['limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+            $model = $model->with(['userDetails','event','space','session']);
+            $perPage = isset($request->limit) ? $request->limit : 20;
+//            $model = $model->whereHas('event', function ($query) {
+//                dd($query);
+//                $query->Where('name', 'LIKE', "%$query%");
+//            });
+            return parent::success($model->paginate($perPage));
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
     public function getBookingsAthlete(Request $request) {
           $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space','order_by'=>'required_if:type,event|required_if:type,session','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
-
         try {
-
             $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
             $model = $model->with('userDetails')->with($request->type);
             if($request->type != 'space'):
@@ -103,9 +120,13 @@ class BookingController extends ApiController
             endif;
 
             $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
-            return parent::success($model->get());
+            if (isset($request->search)):
+//                dd($request->search);
+                $model = $model->whereHas('userDetails', function ($query)use($request) {
+                    $query->Where('name', 'LIKE', "%$request->search%")->orWhere('email', 'LIKE', "%$request->search%");
+                });
+            endif;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -119,9 +140,8 @@ class BookingController extends ApiController
         endif;
 
         try {
-            $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+
+
             $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('organizer') === false)
@@ -147,8 +167,13 @@ class BookingController extends ApiController
                     endif;
                 });
             endif;
-
-            return parent::success($model->get());
+            if (isset($request->search)):
+//                dd($request->search);
+                $model = $model->whereHas('userDetails', function ($query)use($request) {
+                    $query->Where('name', 'LIKE', "%$request->search%")->orWhere('email', 'LIKE', "%$request->search%");
+                });
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -162,9 +187,8 @@ class BookingController extends ApiController
         endif;
 
         try {
-            $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+
+
             $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('coach') === false)
@@ -189,8 +213,13 @@ class BookingController extends ApiController
                 });
             endif;
 
-
-            return parent::success($model->get());
+            if (isset($request->search)):
+//                dd($request->search);
+                $model = $model->whereHas('userDetails', function ($query)use($request) {
+                    $query->Where('name', 'LIKE', "%$request->search%")->orWhere('email', 'LIKE', "%$request->search%");
+                });
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
