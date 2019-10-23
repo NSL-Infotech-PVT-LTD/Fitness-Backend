@@ -28,7 +28,7 @@ class EventsController extends ApiController {
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'));
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'),true);
             endfor;
 
             if (count($images) > 0)

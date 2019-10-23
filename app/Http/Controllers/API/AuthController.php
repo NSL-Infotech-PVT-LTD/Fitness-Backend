@@ -42,7 +42,7 @@ class AuthController extends ApiController {
             $input = $request->all();
 //            dd(json_decode($request->service_ids));
             $input['password'] = Hash::make($request->password);
-            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'));
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'),true);
 
             $user = \App\User::create($input);
             //Assign role to created user[1=>10,2=>20,]

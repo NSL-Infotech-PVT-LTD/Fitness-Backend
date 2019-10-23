@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Session as MyModel;
 use Twilio\Rest\Client;
+use Intervention\Image\ImageManagerStatic as Image;
 use Validator;
 use DB;
 use Auth;
@@ -29,7 +30,7 @@ class SessionController extends ApiController
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/session'),true);
             endfor;
 
             if (count($images) > 0)
