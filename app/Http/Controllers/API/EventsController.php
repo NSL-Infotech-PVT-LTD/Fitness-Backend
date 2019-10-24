@@ -20,6 +20,11 @@ class EventsController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->hasRole('coach') === false):
+                if ($user->hasRole('organizer') === false)
+                return parent::error('Please use valid auth token');
+            endif;
             $input = $request->all();
 
             $input['created_by'] = \Auth::id();

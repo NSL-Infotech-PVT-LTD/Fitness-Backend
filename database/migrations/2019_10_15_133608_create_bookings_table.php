@@ -20,6 +20,7 @@ class CreateBookingsTable extends Migration
             $table->bigInteger('user_id')->unsigned()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('tickets')->default(1);
+            $table->integer('space_booking_date')->nullable();
             $table->float('price')->default(0.00);
             $table->enum('status', ['pending', 'accepted', 'rejected',
                 'completed'])->nullable();
