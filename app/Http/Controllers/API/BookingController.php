@@ -143,7 +143,18 @@ class BookingController extends ApiController
             if ($user->hasRole('organizer') === false)
                 return parent::error('Please use valid auth token');
 //            $target = Event::where('created_by',\Auth::id())->pluck('id');
-            if(Event::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
+            switch ($request->type):
+                case 'event':
+                    $targetModel= new \App\Event();
+                    break;
+                case 'space':
+                    $targetModel= new \App\Space();
+                    break;
+                case 'session':
+                    $targetModel= new \App\Session();
+                    break;
+            endswitch;
+            if($targetModel::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
                 return parent::error('Not found');
             $model = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
 //            dd($model);
@@ -191,7 +202,19 @@ class BookingController extends ApiController
             if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid auth token');
 //            $target = Event::where('created_by',\Auth::id())->pluck('id');
-            if(Event::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
+
+            switch ($request->type):
+                case 'event':
+                    $targetModel= new \App\Event();
+                    break;
+                case 'space':
+                    $targetModel= new \App\Space();
+                    break;
+                case 'session':
+                    $targetModel= new \App\Session();
+                    break;
+            endswitch;
+            if($targetModel->where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
                 return parent::error('Not found');
             $model = MyModel::where('target_id', $request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
             $model = $model->with('userDetails')->with($request->type);
