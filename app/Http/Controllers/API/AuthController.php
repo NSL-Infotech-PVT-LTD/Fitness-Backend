@@ -313,7 +313,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'service_ids');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
@@ -321,6 +321,62 @@ class AuthController extends ApiController {
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
+    }
+
+
+    public function getcoach(Request $request)
+    {
+
+        $rules = ['id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+
+            $model = new \App\User();
+            $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
+            $model = $model->wherein('users.id', $roleusersSA)
+                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
+            $model = $model->where('id', $request->id);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+
+    }
+
+
+    public function getorganiser(Request $request)
+    {
+
+        $rules = ['id' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->hasRole('athlete') === false)
+                return parent::error('Please use valid token');
+            $model = new \App\User();
+            $model = new \App\User();
+            $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
+            $model = $model->wherein('users.id', $roleusersSA)
+                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
+            $model = $model->where('id', $request->id);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+
     }
 
 }

@@ -20,6 +20,7 @@ class EventsController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+           
             $input = $request->all();
 
             $input['created_by'] = \Auth::id();
