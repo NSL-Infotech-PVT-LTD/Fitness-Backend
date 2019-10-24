@@ -74,7 +74,7 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'));
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'),true);
 
             //add service module start
             if (isset($request->service_ids))
@@ -100,7 +100,7 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
@@ -126,7 +126,7 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'));
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
 //            dd('s');
             $user->fill($input);
@@ -148,13 +148,13 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
-            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'));
+            $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'),true);
             $portfolio_image = [];
 
             for ($i = 1; $i <= 4; $i++):
                 $var = 'portfolio_image_' . $i;
                 if (isset($request->$var))
-                    $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'));
+                    $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'),true);
             endfor;
 
             if (count($portfolio_image) > 0)
@@ -188,17 +188,17 @@ class AuthController extends ApiController {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
             if (isset($request->profile_image))
-                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'));
+                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
 //            dd('s');
             if (isset($request->profile_image))
-                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'));
+                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'),true);
             $portfolio_image = [];
 
             for ($i = 1; $i <= 4; $i++):
                 $var = 'portfolio_image_' . $i;
                 if (isset($request->$var))
-                    $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'));
+                    $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'),true);
             endfor;
 
             if (count($portfolio_image) > 0)
