@@ -327,7 +327,7 @@ class AuthController extends ApiController {
     public function getcoach(Request $request)
     {
 
-        $rules = ['id' => 'required'];
+        $rules = ['id' => 'required','search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -343,7 +343,12 @@ class AuthController extends ApiController {
             $model = $model->wherein('users.id', $roleusersSA)
                 ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
             $model = $model->where('id', $request->id);
-            return parent::success($model->first());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('email', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage)->first());
+
         } catch (\Exception $ex) {
 
             return parent::error($ex->getMessage());
@@ -355,7 +360,7 @@ class AuthController extends ApiController {
     public function getorganiser(Request $request)
     {
 
-        $rules = ['id' => 'required'];
+        $rules = ['id' => 'required','search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -371,7 +376,11 @@ class AuthController extends ApiController {
             $model = $model->wherein('users.id', $roleusersSA)
                 ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
             $model = $model->where('id', $request->id);
-            return parent::success($model->first());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('email', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage)->first());
         } catch (\Exception $ex) {
 
             return parent::error($ex->getMessage());

@@ -29,9 +29,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('events/organiser/list', 'API\EventsController@getOrganiserEvents');
     Route::post('events/athlete/list', 'API\EventsController@getAthleteEvents');
     Route::post('events/coach/list', 'API\EventsController@getCoachEvents');
-    Route::get('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');
+    Route::post('spaces/organiser/list', 'API\SpacesController@getOrganiserSpaces');
     Route::post('spaces/athlete/list', 'API\SpacesController@getAthleteSpaces');
-    Route::get('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
+    Route::post('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
     Route::post('organisers/list', 'API\AuthController@getOrganisers');
     Route::post('coach/list', 'API\AuthController@getCoaches');
      Route::post('session/store', 'API\SessionController@store');

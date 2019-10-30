@@ -88,8 +88,8 @@ class SpacesController extends ApiController {
     }
 
     public function getOrganiserSpaces(Request $request) {
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        $rules = ['search'=>'','limit'=>''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -97,7 +97,11 @@ class SpacesController extends ApiController {
         try {
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week','open_hours_from','open_hours_to', 'created_by', 'price_daily');
-            return parent::success($model->get());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('description', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -105,8 +109,8 @@ class SpacesController extends ApiController {
 
     public function getCoachSpaces(Request $request) {
         //Validating attributes
-        $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        $rules = ['search'=>'','limit'=>''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -118,7 +122,11 @@ class SpacesController extends ApiController {
             return parent::error('Please use valid token');
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week', 'open_hours_from','open_hours_to','created_by', 'price_daily');
-            return parent::success($model->get());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('description', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

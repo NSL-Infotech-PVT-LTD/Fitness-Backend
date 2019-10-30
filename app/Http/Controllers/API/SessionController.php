@@ -93,7 +93,7 @@ class SessionController extends ApiController
 
     public function getOrganiserSession(Request $request)
     {
-        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $rules = ['order_by'=>'required|in:upcoming,completed','search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -106,7 +106,10 @@ class SessionController extends ApiController
                 $model = $model->whereDate('date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->whereDate('date','<=',\Carbon\Carbon::now());
-            return parent::success($model->get());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -115,7 +118,7 @@ class SessionController extends ApiController
     public function getCoachSession(Request $request)
     {
         //Validating attributes
-        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $rules = ['order_by'=>'required|in:upcoming,completed','search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -133,7 +136,10 @@ class SessionController extends ApiController
                 $model = $model->whereDate('date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->whereDate('date','<=',\Carbon\Carbon::now());
-            return parent::success($model->get());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
