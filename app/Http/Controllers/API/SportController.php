@@ -13,7 +13,7 @@ class SportController extends ApiController {
     public function getitems(Request $request) {
 
 
-        $rules = ['search'=>''];
+        $rules = ['search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;

@@ -73,7 +73,7 @@ class EventsController extends ApiController {
 
     public function getOrganiserEvents(Request $request) {
 
-        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $rules = ['order_by'=>'required|in:upcoming,completed','search'=>'','limit'=>''];
 
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -92,7 +92,11 @@ class EventsController extends ApiController {
                 $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->whereDate('start_date','<',\Carbon\Carbon::now());
-            return parent::success($model->get());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('description', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -100,7 +104,7 @@ class EventsController extends ApiController {
 
     public function getCoachEvents(Request $request) {
         //Validating attributes
-        $rules = ['order_by'=>'required|in:upcoming,completed'];
+        $rules = ['order_by'=>'required|in:upcoming,completed','search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -120,7 +124,11 @@ class EventsController extends ApiController {
                 $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->whereDate('start_date','<',\Carbon\Carbon::now());
-            return parent::success($model->get());
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('description', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -144,7 +152,8 @@ class EventsController extends ApiController {
             $perPage = isset($request->limit) ? $request->limit : 20;
 
             if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('description', 'LIKE', "%$request->search%");
             switch ($request->order_by):
                 case 'price_high':
                     $model = $model->orderBy('price', 'desc');

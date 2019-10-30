@@ -15,7 +15,7 @@ class ServicesController extends ApiController {
     public function getitems(Request $request) {
 
 
-        $rules = [];
+        $rules = ['search'=>'','limit'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -23,13 +23,15 @@ class ServicesController extends ApiController {
         // dd($category_id);
         try {
             $model = new MyModel();
-            $model = $model->select('id', 'name');
+            $model = $model->select('id','name');
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
 
-            return parent::success($model->where('state', '1')->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-
 }
 
