@@ -62,6 +62,7 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('reset-password', 'API\AuthController@resetPassword');
 
 Route::post('services', 'API\ServicesController@getitems');
+Route::post('sports', 'API\SportController@getitems');
 
 
 
