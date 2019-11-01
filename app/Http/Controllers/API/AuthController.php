@@ -90,7 +90,7 @@ class AuthController extends ApiController {
     }
 
     public function AtheleteRegister(Request $request) {
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'address' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required','sport_id'=>'required','achievements'=>'required','experience_detail'=>'required'];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'address' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required','sport_id'=>'','achievements'=>'required','experience_detail'=>'required'];
 
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -99,6 +99,7 @@ class AuthController extends ApiController {
         endif;
         try {
             $input = $request->all();
+            $input['sport_id']= json_encode($request->sport_id);
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
             $user = \App\User::create($input);
