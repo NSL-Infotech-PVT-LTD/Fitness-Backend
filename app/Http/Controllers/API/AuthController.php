@@ -16,13 +16,15 @@ use Illuminate\Mail\Message;
 class AuthController extends ApiController {
 
     private function addservices($service_ids, $userId) {
+//        dd($service_ids);
         foreach (json_decode($service_ids) as $service):
             $userservice = \App\UserService::where('service_id', $service->id)->where('user_id', $userId)->get();
             if ($userservice->isEmpty())
                 $userservice = new \App\UserService();
             else
-                $userservice = \App\UserService::findOrFail($userservice->id);
+                $userservice = \App\UserService::findOrFail($userservice->first()->id);
 
+//            dd($userservice);
             $userservice->service_id = $service->id;
             $userservice->price = $service->price;
             $userservice->user_id = $userId;
@@ -32,7 +34,7 @@ class AuthController extends ApiController {
 
     public function CoachRegister(Request $request) {
 //        dd(implode(',',\App\Currency::get()->pluck('id')->toArray()));
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required'];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'sport_id'=>'required','service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required'];
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -42,6 +44,7 @@ class AuthController extends ApiController {
             $input = $request->all();
 //            dd(json_decode($request->service_ids));
             $input['password'] = Hash::make($request->password);
+            $input['sport_id']= json_encode($request->sport_id);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'),true);
 
             $user = \App\User::create($input);
@@ -74,12 +77,13 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
+            if (isset($request->profile_image))
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'),true);
 
-            //add service module start
-            if (isset($request->service_ids))
-                self::addservices($request->service_ids, $user->id);
-            //add service module end
+//            add service module start
+//            if (isset($request->service_ids))
+//                self::addservices($request->service_ids, $user->id);
+//            add service module end
             $user->fill($input);
             $user->save();
             parent::addUserDeviceData($user, $request);
@@ -127,12 +131,13 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
+            if (isset($request->profile_image))
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
 //            dd('s');
             $user->fill($input);
             $user->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
+            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user->select('id','name','email','password','phone','address','latitude','longitude','profile_image','sport_id','achievements','experience_detail')->first()]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -192,8 +197,7 @@ class AuthController extends ApiController {
                 $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
 //            dd('s');
-            if (isset($request->profile_image))
-                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'),true);
+
             $portfolio_image = [];
 
             for ($i = 1; $i <= 4; $i++):
@@ -205,13 +209,14 @@ class AuthController extends ApiController {
             if (count($portfolio_image) > 0)
                 $input['portfolio_image'] = json_encode($portfolio_image);
 
+//
+            $user->fill($input);
+            $user->save();
             //add service module start
             if (isset($request->service_ids))
                 self::addservices($request->service_ids, $user->id);
             //add service module end
-            $user->fill($input);
-            $user->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
+            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user->select('id')->first()]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
