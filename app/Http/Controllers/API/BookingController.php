@@ -18,7 +18,7 @@ class BookingController extends ApiController
     public function store(Request $request)
     {
 
-        $rules = ['type' => 'required|in:event,session,space', 'target_id' => 'required', 'user_id' => '', 'tickets' => '', 'price' => 'required',
+        $rules = ['type' => 'required|in:event,session', 'target_id' => 'required', 'user_id' => '', 'tickets' => '', 'price' => 'required',
             'payment_details' => '','token'=>'required','status'=>'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -66,6 +66,52 @@ class BookingController extends ApiController
             $targetModelupdate->save();
             /*****target model update end****/
         // Push notification start
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
+            // Push notification end
+
+            return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+    public function spacestore(Request $request)
+    {
+
+        $rules = ['type'=>'required|in:space','target_id' => 'required', 'user_id' => '','price' => 'required',
+            'payment_details' => '','token'=>'required','status'=>'required','space_date_start'=>'required|date_format:"Y-m-d H:i|after_or_equal:\' . \Carbon\Carbon::now()','space_date_end'=>'required|date_format:"Y-m-d H:i|after_or_equal:\' . \Carbon\Carbon::now()'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            if (!isset($request->token))
+                return parent::error('Please add token');
+            $input = $request->all();
+            $input['user_id'] = \Auth::id();
+            $targetModel= new \App\Space();
+            $targetModeldata = $targetModel->whereId($request->target_id)->get();
+            if($targetModeldata->isEmpty())
+                return parent::error('Please use valid target id');
+            $checkData = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->get();
+            if($checkData->isEmpty() === false):
+                return parent::error(['message' => $request->target_id.' already booked']);
+            endif;
+//
+//            dd($targetModelupdate);
+            $booking = \App\Booking::create($input);
+
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Charge::create([
+                "amount" => $booking->price * 100,
+                "currency" => config('app.stripe_default_currency'),
+                "source" => $request->token, // obtained with Stripe.js
+                "description" => "Charge for the booking booked through utrain app"
+            ]);
+            /*****target model update start****/
+            $targetModelupdate = $targetModel->findOrFail($request->target_id);
+            $targetModelupdate->save();
+            /*****target model update end****/
+            // Push notification start
             parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
             // Push notification end
 
