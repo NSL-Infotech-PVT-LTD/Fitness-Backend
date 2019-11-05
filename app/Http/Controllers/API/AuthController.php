@@ -77,16 +77,18 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
+            $input['sport_id']= json_encode($request->sport_id);
             if (isset($request->profile_image))
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'),true);
 
 //            add service module start
-//            if (isset($request->service_ids))
-//                self::addservices($request->service_ids, $user->id);
+            if (isset($request->service_ids))
+                self::addservices($request->service_ids, $user->id);
 //            add service module end
             $user->fill($input);
             $user->save();
             parent::addUserDeviceData($user, $request);
+            $user = \App\User::whereId($user->id)->select('id','name','email','phone','location','latitude','longitude','business_hour_starts','business_hour_ends','bio','service_ids','expertise_years','hourly_rate','profile_image','sport_id')->first();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -137,7 +139,8 @@ class AuthController extends ApiController {
 //            dd('s');
             $user->fill($input);
             $user->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user->select('id','name','email','password','phone','address','latitude','longitude','profile_image','sport_id','achievements','experience_detail')->first()]);
+            $user = \App\User::whereId($user->id)->select('id','name','email','phone','address','latitude','longitude','profile_image','sport_id','achievements','experience_detail')->first();
+            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -216,7 +219,8 @@ class AuthController extends ApiController {
             if (isset($request->service_ids))
                 self::addservices($request->service_ids, $user->id);
             //add service module end
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user->select('id')->first()]);
+            $user = \App\User::whereId($user->id)->select('id','name','email','phone','location','latitude','longitude','bio','service_ids','expertise_years','hourly_rate','business_hour_starts','business_hour_ends','portfolio_image','profile_image')->first();
+            return parent::successCreated(['Message' => 'Updated Successfully', 'user' =>$user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
