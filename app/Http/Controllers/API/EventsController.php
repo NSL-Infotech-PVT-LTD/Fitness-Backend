@@ -135,7 +135,7 @@ class EventsController extends ApiController {
     }
 
     public function getAthleteEvents(Request $request) {
-        $rules = ['search' => '', 'radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => ''];
+        $rules = ['search' => '', 'radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => '','coach_id'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -150,6 +150,7 @@ class EventsController extends ApiController {
 
             $model = new MyModel();
             $perPage = isset($request->limit) ? $request->limit : 20;
+
 
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
@@ -172,6 +173,12 @@ class EventsController extends ApiController {
             $lngKey = 'longitude';
             $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
                     'created_by', 'guest_allowed','guest_allowed_left', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+
+
+            if($request->coach_id){
+                $model = $model->where('created_by', $request->input('coach_id'));
+                
+            }
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
