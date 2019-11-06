@@ -56,6 +56,7 @@ class User extends Authenticatable {
         return $value == null ? [] : json_decode($value);
     }
     public function getSportIdAttribute($value) {
+//        dd($value);
         return $value == null ? [] : json_decode($value);
     }
 
