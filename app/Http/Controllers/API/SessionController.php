@@ -148,7 +148,7 @@ class SessionController extends ApiController
     public function getAthleteSession(Request $request)
     {
         //Validating attributes
-        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest,distance', 'limit' => ''];
+        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest,distance', 'limit' => '','coach_id'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -186,6 +186,11 @@ class SessionController extends ApiController
                     $model = $model->orderBy('distance');
                     break;
             endswitch;
+
+            if($request->coach_id){
+                $model = $model->where('created_by', $request->input('coach_id'));
+
+            }
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

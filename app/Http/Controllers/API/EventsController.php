@@ -177,7 +177,7 @@ class EventsController extends ApiController {
 
             if($request->coach_id){
                 $model = $model->where('created_by', $request->input('coach_id'));
-                
+
             }
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
