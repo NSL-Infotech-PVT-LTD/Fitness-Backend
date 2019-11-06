@@ -134,7 +134,7 @@ class SpacesController extends ApiController {
 
     public function getAthleteSpaces(Request $request) {
         //Validating attributes
-        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest,distance', 'limit' => ''];
+        $rules = ['search' => '', 'order_by' => 'required|in:price_high,price_low,latest,distance', 'limit' => '','organiser_id'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -172,6 +172,11 @@ class SpacesController extends ApiController {
                     $model = $model->orderBy('distance');
                     break;
             endswitch;
+
+            if($request->organiser_id){
+                $model = $model->where('created_by', $request->input('organiser_id'));
+
+            }
 
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
