@@ -55,10 +55,10 @@ class User extends Authenticatable {
     public function getServiceIdsAttribute($value) {
         return $value == null ? [] : json_decode($value);
     }
-    public function getSportIdAttribute($value) {
-//        dd($value);
-        return $value == null ? [] : json_decode($value);
-    }
+//    public function getSportIdAttribute($value) {
+////        dd($value);
+//        return $value == null ? [] : json_decode($value);
+//    }
 
     public function getRolesAttribute() {
         try {
