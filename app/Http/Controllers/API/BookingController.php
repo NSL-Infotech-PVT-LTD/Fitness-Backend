@@ -52,7 +52,7 @@ class BookingController extends ApiController
                     return parent::error('Tickets are greater than left tickets');
 //
 //            dd($targetModelupdate);
-            $input['owner_id'] = $targetModeldata->created_by;
+            $input['owner_id'] = $targetModeldata->first()->created_by;
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -100,7 +100,7 @@ class BookingController extends ApiController
             endif;
 //
 //            dd($targetModelupdate);
-            $input['owner_id'] = $targetModeldata->created_by;
+            $input['owner_id'] = $targetModeldata->first()->created_by;
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -308,7 +308,23 @@ class BookingController extends ApiController
         return parent::error($ex->getMessage());
     }
 }
+    public function getAllBookingsOrganiser(Request $request)  {
+        $rules = ['limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+//        dd(\Auth::id());
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+            $model = $model->with(['userDetails']);
+            $perPage = isset($request->limit) ? $request->limit : 20;
 
+            return parent::success($model->paginate($perPage));
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
     public function getitem(Request $request) {
 
         $rules = ['id' => 'required|exists:bookings,id'];
