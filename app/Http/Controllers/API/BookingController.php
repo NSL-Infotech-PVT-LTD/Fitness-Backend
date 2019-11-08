@@ -52,7 +52,7 @@ class BookingController extends ApiController
                     return parent::error('Tickets are greater than left tickets');
 //
 //            dd($targetModelupdate);
-            $input['owner_id'] = $targetModeldata->created_by;
+            $input['owner_id'] = $targetModeldata->first()->created_by;
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -100,7 +100,7 @@ class BookingController extends ApiController
             endif;
 //
 //            dd($targetModelupdate);
-            $input['owner_id'] = $targetModeldata->created_by;
+            $input['owner_id'] = $targetModeldata->first()->created_by;
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
