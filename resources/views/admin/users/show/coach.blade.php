@@ -32,31 +32,17 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'full_name', 'email', 'experience', 'hourly_rate', 'bio'] as $column): ?>
+                                <?php foreach (['id', 'name', 'email', 'experience', 'hourly_rate', 'bio'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
-                                        <td>{{ $user->$column }}</td> 
+                                        <td>{{ $user->$column }}</td>
                                     </tr>
                                 <?php endforeach; ?>
                                 <tr>
                                     <th>Profile.</th>
-                                    <td><img width="50" src="{{url('uploads/freelancer/profile_pic/'.$user->profile_pic)}}"></td> 
+                                    <td><img width="50" src="{{url('uploads/coach/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
-                                <tr>
-                                    <th>Portfolio.</th>
-                                    <td>
-                                        <ul>
-                                            <?php
-                                            if (!is_null($user->portfolio_image)):
-                                                foreach ($user->portfolio_image as $portfolio):
-                                                    ?><li><img width="50" src="{{url('uploads/freelancer/portfolio/'.$portfolio)}}"></li>
-                                                    <?php
-                                                endforeach;
-                                            endif;
-                                            ?>
-                                        </ul>
-                                    </td> 
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>

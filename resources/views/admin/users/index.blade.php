@@ -101,7 +101,7 @@
             var id = $(this).attr('data-id');
             var status = $(this).attr('data-status');
             Swal.fire({
-                title: 'Are you sure you wanted to change status?',
+                title: 'Are you sure you want to change status?',
                 text: "You won't be able to revert this!",
                 type: 'warning',
                 showCancelButton: true,
