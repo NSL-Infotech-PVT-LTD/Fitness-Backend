@@ -56,7 +56,7 @@ class Booking extends Model {
                     $targetModel = $targetModel->select('id','name','description','business_hour','date','hourly_rate','images','phone','location','latitude','longitude','guest_allowed','guest_allowed_left','created_by');
                     break;
             endswitch;
-            $model = $targetModel->get();
+            $model = $targetModel->whereId($this->target_id)->get();
             if ($model->isEmpty() !== true)
                     return $model->first();
             return [];
