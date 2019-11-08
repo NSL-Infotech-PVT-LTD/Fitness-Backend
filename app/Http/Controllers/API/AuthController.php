@@ -321,7 +321,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image','portfolio_image','''business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'sport_id','hourly_rate', 'service_ids','profession','experience_detail','training_service_detail');
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image','portfolio_image','business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'sport_id','hourly_rate', 'service_ids','profession','experience_detail','training_service_detail');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
