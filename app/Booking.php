@@ -29,7 +29,7 @@ class Booking extends Model {
      *
      * @var array
      */
-    protected $fillable = ['type','user_id','target_id','tickets','price','status','payment_details','space_date_start','space_date_end'];
+    protected $fillable = ['type','user_id','target_id','tickets','price','status','payment_details','space_date_start','space_date_end','owner_id'];
 
     public function userDetails() {
         return $this->hasOne(User::class, 'id', 'user_id')->select('name', 'email', 'phone',
@@ -38,10 +38,37 @@ class Booking extends Model {
     }
 
 
-    public function targetData() {
-//dd($this->type);
-        return $this->hasOne(Event::class, 'id', 'target_id')->select('id','name','description','start_date','end_date','start_time','end_time','price','images','location','latitude','longitude','created_by','guest_allowed','guest_allowed_left','equipment_required');
+    protected $appends = array('target_data');
+
+    public function getTargetDataAttribute() {
+        try {
+            switch ($this->type):
+                case 'event':
+                    $targetModel= new \App\Event();
+                    $targetModel = $targetModel->select('id','name','description','start_date','end_date','start_time','end_time','price','images','location','latitude','longitude','created_by','guest_allowed','guest_allowed_left','equipment_required');
+                    break;
+                case 'space':
+                    $targetModel= new \App\Space();
+                    $targetModel = $targetModel->select('id','name','images','description','price_hourly','availability_week','location','latitude','longitude','created_by','price_daily');
+                    break;
+                case 'session':
+                    $targetModel= new \App\Session();
+                    $targetModel = $targetModel->select('id','name','description','business_hour','date','hourly_rate','images','phone','location','latitude','longitude','guest_allowed','guest_allowed_left','created_by');
+                    break;
+            endswitch;
+            $model = $targetModel->get();
+            if ($model->isEmpty() !== true)
+                    return $model->first();
+            return [];
+        } catch (Exception $ex) {
+            return [];
+        }
     }
+
+//    public function targetData() {
+//dd($this);
+//        return $this->hasOne(Event::class, 'id', 'target_id')->select('id','name','description','start_date','end_date','start_time','end_time','price','images','location','latitude','longitude','created_by','guest_allowed','guest_allowed_left','equipment_required');
+//    }
 
     public function event() {
         return $this->hasOne(Event::class, 'id', 'target_id')->select('id','name','description','start_date','end_date','start_time','end_time','price','images','location','latitude','longitude','created_by','guest_allowed','guest_allowed_left','equipment_required');

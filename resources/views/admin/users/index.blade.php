@@ -102,7 +102,7 @@
             var status = $(this).attr('data-status');
             Swal.fire({
                 title: 'Are you sure you want to change status?',
-                text: "You won't be able to revert this!",
+                text: "You can revert this,in case you change your mind!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

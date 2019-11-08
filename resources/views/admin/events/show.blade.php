@@ -33,7 +33,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $event->id }}</td>
                                     </tr>
-                                    <tr><th> Name </th><td> {{ $event->name }} </td></tr><tr><th> Description </th><td> {{ $event->description }} </td></tr><tr><th> Start At </th><td> {{ $event->start_at }} </td></tr>
+                                    <tr><th> Name </th><td> {{ $event->name }} </td></tr><tr><th> Description </th><td> {{ $event->description }} </td></tr><tr><th> Start Date </th><td> {{ $event->start_date }} </td></tr><tr><th> End Date </th><td> {{ $event->end_date }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

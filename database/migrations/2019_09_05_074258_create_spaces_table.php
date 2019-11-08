@@ -30,6 +30,9 @@ class CreateSpacesTable extends Migration {
                 $table->integer('created_by')->unsigned()->index();
             }
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->time('open_hours_from')->nullable();
+            $table->time('open_hours_to')->nullable();
+
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }

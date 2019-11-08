@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 use App\Event;
+use App\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Booking as MyModel;
@@ -51,6 +52,7 @@ class BookingController extends ApiController
                     return parent::error('Tickets are greater than left tickets');
 //
 //            dd($targetModelupdate);
+            $input['owner_id'] = $targetModeldata->created_by;
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -98,6 +100,7 @@ class BookingController extends ApiController
             endif;
 //
 //            dd($targetModelupdate);
+            $input['owner_id'] = $targetModeldata->created_by;
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -120,7 +123,6 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-
     public function getBookingsAthleteAll(Request $request) {
         $rules = ['limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
@@ -129,7 +131,7 @@ class BookingController extends ApiController
         endif;
         try {
             $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-            $model = $model->with(['userDetails','targetData']);
+            $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
 
             return parent::success($model->paginate($perPage));
@@ -173,7 +175,6 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-
     public function getBookingsOrganiser(Request $request) {
         $rules = ['search' => '','target_id'=>'required','type'=>'required|in:event,session,space','order_by'=>'required_if:type,event|required_if:type,session','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -233,6 +234,7 @@ class BookingController extends ApiController
         }
     }
 
+
     public function getBookingsCoach(Request $request) {
         $rules = ['search' => '','target_id'=>'','type'=>'required|in:event,session,space','order_by'=>'required_if:type,event|required_if:type,session','limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -241,14 +243,11 @@ class BookingController extends ApiController
         endif;
 
         try {
-
-
             $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
             if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid auth token');
 //            $target = Event::where('created_by',\Auth::id())->pluck('id');
-
             switch ($request->type):
                 case 'event':
                     $targetModel= new \App\Event();
@@ -291,29 +290,25 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
-    public function getBookingsCoachAll(Request $request) {
-        $rules = ['limit' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        try {
 
+    public function getAllBookingsCoach(Request $request)  {
+    $rules = ['limit' => ''];
+    $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+    if ($validateAttributes):
+        return $validateAttributes;
+    endif;
+    try {
+//        dd(\Auth::id());
+        $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+        $model = $model->with(['userDetails']);
+        $perPage = isset($request->limit) ? $request->limit : 20;
 
-            $model = new \App\Booking();
-            $user = \App\User::find(Auth::user()->id);
-            if ($user->hasRole('coach') === false)
-                return parent::error('Please use valid auth token');
-            $targetModel->where('created_by',\Auth::id())->get();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
-            $model = $model->with(['userDetails','targetData']);
-            $perPage = isset($request->limit) ? $request->limit : 20;
-
-            return parent::success($model->paginate($perPage));
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
+        return parent::success($model->paginate($perPage));
+    } catch (\Exception $ex) {
+        return parent::error($ex->getMessage());
     }
+}
+
     public function getitem(Request $request) {
 
         $rules = ['id' => 'required|exists:bookings,id'];
