@@ -32,16 +32,19 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'full_name', 'email'] as $column): ?>
+                                <?php foreach (['id', 'name', 'email', 'experience', 'hourly_rate'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
-                                        <td>{{ $user->$column }}</td> 
+                                        <td>{{ $user->$column }}</td>
                                     </tr>
                                 <?php endforeach; ?>
                                 <tr>
                                     <th>Profile.</th>
-                                    <td><img width="50" src="{{url('uploads/client/profile_pic/'.$user->profile_pic)}}"></td> 
+                                    <td><img width="50" src="{{url('uploads/organiser/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
+
+
+
                             </tbody>
                         </table>
                     </div>

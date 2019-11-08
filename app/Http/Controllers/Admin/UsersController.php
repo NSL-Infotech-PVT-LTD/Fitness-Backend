@@ -57,14 +57,14 @@ class UsersController extends AdminCommonController {
                                 $return = '';
                                 if ($role_id != '1'):
                                     if ($item->state == '0'):
-                                        $return .= "<button class='btn btn-success btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
+                                        $return .= "<button class='btn btn-danger btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
                                     else:
-                                        $return .= "<button class='btn btn-danger btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
+                                        $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                     endif;
                                 endif;
-                                $return .= "<a href=" . url('/admin/users/' . $item->id) . " title='View User'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                $return .= " <a href=" . url('/admin/users/' . $item->id) . " title='View User'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
                                         <a href=" . url('/admin/users/' . $item->id . '/edit') . " title='Edit User'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
-                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/users/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                        . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/users/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
                             ->rawColumns(['action'])
@@ -120,10 +120,18 @@ class UsersController extends AdminCommonController {
     public function show($id) {
         $user = User::findOrFail($id);
 
-        if ($user->hasRole('freelancer')):
-            return view('admin.users.show.freelancer', compact('user'));
+        if ($user->hasRole('super admin')):
+            return view('admin.users.show.admin', compact('user'));
         else:
-            return view('admin.users.show.client', compact('user'));
+            if ($user->hasRole('coach')):
+                return view('admin.users.show.coach', compact('user'));
+            else:
+                if ($user->hasRole('organizer')):
+                    return view('admin.users.show.organizer', compact('user'));
+                else:
+            return view('admin.users.show.athlete', compact('user'));
+        endif;
+            endif;
         endif;
     }
 
@@ -174,7 +182,7 @@ class UsersController extends AdminCommonController {
             $user->assignRole($role);
         }
 //         $role_id = \DB::table('role_user')->select('role_id')->get();
-        
+
         $role_id = $user->roles->first()->id;
 //        dd($role_id);
         return redirect('admin/users/role/'.$role_id)->with('flash_message', 'User Updated!');

@@ -34,7 +34,7 @@ class AuthController extends ApiController {
 
     public function CoachRegister(Request $request) {
 //        dd(implode(',',\App\Currency::get()->pluck('id')->toArray()));
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'sport_id'=>'required','service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required'];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'sport_id'=>'required','service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required','profession'=>'required','experience_detail'=>'required','training_service_detail'=>'required'];
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -69,14 +69,13 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'password' => '', 'phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => ''];
+        $rules = ['name' => '', 'phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '','profession'=>'','experience_detail'=>'','training_service_detail'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
             $input = $request->all();
-            $input['password'] = Hash::make($request->password);
             $input['sport_id']= json_encode($request->sport_id);
             if (isset($request->profile_image))
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'),true);
@@ -88,7 +87,7 @@ class AuthController extends ApiController {
             $user->fill($input);
             $user->save();
             parent::addUserDeviceData($user, $request);
-            $user = \App\User::whereId($user->id)->select('id','name','email','phone','location','latitude','longitude','business_hour_starts','business_hour_ends','bio','service_ids','expertise_years','hourly_rate','profile_image','sport_id')->first();
+            $user = \App\User::whereId($user->id)->select('id','name','email','phone','location','latitude','longitude','business_hour_starts','business_hour_ends','bio','service_ids','expertise_years','hourly_rate','profile_image','sport_id','profession','experience_detail','training_service_detail')->first();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -125,7 +124,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('athlete') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'password' => '', 'phone' => '', 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => ''];
+        $rules = ['name' => '', 'phone' => '', 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -133,7 +132,6 @@ class AuthController extends ApiController {
         try {
             $input = $request->all();
             $input['sport_id']= json_encode($request->sport_id);
-            $input['password'] = Hash::make($request->password);
             if (isset($request->profile_image))
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
@@ -148,7 +146,7 @@ class AuthController extends ApiController {
     }
 
     public function OrganiserRegister(Request $request) {
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required', 'portfolio_image_1' => 'required', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => ''];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required', 'portfolio_image_1' => 'required', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '','experience_detail'=>'required','training_service_detail'=>'required'];
 
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -189,14 +187,13 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('organizer') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'password' => '', 'phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => 'required', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => ''];
+        $rules = ['name' => '','phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => 'required', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '','experience_detail'=>'','training_service_detail'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
             $input = $request->all();
-            $input['password'] = Hash::make($request->password);
             if (isset($request->profile_image))
                 $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
@@ -220,7 +217,7 @@ class AuthController extends ApiController {
             if (isset($request->service_ids))
                 self::addservices($request->service_ids, $user->id);
             //add service module end
-            $user = \App\User::whereId($user->id)->select('id','name','email','phone','location','latitude','longitude','bio','service_ids','expertise_years','hourly_rate','business_hour_starts','business_hour_ends','portfolio_image','profile_image')->first();
+            $user = \App\User::whereId($user->id)->select('id','name','email','phone','location','latitude','longitude','bio','service_ids','expertise_years','hourly_rate','business_hour_starts','business_hour_ends','portfolio_image','profile_image','experience_detail','training_service_detail')->first();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' =>$user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -299,7 +296,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids','sport_id');
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids','sport_id','experience_detail','training_service_detail');
 
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
@@ -324,10 +321,12 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'service_ids');
+                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'sport_id','hourly_rate', 'service_ids','profession','experience_detail','training_service_detail');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('email', 'LIKE', "%$request->search%")
+                    ->orWhere('sport_id', 'LIKE', "%$request->search%");
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -352,11 +351,13 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
+                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years','sport_id', 'hourly_rate', 'portfolio_image', 'service_ids','profession','experience_detail','training_service_detail');
             $model = $model->where('id', $request->id);
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
-                    ->orWhere('email', 'LIKE', "%$request->search%");
+                    ->orWhere('email', 'LIKE', "%$request->search%")
+                    ->orWhere('sport_id', 'LIKE', "%$request->search%");
+
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage)->first());
 
@@ -385,7 +386,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids');
+                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids','experience_detail','training_service_detail');
             $model = $model->where('id', $request->id);
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")

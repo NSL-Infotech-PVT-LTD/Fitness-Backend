@@ -291,7 +291,29 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
+    public function getBookingsCoachAll(Request $request) {
+        $rules = ['limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
 
+
+            $model = new \App\Booking();
+            $user = \App\User::find(Auth::user()->id);
+            if ($user->hasRole('coach') === false)
+                return parent::error('Please use valid auth token');
+            $targetModel->where('created_by',\Auth::id())->get();
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price');
+            $model = $model->with(['userDetails','targetData']);
+            $perPage = isset($request->limit) ? $request->limit : 20;
+
+            return parent::success($model->paginate($perPage));
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
     public function getitem(Request $request) {
 
         $rules = ['id' => 'required|exists:bookings,id'];
