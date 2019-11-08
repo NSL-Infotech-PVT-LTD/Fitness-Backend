@@ -17,7 +17,7 @@
                     <div class="table-responsive">
                         <table class="table table-borderless data-table">
                             <thead>
-                                <tr> 
+                                <tr>
                                     <th>ID</th>
                                     <?php foreach ($rules as $rule): ?>
                                         <th>{{ucfirst($rule)}}</th>
@@ -86,7 +86,7 @@
             var status = $(this).attr('data-status');
             Swal.fire({
                 title: 'Are you sure you wanted to change status?',
-                text: "You won't be able to revert this!",
+                text: "You can revert this,in case you change your mind!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

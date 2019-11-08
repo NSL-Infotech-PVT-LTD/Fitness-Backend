@@ -42,6 +42,7 @@ class CreateEventsTable extends Migration {
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('guest_allowed')->default(0);
             $table->string('equipment_required')->nullable();
+            $table->integer('guest_allowed_left')->default(0);
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }

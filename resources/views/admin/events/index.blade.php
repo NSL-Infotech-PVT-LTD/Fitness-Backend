@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <a href="{{ url('/admin/events/create') }}" class="btn btn-success btn-sm" title="Add New Event">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                    </a>                       
+                    </a>
                 </div>
 
                 <br/>
@@ -19,7 +19,7 @@
                 <div class="table-responsive">
                     <table class="table table-borderless data-table">
                         <thead>
-                            <tr> 
+                            <tr>
                                 <th>ID</th>
                                 <?php foreach ($rules as $rule): ?>
                                     <th>{{ucfirst($rule)}}</th>
@@ -84,7 +84,7 @@
             var status = $(this).attr('data-status');
             Swal.fire({
             title: 'Are you sure you wanted to change status?',
-                    text: "You won't be able to revert this!",
+                text: "You can revert this,in case you change your mind!",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',

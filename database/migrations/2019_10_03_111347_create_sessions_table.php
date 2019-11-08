@@ -30,6 +30,7 @@ class CreateSessionsTable extends Migration {
                 $table->integer('created_by')->unsigned()->index();
             }
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('guest_allowed_left')->default(0);
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }

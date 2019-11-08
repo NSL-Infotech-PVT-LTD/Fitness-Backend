@@ -26,13 +26,13 @@ class EventsController extends AdminCommonController
                                 $return = '';
 
                                 if ($item->state == '0'):
-                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
+                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
                                 else:
-                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
+                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
-                                $return .= "<a href=" . url('/admin/events/' . $item->id) . " title='View Event'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                $return .= " <a href=" . url('/admin/events/' . $item->id) . " title='View Event'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
                                         <a href=" . url('/admin/events/' . $item->id . '/edit') . " title='Edit Event'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
-                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/events/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                        . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/events/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
                             ->rawColumns(['action'])
@@ -70,7 +70,7 @@ class EventsController extends AdminCommonController
 			'guest_allowed' => 'required'
 		]);
         $requestData = $request->all();
-        
+
         Event::create($requestData);
 
         return redirect('admin/events')->with('flash_message', 'Event added!');
@@ -124,7 +124,7 @@ class EventsController extends AdminCommonController
 			'guest_allowed' => 'required'
 		]);
         $requestData = $request->all();
-        
+
         $event = Event::findOrFail($id);
         $event->update($requestData);
 
@@ -144,7 +144,7 @@ class EventsController extends AdminCommonController
 
         return redirect('admin/events')->with('flash_message', 'Event deleted!');
     }
-    
+
      public function changeStatus(Request $request) {
         $appointment = Event::findOrFail($request->id);
         $appointment->state = $request->status == 'Block' ? '0' : '1';
