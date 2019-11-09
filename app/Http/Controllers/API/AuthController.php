@@ -308,7 +308,7 @@ class AuthController extends ApiController {
     }
 
     public function getCoaches(Request $request) {
-        $rules = ['search' => '', 'limit' => ''];
+        $rules = ['search' => '', 'limit' => '','order_by'=>'required|in:latest,rating'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -327,6 +327,14 @@ class AuthController extends ApiController {
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                     ->orWhere('email', 'LIKE', "%$request->search%")
                     ->orWhere('sport_id', 'LIKE', "%$request->search%");
+            switch ($request->order_by):
+                case 'latest':
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+                default :
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+            endswitch;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
