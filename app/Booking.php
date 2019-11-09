@@ -38,9 +38,32 @@ class Booking extends Model {
     }
 
 
-    protected $appends = array('target_data');
+    protected $appends = array('target_data','booking_date');
 
-    public function getTargetDataAttribute() {
+    public function getBookingDateAttribute() {
+
+        switch ($this->type):
+            case 'event':
+                $targetModel= new \App\Event();
+                $model = $targetModel->whereId($this->target_id)->get();
+                if ($model->isEmpty() !== true)
+                    return ['start'=>$model->first()->start_date.' '.$model->first()->start_time,'end'=>$model->first()->end_date.' '.$model->first()->end_time];
+                break;
+            case 'space':
+//                $targetModel= new \App\Space();
+                return ['start'=>$this->space_start_date,'end'=>$this->space_end_date];
+                break;
+            case 'session':
+                $targetModel= new \App\Session();
+                $model = $targetModel->whereId($this->target_id)->get();
+                if ($model->isEmpty() !== true)
+                    return ['start'=>$model->first()->start_date,'end'=>$model->first()->end_date];
+                break;
+        endswitch;
+        return [];
+
+    }
+        public function getTargetDataAttribute() {
         try {
             switch ($this->type):
                 case 'event':
@@ -53,7 +76,7 @@ class Booking extends Model {
                     break;
                 case 'session':
                     $targetModel= new \App\Session();
-                    $targetModel = $targetModel->select('id','name','description','business_hour','date','hourly_rate','images','phone','location','latitude','longitude','guest_allowed','guest_allowed_left','created_by');
+                    $targetModel = $targetModel->select('id','name','description','start_date','end_date','hourly_rate','images','phone','location','latitude','longitude','guest_allowed','guest_allowed_left','created_by');
                     break;
             endswitch;
             $model = $targetModel->whereId($this->target_id)->get();
