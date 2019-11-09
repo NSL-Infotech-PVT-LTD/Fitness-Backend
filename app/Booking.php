@@ -57,7 +57,7 @@ class Booking extends Model {
                 $targetModel= new \App\Session();
                 $model = $targetModel->whereId($this->target_id)->get();
                 if ($model->isEmpty() !== true)
-                    return ['start'=>$model->first()->start_date,'end'=>$model->first()->end_date];
+                    return ['start'=>$model->first()->start_date.' '.$model->first()->start_time,'end'=>$model->first()->end_date.' '.$model->first()->end_time];
                 break;
         endswitch;
         return [];
@@ -76,7 +76,7 @@ class Booking extends Model {
                     break;
                 case 'session':
                     $targetModel= new \App\Session();
-                    $targetModel = $targetModel->select('id','name','description','start_date','end_date','hourly_rate','images','phone','location','latitude','longitude','guest_allowed','guest_allowed_left','created_by');
+                    $targetModel = $targetModel->select('id','name','description','start_date','end_date','start_time','end_time','hourly_rate','images','phone','location','latitude','longitude','guest_allowed','guest_allowed_left','created_by');
                     break;
             endswitch;
             $model = $targetModel->whereId($this->target_id)->get();

@@ -17,7 +17,7 @@ class SessionController extends ApiController
     public function store(Request $request)
     {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d H:i"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d H:i"|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'guest_allowed' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'guest_allowed' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -45,7 +45,7 @@ class SessionController extends ApiController
 
     public function Update(Request $request)
     {
-        $rules = ['id' => 'required','name' => '', 'description' => '', 'start_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'location'=>'', 'latitude'=>'', 'longitude'=>'','guest_allowed' => '', 'created_by' => ''];
+        $rules = ['id' => 'required','name' => '', 'description' => '', 'start_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'location'=>'', 'latitude'=>'', 'longitude'=>'','guest_allowed' => '', 'created_by' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -101,7 +101,7 @@ class SessionController extends ApiController
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'hourly_rate','location', 'latitude', 'longitude', 'images', 'phone', 'guest_allowed', 'guest_allowed_left','created_by');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','hourly_rate','location', 'latitude', 'longitude', 'images', 'phone', 'guest_allowed', 'guest_allowed_left','created_by');
             if ($request->order_by == 'upcoming')
                 $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
@@ -131,7 +131,7 @@ class SessionController extends ApiController
             return parent::error('Please use valid auth token');
 
 
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'location', 'latitude', 'longitude','hourly_rate', 'images', 'phone', 'guest_allowed','guest_allowed_left', 'created_by');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','location', 'latitude', 'longitude','hourly_rate', 'images', 'phone', 'guest_allowed','guest_allowed_left', 'created_by');
             if ($request->order_by == 'upcoming')
                 $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
@@ -165,7 +165,7 @@ class SessionController extends ApiController
             $perPage = isset($request->limit) ? $request->limit : 20;
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'hourly_rate', 'location', 'latitude', 'longitude', 'images', 'phone', 'guest_allowed','guest_allowed_left','created_by', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','hourly_rate', 'location', 'latitude', 'longitude', 'images', 'phone', 'guest_allowed','guest_allowed_left','created_by', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
