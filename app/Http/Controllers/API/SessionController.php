@@ -45,7 +45,7 @@ class SessionController extends ApiController
 
     public function Update(Request $request)
     {
-        $rules = ['id' => 'required','name' => '', 'description' => '', 'start_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'location', 'latitude', 'longitude','guest_allowed' => '', 'created_by' => ''];
+        $rules = ['id' => 'required','name' => '', 'description' => '', 'start_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => '', 'location'=>'', 'latitude'=>'', 'longitude'=>'','guest_allowed' => '', 'created_by' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;

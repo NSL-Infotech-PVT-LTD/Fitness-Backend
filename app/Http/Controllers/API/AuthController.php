@@ -283,7 +283,7 @@ class AuthController extends ApiController {
     }
 
     public function getOrganisers(Request $request) {
-        $rules = ['search' => '', 'limit' => ''];
+        $rules = ['search' => '', 'limit' => '','order_by'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -301,6 +301,14 @@ class AuthController extends ApiController {
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
+            switch ($request->order_by):
+                case 'latest':
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+                default :
+                    $model = $model->orderBy('created_at', 'desc');
+                    break;
+            endswitch;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
