@@ -47,7 +47,7 @@ class Booking extends Model {
                 $targetModel= new \App\Event();
                 $model = $targetModel->whereId($this->target_id)->get();
                 if ($model->isEmpty() !== true)
-                    return ['start'=>$model->first()->start_date.' '.$model->first()->start_time,'end'=>$model->first()->end_date.' '.$model->first()->end_time];
+                    return ['start'=>$model->first()->start_date,'end'=>$model->first()->end_date];
                 break;
             case 'space':
 //                $targetModel= new \App\Space();
@@ -57,7 +57,7 @@ class Booking extends Model {
                 $targetModel= new \App\Session();
                 $model = $targetModel->whereId($this->target_id)->get();
                 if ($model->isEmpty() !== true)
-                    return ['start'=>$model->first()->start_date.' '.$model->first()->start_time,'end'=>$model->first()->end_date.' '.$model->first()->end_time];
+                    return ['start'=>$model->first()->start_date,'end'=>$model->first()->end_date];
                 break;
         endswitch;
         return [];
