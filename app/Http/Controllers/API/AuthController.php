@@ -308,7 +308,7 @@ class AuthController extends ApiController {
     }
 
     public function getCoaches(Request $request) {
-        $rules = ['search' => '', 'limit' => '','order_by'=>'required|in:latest,rating'];
+        $rules = ['search' => '', 'limit' => '','order_by'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
