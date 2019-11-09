@@ -15,8 +15,8 @@ class CreateSessionsTable extends Migration {
             $table->increments('id');
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->time('business_hour')->nullable();
-            $table->date('date')->nullable();
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
             $table->float('hourly_rate')->nullable();
             $table->string('location')->nullable();
             $table->string('latitude')->nullable();
