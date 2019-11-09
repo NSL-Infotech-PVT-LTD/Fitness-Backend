@@ -104,7 +104,7 @@ class AuthController extends ApiController {
         endif;
         try {
             $input = $request->all();
-            $input['sport_id']= json_encode($request->sport_id);
+//            $input['sport_id']= json_encode($request->sport_id);
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
             $user = \App\User::create($input);
@@ -131,7 +131,7 @@ class AuthController extends ApiController {
         endif;
         try {
             $input = $request->all();
-            $input['sport_id']= json_encode($request->sport_id);
+//            $input['sport_id']= json_encode($request->sport_id);
             if (isset($request->profile_image))
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'),true);
 //            var_dump(json_decode($input['category_id']));
