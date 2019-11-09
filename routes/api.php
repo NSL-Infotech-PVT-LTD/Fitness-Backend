@@ -54,6 +54,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('space/details', 'API\SpacesController@getitem');
     Route::post('coach/details','API\AuthController@getcoach');
     Route::post('organiser/details','API\AuthController@getorganiser');
+    Route::post('organiser/coach/store','API\OrganiserCoachController@store');
+    Route::post('organiser/coach/update','API\OrganiserCoachController@update');
+    Route::post('organiser/coach/list', 'API\OrganiserCoachController@getitems');
+
 
 
 });

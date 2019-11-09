@@ -153,7 +153,7 @@ class BookingController extends ApiController
                     if($request->type=='event'):
                         $targetOrderByKey='end_date';
                     elseif ($request->type=='session'):
-                         $targetOrderByKey='date';
+                         $targetOrderByKey='end_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey,'>=',\Carbon\Carbon::now());
@@ -212,7 +212,7 @@ class BookingController extends ApiController
                     if($request->type=='event'):
                         $targetOrderByKey='end_date';
                     elseif ($request->type=='session'):
-                        $targetOrderByKey='date';
+                        $targetOrderByKey='end_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey,'>=',\Carbon\Carbon::now());
@@ -268,7 +268,7 @@ class BookingController extends ApiController
                     if($request->type=='event'):
                         $targetOrderByKey='end_date';
                     elseif ($request->type=='session'):
-                        $targetOrderByKey='date';
+                        $targetOrderByKey='end_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey,'>=',\Carbon\Carbon::now());

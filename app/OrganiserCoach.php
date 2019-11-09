@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrganiserCoach extends Model
 {
-    protected $fillable = ['name', 'profile_image', 'bio', 'sport_id', 'organisation_id','hourly_rate','experience_detail', 'expertise_years', 'profession','training-service_detail'];
+    protected $fillable = ['name', 'profile_image', 'bio', 'sport_id', 'organisation_id','hourly_rate','experience_detail', 'expertise_years', 'profession','training_service_detail'];
 
     public function getSportIdAttribute($value) {
 //        dd($value);
