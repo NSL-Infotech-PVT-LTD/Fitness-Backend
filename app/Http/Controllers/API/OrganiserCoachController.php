@@ -87,4 +87,26 @@ class OrganiserCoachController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
+
+    public function getOrganiseritems(Request $request) {
+
+
+        $rules = ['search'=>'','limit'=>'','organiser_id'=>''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new MyModel();
+            $model = $model->where('organisation_id',$request->organiser_id)->select('id','name','profile_image','bio','sport_id','organisation_id','hourly_rate','experience_detail','expertise_years','profession','training_service_detail');
+            if (isset($request->search))
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
+
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
 }
