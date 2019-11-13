@@ -24,6 +24,8 @@ class EventsController extends ApiController {
             $input = $request->all();
 
             $input['created_by'] = \Auth::id();
+            $input['state'] = '1';
+
             $images = [];
 
             for ($i = 1; $i <= 5; $i++):

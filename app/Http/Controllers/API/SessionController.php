@@ -25,6 +25,7 @@ class SessionController extends ApiController
         try {
             $input = $request->all();
             $input['created_by'] = \Auth::id();
+            $input['state']= '1';
             $images = [];
 
             for ($i = 1; $i <= 5; $i++):
@@ -64,6 +65,7 @@ class SessionController extends ApiController
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
+            $input['state']= '1';
             $session = MyModel::findOrFail($request->id);
             $session->fill($input);
             $session->save();

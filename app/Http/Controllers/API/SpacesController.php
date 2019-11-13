@@ -23,6 +23,7 @@ class SpacesController extends ApiController {
         try {
             $input = $request->all();
             $input['created_by'] = \Auth::id();
+            $input['state']= '1';
             $images = [];
 
             for ($i = 1; $i <= 5; $i++):
@@ -61,6 +62,7 @@ class SpacesController extends ApiController {
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
+            $input['state']= '1';
             $space = MyModel::findOrFail($request->id);
             $space->fill($input);
             $space->save();
@@ -122,6 +124,8 @@ class SpacesController extends ApiController {
             return parent::error('Please use valid token');
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude','availability_week', 'open_hours_from','open_hours_to','created_by', 'price_daily');
+
+
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                     ->orWhere('description', 'LIKE', "%$request->search%");
@@ -176,6 +180,10 @@ class SpacesController extends ApiController {
             if($request->organiser_id){
                 $model = $model->where('created_by', $request->input('organiser_id'));
 
+            }
+
+            if ($user->hasRole('organizer') === true){
+                $model = $model->where('created_by', '!=',\Auth::id());
             }
 
             return parent::success($model->paginate($perPage));

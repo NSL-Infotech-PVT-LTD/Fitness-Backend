@@ -14,7 +14,7 @@
         <link href="{{asset('adminMedia/css/style.css')}}" rel='stylesheet' type='text/css' />
         <!-- font CSS -->
         <!-- font-awesome icons -->
-        <link href="{{asset('adminMedia/css/font-awesome.css')}}" rel="stylesheet"> 
+        <link href="{{asset('adminMedia/css/font-awesome.css')}}" rel="stylesheet">
         <!-- //font-awesome icons -->
         <!-- js-->
         <script src="{{asset('adminMedia/js/jquery-1.11.1.min.js')}}"></script>
@@ -22,19 +22,19 @@
         <!--webfonts-->
         <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
         <!--datatable starts-->
-       
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />-->
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>-->  
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>-->
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>-->
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-    
+
     <!--datatable ends-->
-        <!--//webfonts--> 
+        <!--//webfonts-->
         <!--animate-->
         <link href="{{asset('adminMedia/css/animate.css')}}" rel="stylesheet" type="text/css" media="all">
         <script src="{{asset('adminMedia/js/wow.min.js')}}"></script>
@@ -47,7 +47,7 @@ new WOW().init();
         <script src="{{asset('adminMedia/js/custom.js')}}"></script>
         <link href="{{asset('adminMedia/css/custom.css')}}" rel="stylesheet">
         <!--//Metis Menu -->
-    </head> 
+    </head>
     <body class="cbp-spmenu-push">
         <div class="main-content">
             <!--left-fixed -navigation-->
@@ -59,12 +59,12 @@ new WOW().init();
                                 <a href="{{ url('/admin') }}"><i class="fa fa-home nav_icon"></i>Dashboard</a>
                             </li>
                             <li>
-                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>users<span class=""></span></a>              
+                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>users<span class=""></span></a>
                                 <ul class="nav nav-second-level collapse">
                                     <?php foreach (\App\Role::all() as $role): ?>
                                         <li>
                                             <a href="{{ url('admin/users/role/'.$role->id) }}">{{$role->name}}<span class=""></span></a>
-                                        </li>  
+                                        </li>
                                     <?php endforeach; ?>
                                 </ul>
                             </li>
@@ -119,7 +119,7 @@ new WOW().init();
                                                 <p>Lorem ipsum dolor amet</p>
                                                 <p><span>1 hour ago</span></p>
                                             </div>
-                                            <div class="clearfix"></div>	
+                                            <div class="clearfix"></div>
                                         </a></li>
                                     <li class="odd"><a href="#">
                                             <div class="user_img"><img src="images/1.png" alt=""></div>
@@ -127,7 +127,7 @@ new WOW().init();
                                                 <p>Lorem ipsum dolor amet </p>
                                                 <p><span>1 hour ago</span></p>
                                             </div>
-                                            <div class="clearfix"></div>	
+                                            <div class="clearfix"></div>
                                         </a></li>
                                     <li><a href="#">
                                             <div class="user_img"><img src="images/3.png" alt=""></div>
@@ -135,37 +135,37 @@ new WOW().init();
                                                 <p>Lorem ipsum dolor amet </p>
                                                 <p><span>1 hour ago</span></p>
                                             </div>
-                                            <div class="clearfix"></div>	
+                                            <div class="clearfix"></div>
                                         </a></li>
                                     <li>
                                         <div class="notification_bottom">
                                             <a href="#">See all notifications</a>
-                                        </div> 
+                                        </div>
                                     </li>
                                 </ul>
-                            </li>	
+                            </li>
                         </ul>
                         <div class="clearfix"> </div>
                     </div>
                     <!--notification menu end -->
-                    <div class="profile_details">		
+                    <div class="profile_details">
                         <ul>
                             <li class="dropdown profile_details_drop">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <div class="profile_img">	
-                                        <span class="prfil-img"><img src="images/a.png" alt=""> </span> 
+                                    <div class="profile_img">
+                                        <span class="prfil-img"><img src="images/a.png" alt=""> </span>
                                         <div class="user-name">
                                             <p>Admin</p>
                                             <span>Administrator</span>
                                         </div>
                                         <i class="fa fa-angle-down lnr"></i>
                                         <i class="fa fa-angle-up lnr"></i>
-                                        <div class="clearfix"></div>	
-                                    </div>	
+                                        <div class="clearfix"></div>
+                                    </div>
                                 </a>
                                 <ul class="dropdown-menu drp-mnu">
-                                    <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li> 
-                                    <li> <a href="#"><i class="fa fa-user"></i> Profile</a> </li> 
+                                    <li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>
+                                    <li> <a href="#"><i class="fa fa-user"></i> Profile</a> </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ url('/logout') }}"
                                            onclick="event.preventDefault();
@@ -180,9 +180,9 @@ new WOW().init();
                             </li>
                         </ul>
                     </div>
-                    <div class="clearfix"> </div>	
+                    <div class="clearfix"> </div>
                 </div>
-                <div class="clearfix"> </div>	
+                <div class="clearfix"> </div>
             </div>
             <!-- //header-ends -->
             <!-- main content start-->

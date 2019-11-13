@@ -9,16 +9,16 @@
             <div class="card">
                 <div class="card-header">Spaces</div>
                 <div class="card-body">
-                    <a href="{{ url('/admin/spaces/create') }}" class="btn btn-success btn-sm" title="Add New Space">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Add New
-                    </a>                     
+{{--                    <a href="{{ url('/admin/spaces/create') }}" class="btn btn-success btn-sm" title="Add New Space">--}}
+{{--                        <i class="fa fa-plus" aria-hidden="true"></i> Add New--}}
+{{--                    </a>                     --}}
 
                     <br/>
                     <br/>
                     <div class="table-responsive">
                         <table class="table table-borderless data-table">
                             <thead>
-                                <tr> 
+                                <tr>
                                     <th>ID</th>
                                     <?php foreach ($rules as $rule): ?>
                                         <th>{{ucfirst($rule)}}</th>
