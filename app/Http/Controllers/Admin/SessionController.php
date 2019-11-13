@@ -26,9 +26,9 @@ class SessionController extends Controller {
                                 $return = '';
 
                                 if ($item->state == '0'):
-                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
+                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
                                 else:
-                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
+                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
                                 $return .= "<a href=" . url('/admin/session/' . $item->id) . " title='View Session'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
                                         <a href=" . url('/admin/session/' . $item->id . '/edit') . " title='Edit Session'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
@@ -136,7 +136,7 @@ class SessionController extends Controller {
 
         return redirect('admin/session')->with('flash_message', 'Session deleted!');
     }
-    
+
      public function changeStatus(Request $request) {
         $appointment = Session::findOrFail($request->id);
         $appointment->state = $request->status == 'Block' ? '0' : '1';

@@ -33,7 +33,7 @@ class UsersController extends AdminCommonController {
         return view('admin.users.index', compact('users'));
     }
 
-    public function indexByRoleId(Request $request, $role_id) {
+        public function indexByRoleId(Request $request, $role_id) {
 //        $keyword = $request->get('search');
 //        $perPage = 5;
 //
@@ -70,7 +70,7 @@ class UsersController extends AdminCommonController {
                             ->rawColumns(['action'])
                             ->make(true);
         }
-        return view('admin.users.index', ['rules' => array_keys($this->__rulesforindex), 'role_id' => $role_id]);
+            return view('admin.users.index', ['rules' => array_keys($this->__rulesforindex), 'role_id' => $role_id]);
     }
 
     /**
@@ -213,9 +213,9 @@ class UsersController extends AdminCommonController {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function changeStatus(Request $request) {
-        $appointment = User::findOrFail($request->id);
-        $appointment->state = $request->status == 'Block' ? '0' : '1';
-        $appointment->save();
+        $user = User::findOrFail($request->id);
+        $user->state = $request->status == 'Block' ? '0' : '1';
+        $user->save();
         return response()->json(["success" => true, 'message' => 'User updated!']);
     }
 

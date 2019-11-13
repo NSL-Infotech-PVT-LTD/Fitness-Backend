@@ -33,7 +33,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $session->id }}</td>
                                     </tr>
-                                    <tr><th> Name </th><td> {{ $session->name }} </td></tr><tr><th> Description </th><td> {{ $session->description }} </td></tr><tr><th> Business Hour </th><td> {{ $session->business_hour }} </td></tr>
+                                    <tr><th> Name </th><td> {{ $session->name }} </td></tr><tr><th> Description </th><td> {{ $session->description }} </td></tr><tr><th>Hourly Rate </th><td> {{ $session->hourly_rate }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

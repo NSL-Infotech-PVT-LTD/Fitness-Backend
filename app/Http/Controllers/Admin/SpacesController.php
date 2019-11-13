@@ -26,9 +26,9 @@ class SpacesController extends AdminCommonController
                                 $return = '';
 
                                 if ($item->state == '0'):
-                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
+                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='UnBlock'  data-id=" . $item->id . " data-status='UnBlock'>UnBlock / Active</button>";
                                 else:
-                                    $return .= "<button class='btn btn-danger btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
+                                    $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
                                 $return .= "<a href=" . url('/admin/spaces/' . $item->id) . " title='View Space'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
                                         <a href=" . url('/admin/spaces/' . $item->id . '/edit') . " title='Edit Event'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
@@ -65,7 +65,7 @@ class SpacesController extends AdminCommonController
 			'price_hourly' => 'required'
 		]);
         $requestData = $request->all();
-        
+
         Space::create($requestData);
 
         return redirect('admin/spaces')->with('flash_message', 'Space added!');
@@ -114,7 +114,7 @@ class SpacesController extends AdminCommonController
 			'price_hourly' => 'required'
 		]);
         $requestData = $request->all();
-        
+
         $space = Space::findOrFail($id);
         $space->update($requestData);
 

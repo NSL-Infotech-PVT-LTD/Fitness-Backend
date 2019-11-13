@@ -15,7 +15,7 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-     protected $__rulesforindex = ['name' => 'required', 'location' => 'required','guest_allowed'=>'required'];
+     protected $__rulesforindex = ['name' => 'required', 'location' => 'required','guest_allowed'=>'required','category_id'=>'required'];
     public function index(Request $request)
     {
         if ($request->ajax()) {
