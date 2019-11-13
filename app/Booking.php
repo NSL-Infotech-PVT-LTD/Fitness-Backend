@@ -51,7 +51,7 @@ class Booking extends Model {
                 break;
             case 'space':
 //                $targetModel= new \App\Space();
-                return ['start'=>$this->space_start_date,'end'=>$this->space_end_date];
+                return ['start'=>$this->space_date_start,'end'=>$this->space_date_end];
                 break;
             case 'session':
                 $targetModel= new \App\Session();
