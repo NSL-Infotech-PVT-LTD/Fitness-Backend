@@ -316,7 +316,7 @@ class AuthController extends ApiController {
 
 //            if ($request->order_by == 'rating')
 //                $model = $model->orderBy('rating', 'desc');
-            return parent::success($model->get());
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -355,7 +355,7 @@ class AuthController extends ApiController {
 
 //            if ($request->order_by == 'rating')
 //                $model = $model->orderBy('rating', 'desc');
-            return parent::success($model->get());
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
