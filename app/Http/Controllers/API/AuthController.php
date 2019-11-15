@@ -295,9 +295,11 @@ class AuthController extends ApiController {
                 return parent::error('Please use valid token');
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
-            $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids','sport_id','experience_detail','training_service_detail');
 
+            $model = $model->wherein('users.id', $roleusersSA)
+                ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at','users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image','users.service_ids','users.sport_id','users.experience_detail','users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
+            $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
@@ -305,11 +307,16 @@ class AuthController extends ApiController {
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
                     break;
+                case 'rating':
+                        $model = $model->orderBy('rating', 'desc');
                 default :
                     $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
-            return parent::success($model->paginate($perPage));
+
+//            if ($request->order_by == 'rating')
+//                $model = $model->orderBy('rating', 'desc');
+            return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -329,21 +336,26 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image','business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'sport_id','hourly_rate', 'service_ids','profession','experience_detail','training_service_detail');
+                ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                    ->Select('users.id', 'users.name', 'users.email', 'users.phone', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image','users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.sport_id','users.hourly_rate', 'users.service_ids','users.profession','users.experience_detail','users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
+            $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%")
-                    ->orWhere('email', 'LIKE', "%$request->search%")
-                    ->orWhere('sport_id', 'LIKE', "%$request->search%");
+                $model = $model->Where('name', 'LIKE', "%$request->search%");
             switch ($request->order_by):
                 case 'latest':
-                    $model = $model->orderBy('created_at', 'desc');
+                    $model = $model->orderBy('users.created_at', 'desc');
                     break;
+                case 'rating':
+                    $model = $model->orderBy('rating', 'desc');
                 default :
                     $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
-            return parent::success($model->paginate($perPage));
+
+//            if ($request->order_by == 'rating')
+//                $model = $model->orderBy('rating', 'desc');
+            return parent::success($model->get());
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -367,8 +379,10 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years','sport_id', 'hourly_rate', 'service_ids','profession','experience_detail','training_service_detail');
-            $model = $model->where('id', $request->id);
+                ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                ->Select('users.id', 'users.name', 'users.email', 'users.phone', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image','users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.sport_id','users.hourly_rate', 'users.service_ids','users.profession','users.experience_detail','users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
+            $model = $model->groupBy('users.id');
+            $model = $model->where('users.id', $request->id);
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                     ->orWhere('email', 'LIKE', "%$request->search%")
@@ -402,8 +416,10 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                ->Select('id', 'name', 'email', 'phone', 'location', 'location', 'latitude', 'longitude', 'profile_image', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids','experience_detail','training_service_detail');
-            $model = $model->where('id', $request->id);
+                ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at','users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image','users.service_ids','users.sport_id','users.experience_detail','users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
+            $model = $model->groupBy('users.id');
+            $model = $model->where('users.id', $request->id);
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                     ->orWhere('email', 'LIKE', "%$request->search%");

@@ -24,7 +24,7 @@ class CreateBookingsTable extends Migration
             $table->integer('tickets')->default(1);
             $table->float('price')->default(0.00);
             $table->enum('status', ['pending', 'accepted', 'rejected',
-                'completed'])->nullable();
+                'completed','completed_rated'])->nullable();
             $table->text('payment_details')->nullable();
             $table->dateTime('space_date_start')->nullable();
             $table->dateTime('space_date_end')->nullable();
