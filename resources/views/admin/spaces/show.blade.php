@@ -33,7 +33,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $space->id }}</td>
                                     </tr>
-                                    <tr><th> Name </th><td> {{ $space->name }} </td></tr><tr><th> Images </th><td> {{ $space->images }} </td></tr><tr><th> Description </th><td> {{ $space->description }} </td></tr>
+                                    <tr><th> Name </th><td> {{ $space->name }} </td></tr><tr><th> Images </th><td><img width="50" src="{{url('uploads/spaces/'.$space->image)}}"></td></tr><tr><th> Description </th><td> {{ $space->description }} </td></tr>
                                 </tbody>
                             </table>
                         </div>
