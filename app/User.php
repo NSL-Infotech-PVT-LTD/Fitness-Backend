@@ -76,4 +76,10 @@ class User extends Authenticatable {
         }
     }
 
+    public function getRatingAttribute($value)
+    {
+        return $value == null ? '0' : number_format((float)$value, 2, '.', '');
+
+    }
+
 }

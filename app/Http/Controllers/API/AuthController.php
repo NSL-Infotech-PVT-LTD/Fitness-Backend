@@ -365,7 +365,7 @@ class AuthController extends ApiController {
     public function getcoach(Request $request)
     {
 
-        $rules = ['id' => 'required','search'=>'','limit'=>''];
+        $rules = ['id' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -374,7 +374,7 @@ class AuthController extends ApiController {
         try {
             $user = \App\User::findOrFail(\Auth::id());
             if ($user->hasRole('athlete') === false)
-                return parent::error('Please use valid token');
+                return parent::error('Please use valid auth token');
 
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
@@ -402,7 +402,7 @@ class AuthController extends ApiController {
     public function getorganiser(Request $request)
     {
 
-        $rules = ['id' => 'required','search'=>'','limit'=>''];
+        $rules = ['id' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -411,7 +411,7 @@ class AuthController extends ApiController {
         try {
             $user = \App\User::findOrFail(\Auth::id());
             if ($user->hasRole('athlete') === false)
-                return parent::error('Please use valid token');
+                return parent::error('Please use valid auth token');
             $model = new \App\User();
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
