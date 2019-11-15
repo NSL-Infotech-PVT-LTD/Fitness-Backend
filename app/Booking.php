@@ -52,7 +52,7 @@ class Booking extends Model {
             case 'space':
                 $targetModel= new \App\Booking();
                 $model = $targetModel->whereId($this->id)->get();
-                return ['start'=>$model->first()->space_date_start,'end'=>$model->first()->space_date_end];
+                return ['start' => date('Y-m-d', strtotime($model->first()->space_date_start)),'end' => date('Y-m-d', strtotime($model->first()->space_date_end))];
                 break;
             case 'session':
                 $targetModel= new \App\Session();
