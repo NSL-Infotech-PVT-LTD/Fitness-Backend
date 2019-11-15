@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
+use App\Booking;
 use App\Event;
 use App\Session;
 use Illuminate\Http\Request;
@@ -56,13 +57,18 @@ class BookingController extends ApiController
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            \Stripe\Charge::create([
+           $stripe = \Stripe\Charge::create([
                 "amount" => $booking->price * 100,
                 "currency" => config('app.stripe_default_currency'),
                 "source" => $request->token, // obtained with Stripe.js
                 "description" => "Charge for the booking booked through utrain app"
             ]);
             /*****target model update start****/
+//            Booking::findorfail($booking->id);
+            $booking->payment_details = json_encode($stripe);
+            $booking->save();
+
+
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
             $targetModelupdate->guest_allowed_left = $targetModeldata->first()->guest_allowed_left-$request->tickets;
             $targetModelupdate->save();
@@ -344,5 +350,33 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
+
+    public function rating(Request $request){
+        $rules = ['booking_id'=>'required','rating'=>'required|in:1,2,3,4,5'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+
+        try {
+            if (\App\Booking::whereId($request->booking_id)->where('user_id', \Auth::id())->get()->isEmpty())
+                return parent::error('Please use valid booking');
+            $rating = MyModel::where('id',$request->booking_id)->get();
+            if($rating->isEmpty() === false):
+                /*****target model update start****/
+                $ratingupdate = \App\Booking::findOrFail($request->booking_id);
+                $ratingupdate->rating = $request->rating;
+                $ratingupdate->status = 'completed_rated';
+                $ratingupdate->save();
+                /*****target model update end****/
+                return parent::successCreated(['message' => $request->booking_id.' Updated Successfully']);
+            else:
+                return parent::error('Booking is not rated yet');
+            endif;
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
 
 }

@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('organiser/coach/update','API\OrganiserCoachController@update');
     Route::post('organiser/coach/list', 'API\OrganiserCoachController@getitems');
     Route::post('organiser/coach/athlete/list', 'API\OrganiserCoachController@getOrganiseritems');
+    Route::post('booking/rating','API\BookingController@rating');
 
 
 
