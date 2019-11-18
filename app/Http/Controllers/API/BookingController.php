@@ -116,6 +116,7 @@ class BookingController extends ApiController
                 "source" => $request->token, // obtained with Stripe.js
                 "description" => "Charge for the booking booked through utrain app"
             ]);
+            $booking->payment_details = json_encode($stripe);
             /*****target model update start****/
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
             $targetModelupdate->save();
@@ -377,6 +378,27 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
+    
+    public function getTransactDetails(Request $request) {
+
+        $rules = ['id' => 'required|exists:bookings,id'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new \App\Booking();
+            $model = $model->where('id', $request->id)->with('userDetails');
+            $model = $model->with($model->first()->type);
+//            dd($model);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
 
 
 }
