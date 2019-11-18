@@ -203,11 +203,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
     public static function pushNotifications($data = [], $userId) {
 //        dd(\App\UserDevice::whereUserId($userId)->get());
-        $userNotificationData = $data;
-        $userNotificationData += ['user_id' => $userId];
-//        dd($userNotificationData);
-        \App\UserNotifcation::create ($userNotificationData);
-
+       
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
 //            dd($userDevice->token);
 //            dd($data);
