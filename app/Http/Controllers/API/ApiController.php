@@ -13,8 +13,6 @@ use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
 
-
-
 class ApiController extends \App\Http\Controllers\Controller {
 
     /**
@@ -205,6 +203,11 @@ class ApiController extends \App\Http\Controllers\Controller {
 
     public static function pushNotifications($data = [], $userId) {
 //        dd(\App\UserDevice::whereUserId($userId)->get());
+        $userNotificationData = $data;
+        $userNotificationData += ['user_id' => $userId];
+//        dd($userNotificationData);
+        \App\UserNotifcation::create ($userNotificationData);
+
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
 //            dd($userDevice->token);
 //            dd($data);
@@ -251,7 +254,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         stream_context_set_option($ctx, 'ssl', 'passphrase', '');
         // Open a connection to the APNS server
         $fp = stream_socket_client(
-            'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
+                'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
         if (!$fp)
             exit("Failed to connect: $err $errstr" . PHP_EOL);
         // Create the payload body
@@ -282,19 +285,19 @@ class ApiController extends \App\Http\Controllers\Controller {
      * @param bool $thumnail use to generate thumbnail image
      * @return string
      */
-    protected static function __uploadImage($image, $path = null,$thumbnail=false) {
+    protected static function __uploadImage($image, $path = null, $thumbnail = false) {
         if ($path === null)
             $path = public_path('uploads');
         $digits = 3;
-        $imageName = time() .rand(pow(10, $digits-1), pow(10, $digits)-1). '.' . $image->getClientOriginalExtension();
+        $imageName = time() . rand(pow(10, $digits - 1), pow(10, $digits) - 1) . '.' . $image->getClientOriginalExtension();
         $image->move($path, $imageName);
-        /******************generate Thumbnail image start ***********************/
-        if($thumbnail===true):
-            $path.='/';
-            $img = \Intervention\Image\ImageManagerStatic::make($path.$imageName)->resize(320, 240);
-            $img->save($path.'thumbnail_'.$imageName);
+        /*         * ****************generate Thumbnail image start ********************** */
+        if ($thumbnail === true):
+            $path .= '/';
+            $img = \Intervention\Image\ImageManagerStatic::make($path . $imageName)->resize(320, 240);
+            $img->save($path . 'thumbnail_' . $imageName);
         endif;
-        /******************generate Thumbnail image end ***********************/
+        /*         * ****************generate Thumbnail image end ********************** */
         return $imageName;
     }
 
@@ -382,7 +385,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 
         // Check errors
         if ($response) {
-
+            
         } else {
             $error = curl_error($curl) . '(' . curl_errno($curl) . ')';
             echo $error . "\n";
