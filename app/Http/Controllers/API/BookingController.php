@@ -65,10 +65,9 @@ class BookingController extends ApiController
             ]);
             /*****target model update start****/
 //            Booking::findorfail($booking->id);
-            $booking->payment_details = $stripe;
+            $booking->payment_details = json_encode($stripe);
+            $booking->payment_id = $stripe->id;
             $booking->save();
-
-
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
             $targetModelupdate->guest_allowed_left = $targetModeldata->first()->guest_allowed_left-$request->tickets;
             $targetModelupdate->save();
@@ -117,6 +116,7 @@ class BookingController extends ApiController
                 "description" => "Charge for the booking booked through utrain app"
             ]);
             $booking->payment_details = json_encode($stripe);
+            $booking->payment_id = $stripe->id;
             /*****target model update start****/
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
             $targetModelupdate->save();
@@ -137,7 +137,7 @@ class BookingController extends ApiController
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','space_date_start','space_date_end');
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','space_date_start','space_date_end','payment_id');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
 
@@ -153,7 +153,7 @@ class BookingController extends ApiController
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_details');
+            $model = MyModel::where('user_id', \Auth::id())->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id');
             $model = $model->with('userDetails')->with($request->type);
             if($request->type != 'space'):
                 $model= $model->whereHas($request->type, function ($query)use($request) {
@@ -210,7 +210,7 @@ class BookingController extends ApiController
             endswitch;
             if($targetModel::where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
                 return parent::error('Not found');
-            $model = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_details');
+            $model = MyModel::where('target_id',$request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id');
 //            dd($model);
 
             $model = $model->with('userDetails')->with($request->type);
@@ -268,7 +268,7 @@ class BookingController extends ApiController
             endswitch;
             if($targetModel->where('created_by',\Auth::id())->where('id',$request->target_id)->get()->isEmpty())
                 return parent::error('Not found');
-            $model = MyModel::where('target_id', $request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_details');
+            $model = MyModel::where('target_id', $request->target_id)->where('type',$request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id');
             $model = $model->with('userDetails')->with($request->type);
             if($request->type != 'space'):
                 $model= $model->whereHas($request->type, function ($query)use($request) {
@@ -306,7 +306,7 @@ class BookingController extends ApiController
     endif;
     try {
 //        dd(\Auth::id());
-        $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_details');
+        $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id');
         $model = $model->with(['userDetails']);
         $perPage = isset($request->limit) ? $request->limit : 20;
 
@@ -323,7 +323,7 @@ class BookingController extends ApiController
         endif;
         try {
 //        dd(\Auth::id());
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_details');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
 

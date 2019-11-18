@@ -29,7 +29,7 @@ class Booking extends Model {
      *
      * @var array
      */
-    protected $fillable = ['type','user_id','target_id','tickets','price','status','payment_details','space_date_start','space_date_end','owner_id','rating'];
+    protected $fillable = ['type','user_id','target_id','tickets','price','status','payment_details','payment_id','space_date_start','space_date_end','owner_id','rating'];
 
     public function userDetails() {
         return $this->hasOne(User::class, 'id', 'user_id')->select('name', 'email', 'phone',
