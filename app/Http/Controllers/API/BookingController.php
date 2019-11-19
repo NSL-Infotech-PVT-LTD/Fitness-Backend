@@ -7,6 +7,7 @@ use App\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Booking as MyModel;
+use App\UserNotification;
 use Twilio\Rest\Client;
 use Validator;
 use DB;
@@ -398,6 +399,32 @@ class BookingController extends ApiController
             return parent::error($ex->getMessage());
         }
     }
+    
+     public function getnotifications(Request $request) {
+
+
+        $rules = ['search'=>'','limit'=>''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new \App\UserNotification();
+            $model = $model->select('id','title','body','data','user_id');
+            if (isset($request->search))
+                $model = $model->Where('title', 'LIKE', "%$request->search%")
+                    ->orWhere('body', 'LIKE', "%$request->search%")
+                    ->orWhere('data', 'LIKE', "%$request->search%");
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
+
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    
 
 
 
