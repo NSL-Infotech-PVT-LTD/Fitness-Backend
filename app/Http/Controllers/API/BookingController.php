@@ -410,8 +410,9 @@ class BookingController extends ApiController
         endif;
         // dd($category_id);
         try {
+             $user = \App\User::find(Auth::user()->id);
             $model = new \App\UserNotification();
-            $model = $model->select('id','title','body','data','user_id');
+            $model = $model->where('user_id',\Auth::id())->select('id','title','body','data','user_id');
             if (isset($request->search))
                 $model = $model->Where('title', 'LIKE', "%$request->search%")
                     ->orWhere('body', 'LIKE', "%$request->search%")
