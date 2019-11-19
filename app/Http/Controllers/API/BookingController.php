@@ -17,7 +17,7 @@ class BookingController extends ApiController
 
 {
     private $_MSGCreate = ['title' => 'Hurray!', 'body' => 'You got new Booking'];
-    private $_MSGAthCreate = ['title' => 'Hurray!', 'body' => 'You Booking confirmed'];
+    private $_MSGAthCreate = ['title' => 'Hurray!', 'body' => 'Your Booking is confirmed'];
 
     
 
@@ -47,6 +47,7 @@ class BookingController extends ApiController
                     break;
                     endswitch;
             $targetModeldata = $targetModel->whereId($request->target_id)->get();
+//            dd($targetModeldata);
             if($targetModeldata->isEmpty())
                 return parent::error('Please use valid target id');
             if($request->type!='space')
@@ -128,6 +129,7 @@ class BookingController extends ApiController
             /*****target model update end****/
             // Push notification start
             parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
+             parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id]], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -416,7 +418,7 @@ class BookingController extends ApiController
         try {
              $user = \App\User::find(Auth::user()->id);
             $model = new \App\UserNotification();
-            $model = $model->where('user_id',\Auth::id())->select('id','title','body','data','user_id');
+            $model = $model->where('user_id',\Auth::id())->select('id','title','body','data','user_id','created_at');
             if (isset($request->search))
                 $model = $model->Where('title', 'LIKE', "%$request->search%")
                     ->orWhere('body', 'LIKE', "%$request->search%")
