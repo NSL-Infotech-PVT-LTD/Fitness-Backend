@@ -17,6 +17,9 @@ class BookingController extends ApiController
 
 {
     private $_MSGCreate = ['title' => 'Hurray!', 'body' => 'You got new Booking'];
+    private $_MSGAthCreate = ['title' => 'Hurray!', 'body' => 'You Booking confirmed'];
+
+    
 
     public function store(Request $request)
     {
@@ -75,6 +78,7 @@ class BookingController extends ApiController
             /*****target model update end****/
         // Push notification start
             parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
+              parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id]], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
