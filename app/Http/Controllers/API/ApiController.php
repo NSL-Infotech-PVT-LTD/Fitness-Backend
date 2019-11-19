@@ -201,12 +201,27 @@ class ApiController extends \App\Http\Controllers\Controller {
         }
     }
 
-    public static function pushNotifications($data = [], $userId) {
+    private static function savePushNotification($data, $userId) {
+        try {
+
+            if (isset($data['data']))
+                $data['data'] = json_encode($data['data']);
+            $data += ['user_id' => $userId];
+            \App\UserNotification::create($data);
+            return true;
+        } catch (Exception $ex) {
+            
+        }
+    }
+
+    public static function pushNotifications($data = [], $userId, $saveNotification = true) {
 //        dd(\App\UserDevice::whereUserId($userId)->get());
-       
+        if ($saveNotification)
+            self::savePushNotification($data, $userId);
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
 //            dd($userDevice->token);
 //            dd($data);
+
             self::pushNotification($data, $userDevice->token);
         endforeach;
         return true;
