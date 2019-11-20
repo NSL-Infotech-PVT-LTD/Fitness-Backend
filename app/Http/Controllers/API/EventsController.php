@@ -12,6 +12,8 @@ use Auth;
 
 class EventsController extends ApiController {
 
+    private $_MSGCreate = ['title' => 'Hey!', 'body' => 'New event has created'];
+
     public function store(Request $request) {
 
         $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'price' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => 'required', 'guest_allowed' => 'required', 'equipment_required' => 'required'];
@@ -38,6 +40,7 @@ class EventsController extends ApiController {
                 $input['images'] = json_encode($images);
             $input['guest_allowed_left'] = $request->guest_allowed;
             $event = MyModel::create($input);
+            parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $event->id,'target_model'=>'event']], '3', true);
             return parent::successCreated(['message' => 'Created Successfully', 'event' => $event]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -75,7 +78,7 @@ class EventsController extends ApiController {
 
     public function getOrganiserEvents(Request $request) {
 
-        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
+        $rules = ['order_by' => '', 'search' => '', 'limit' => ''];
 
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -106,7 +109,7 @@ class EventsController extends ApiController {
 
     public function getCoachEvents(Request $request) {
         //Validating attributes
-        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
+        $rules = ['order_by' => '', 'search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
