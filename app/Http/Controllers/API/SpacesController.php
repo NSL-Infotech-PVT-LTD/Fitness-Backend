@@ -35,6 +35,7 @@ class SpacesController extends ApiController {
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
             $space = MyModel::create($input);
+              parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $session->id,'target_model'=>'session']], '3', true);
             return parent::successCreated(['message' => 'Created Successfully', 'space' => $space]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

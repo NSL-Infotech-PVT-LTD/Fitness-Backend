@@ -13,7 +13,7 @@ use Auth;
 
 class SessionController extends ApiController
 {
-
+ private $_MSGCreate = ['title' => 'Hey!', 'body' => 'New session has created'];
     public function store(Request $request)
     {
 
@@ -38,6 +38,7 @@ class SessionController extends ApiController
                 $input['images'] = json_encode($images);
             $input['guest_allowed_left'] =$request->guest_allowed;
             $session = MyModel::create($input);
+             parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $session->id,'target_model'=>'session']], '3', true);
             return parent::successCreated(['message' => 'Created Successfully', 'session' => $session]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
