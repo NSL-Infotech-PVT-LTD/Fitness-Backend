@@ -214,14 +214,16 @@ class ApiController extends \App\Http\Controllers\Controller {
         }
     }
 
+    public static function pushNotificationsUserRoles($data = [], $userRoleId, $saveNotification = true) {
+        foreach (\DB::table('role_user')->where('role_id', $userRoleId)->pluck('user_id')->toArray() as $userId):
+            self::pushNotifications($data, $userId, $saveNotification);
+        endforeach;
+    }
+
     public static function pushNotifications($data = [], $userId, $saveNotification = true) {
-//        dd(\App\UserDevice::whereUserId($userId)->get());
         if ($saveNotification)
             self::savePushNotification($data, $userId);
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
-//            dd($userDevice->token);
-//            dd($data);
-
             self::pushNotification($data, $userDevice->token);
         endforeach;
         return true;
