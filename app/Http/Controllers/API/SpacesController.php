@@ -12,7 +12,7 @@ use DB;
 use Auth;
 
 class SpacesController extends ApiController {
-
+ private $_MSGCreate = ['title' => 'Hey!', 'body' => 'New space has created'];
     public function store(Request $request) {
 
         $rules = ['name' => 'required', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'description' => 'required','location'=>'required','latitude'=>'required','longitude'=>'required', 'price_hourly' => 'required', 'availability_week' => 'required', 'open_hours_from'=>'required|after_or_equal:\' . \Carbon\Carbon::now()','open_hours_to'=>'required|after_or_equal:\' . \Carbon\Carbon::now()','price_daily' => 'required'];
@@ -35,7 +35,7 @@ class SpacesController extends ApiController {
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
             $space = MyModel::create($input);
-              parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $session->id,'target_model'=>'session']], '3', true);
+              parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $space->id,'target_model'=>'space']],'3', true);
             return parent::successCreated(['message' => 'Created Successfully', 'space' => $space]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
