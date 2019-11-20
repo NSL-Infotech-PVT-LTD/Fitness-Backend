@@ -31,12 +31,12 @@ class EventsController extends ApiController {
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'),true);
+                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'), true);
             endfor;
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
-            $input['guest_allowed_left'] =$request->guest_allowed;
+            $input['guest_allowed_left'] = $request->guest_allowed;
             $event = MyModel::create($input);
             return parent::successCreated(['message' => 'Created Successfully', 'event' => $event]);
         } catch (\Exception $ex) {
@@ -75,7 +75,7 @@ class EventsController extends ApiController {
 
     public function getOrganiserEvents(Request $request) {
 
-        $rules = ['order_by'=>'required|in:upcoming,completed','search'=>'','limit'=>''];
+        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
 
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -87,16 +87,16 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left','equipment_required');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
 
 //            dd(\Carbon\Carbon::now()->toDate());
             if ($request->order_by == 'upcoming')
-                $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->whereDate('start_date','<',\Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '<', \Carbon\Carbon::now());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
-                    ->orWhere('description', 'LIKE', "%$request->search%");
+                        ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -106,29 +106,29 @@ class EventsController extends ApiController {
 
     public function getCoachEvents(Request $request) {
         //Validating attributes
-        $rules = ['order_by'=>'required|in:upcoming,completed','search'=>'','limit'=>''];
+        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
-        $user = \App\User::findOrFail(\Auth::id());
-        if ($user->get()->isEmpty())
-            return parent::error('User Not found');
-        if ($user->hasRole('coach') === false)
-            return parent::error('Please use valid auth token');
+            $user = \App\User::findOrFail(\Auth::id());
+            if ($user->get()->isEmpty())
+                return parent::error('User Not found');
+            if ($user->hasRole('coach') === false)
+                return parent::error('Please use valid auth token');
 
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed','guest_allowed_left', 'equipment_required');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
             if ($request->order_by == 'upcoming')
-                $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->whereDate('start_date','<',\Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '<', \Carbon\Carbon::now());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
-                    ->orWhere('description', 'LIKE', "%$request->search%");
+                        ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -137,7 +137,7 @@ class EventsController extends ApiController {
     }
 
     public function getAthleteEvents(Request $request) {
-        $rules = ['search' => '', 'radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => '','coach_id'=>''];
+        $rules = ['search' => '', 'radius' => 'required', 'order_by' => 'required|in:distance,price_high,price_low,latest', 'limit' => '', 'coach_id' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -156,7 +156,7 @@ class EventsController extends ApiController {
 
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
-                    ->orWhere('description', 'LIKE', "%$request->search%");
+                        ->orWhere('description', 'LIKE', "%$request->search%");
             switch ($request->order_by):
                 case 'price_high':
                     $model = $model->orderBy('price', 'desc');
@@ -174,17 +174,16 @@ class EventsController extends ApiController {
             $latKey = 'latitude';
             $lngKey = 'longitude';
             $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
-                    'created_by', 'guest_allowed','guest_allowed_left', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+                    'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
 
-            if($request->coach_id){
+            if ($request->coach_id) {
                 $model = $model->where('created_by', $request->input('coach_id'));
-
             }
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             $model = $model->orderBy('distance');
-//
+            $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -208,7 +207,5 @@ class EventsController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-
-
 
 }
