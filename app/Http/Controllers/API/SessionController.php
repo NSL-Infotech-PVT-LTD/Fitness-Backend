@@ -193,6 +193,7 @@ class SessionController extends ApiController
                 $model = $model->where('created_by', $request->input('coach_id'));
 
             }
+            $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
