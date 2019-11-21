@@ -187,7 +187,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('organizer') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '','phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => 'required', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '','experience_detail'=>'','training_service_detail'=>''];
+        $rules = ['name' => '','phone' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '','experience_detail'=>'','training_service_detail'=>''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
