@@ -46,5 +46,10 @@ class Session extends Model {
     public function getDistanceAttribute($value) {
         return $value == null ? '0' : number_format((float) $value, 2, '.', '');
     }
+     public function getRatingAttribute($value)
+    {
+        return $value == null ? '0' : number_format((float)$value, 2, '.', '');
+
+    }
 
 }
