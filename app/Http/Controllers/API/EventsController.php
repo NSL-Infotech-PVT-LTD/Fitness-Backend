@@ -40,7 +40,7 @@ class EventsController extends ApiController {
                 $input['images'] = json_encode($images);
             $input['guest_allowed_left'] = $request->guest_allowed;
             $event = MyModel::create($input);
-            parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $event->id,'target_model'=>'event']], '3', true);
+            parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $event->id, 'target_model' => 'event']], '3', true);
             return parent::successCreated(['message' => 'Created Successfully', 'event' => $event]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -176,10 +176,10 @@ class EventsController extends ApiController {
             endswitch;
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
-                    'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
-
-
+            $model = $model->leftJoin('bookings', 'bookings.target_id', '=', 'events.id')                             ->select('events.id', 'events.name', 'events.description', 'events.start_date', 'events.end_date', 'events.start_time', 'events.end_time', 'events.price', 'events.images', 'events.location', 'events.latitude', 'events.longitude', 'events.service_id',
+                    'events.created_by', 'events.guest_allowed', 'events.guest_allowed_left', 'events.equipment_required', 'events.created_at', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance', \DB::raw('AVG(bookings.rating) as rating')));
+//dd($model);
+            $model = $model->groupBy('events.id');
             if ($request->coach_id) {
                 $model = $model->where('created_by', $request->input('coach_id'));
             }
