@@ -136,7 +136,7 @@ class BookingController extends ApiController {
     }
 
     public function getBookingsAthleteAll(Request $request) {
-        $rules = ['limit' => '', 'filter_by' => ''];
+        $rules = ['limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
