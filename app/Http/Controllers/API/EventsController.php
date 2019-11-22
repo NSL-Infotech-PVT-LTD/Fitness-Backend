@@ -48,7 +48,7 @@ class EventsController extends ApiController {
     }
 
     public function Update(Request $request) {
-        $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'after_or_equal:\' . \Carbon\Carbon::now()', 'price' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => ''];
+        $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_date' => '', 'end_date' => '', 'start_time' => '', 'end_time' => '', 'price' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
