@@ -68,7 +68,7 @@ class EventsController extends ApiController {
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
-          
+            $event = MyModel::findOrFail($request->id);
             $event->fill($input);
             $event->save();
             return parent::successCreated(['Message' => 'Updated Successfully', 'event' => $event]);
