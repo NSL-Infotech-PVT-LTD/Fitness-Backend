@@ -143,7 +143,7 @@ class BookingController extends ApiController {
         endif;
         try {
 //            dd($request->filter_by);
-            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'space_date_start', 'space_date_end', 'payment_id');
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'space_date_start', 'space_date_end', 'payment_id','status','rating');
             $model = $model->with(['userDetails']);
 //            $model = $model->where('target_data','!=','');
             $perPage = isset($request->limit) ? $request->limit : 20;
@@ -162,7 +162,7 @@ class BookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('user_id', \Auth::id())->where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id');
+            $model = MyModel::where('user_id', \Auth::id())->where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id','status','rating');
             $model = $model->with('userDetails')->with($request->type);
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
@@ -220,7 +220,7 @@ class BookingController extends ApiController {
             endswitch;
             if ($targetModel::where('created_by', \Auth::id())->where('id', $request->target_id)->get()->isEmpty())
                 return parent::error('Not found');
-            $model = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id');
+            $model = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id','status','rating');
 //            dd($model);
 
             $model = $model->with('userDetails')->with($request->type);
@@ -277,7 +277,7 @@ class BookingController extends ApiController {
             endswitch;
             if ($targetModel->where('created_by', \Auth::id())->where('id', $request->target_id)->get()->isEmpty())
                 return parent::error('Not found');
-            $model = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id');
+            $model = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id','status','rating');
             $model = $model->with('userDetails')->with($request->type);
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
@@ -315,7 +315,7 @@ class BookingController extends ApiController {
         endif;
         try {
 //        dd(\Auth::id());
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id','status','rating');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
 
@@ -333,7 +333,7 @@ class BookingController extends ApiController {
         endif;
         try {
 //        dd(\Auth::id());
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id','status','rating');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
 
