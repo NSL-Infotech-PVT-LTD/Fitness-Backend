@@ -61,13 +61,14 @@ class EventsController extends ApiController {
 
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
-                if (isset($request->$var))
+                if (isset($request->$var)):
                     $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'));
+                endif;
             endfor;
 
             if (count($images) > 0)
                 $input['images'] = json_encode($images);
-            $event = MyModel::findOrFail($request->id);
+          
             $event->fill($input);
             $event->save();
             return parent::successCreated(['Message' => 'Updated Successfully', 'event' => $event]);

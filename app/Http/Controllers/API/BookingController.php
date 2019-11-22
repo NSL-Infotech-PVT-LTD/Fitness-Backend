@@ -148,7 +148,7 @@ class BookingController extends ApiController {
 //            $model = $model->where('target_data','!=','');
             $perPage = isset($request->limit) ? $request->limit : 20;
             
-            
+           
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
