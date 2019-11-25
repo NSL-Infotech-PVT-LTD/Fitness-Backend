@@ -60,19 +60,19 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('organiser/coach/athlete/list', 'API\OrganiserCoachController@getOrganiseritems');
     Route::post('booking/rating','API\BookingController@rating');
     Route::post('booking/notifications','API\BookingController@getnotifications');
+   
 
 
+ Route::post('password/change','API\AuthController@changePassword');
 
 
 
 });
-
+ Route::post('reset/password','API\AuthController@resetPassword');
 Route::post('coach/register', 'API\AuthController@CoachRegister');
 Route::post('athlete/register', 'API\AuthController@AtheleteRegister');
 Route::post('organiser/register', 'API\AuthController@OrganiserRegister');
 Route::post('login', 'API\AuthController@Login');
-Route::post('reset-password', 'API\AuthController@resetPassword');
-
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
 
