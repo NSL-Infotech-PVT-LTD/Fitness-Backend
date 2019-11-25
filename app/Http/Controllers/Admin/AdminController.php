@@ -89,4 +89,6 @@ class AdminController extends AdminCommonController {
         return redirect('admin/display')->with('flash_message', 'Category deleted!');
     }
 
+    
+
 }

@@ -255,11 +255,15 @@ class AuthController extends ApiController {
 
     public function resetPassword(Request $request, Factory $view) {
         //Validating attributes
-        $rules = ['email' => 'required'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $validateAttributes = parent::validateAttributes($request, 'POST', array_merge(['email' => 'required']), array_keys(['email' => 'required']), true);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
+        //Validating Client Details
+//        $validateClientSecret = parent::validateClientSecret();
+//        if ($validateClientSecret):
+//            return $validateClientSecret;
+//        endif;
         $view->composer('emails.auth.password', function($view) {
             $view->with([
                 'title' => trans('front/password.email-title'),
@@ -425,6 +429,32 @@ class AuthController extends ApiController {
             return parent::success($model->paginate($perPage)->first());
         } catch (\Exception $ex) {
 
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    /**
+     * Reset the given user's password.
+     * 
+     * @param  ResetPasswordRequest  $request
+     * @return Response
+     */
+    public function changePassword(Request $request) {
+        $rules = ['old_password' => 'required', 'password' => 'required', 'password_confirmation' => 'required|same:password'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            if (\Hash::check($request->old_password, \Auth::User()->password)):
+                $model = \App\User::find(\Auth::id());
+                $model->password = \Hash::make($request->password);
+                $model->save();
+                return parent::success('Password Changed Successfully');
+            else:
+                return parent::error('Please use valid old password');
+            endif;
+        } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
