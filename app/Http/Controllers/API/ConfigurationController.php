@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Parent_;
 use App\Configuration as MyModel;
 use Auth;
 use Validator;
@@ -33,7 +34,7 @@ class ConfigurationController extends ApiController {
      public function getTerms(Request $request) {
 
 
-        $rules = ['type'=>'required|in:organiser,coach,athlete'];
+        $rules = ['type'=>'required|in:organizer,coach,athlete'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -41,8 +42,10 @@ class ConfigurationController extends ApiController {
         // dd($category_id);
         try {
             
+              
             $model = new MyModel();
              switch ($request->type):
+                 
                 case 'organiser':
                     $model = $model->select('terms_and_conditions_organiser');
                     break;
@@ -58,6 +61,7 @@ class ConfigurationController extends ApiController {
             return parent::success($model->get());
 
         } catch (\Exception $ex) {
+           
             return parent::error($ex->getMessage());
         }
     }
@@ -85,27 +89,7 @@ class ConfigurationController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-     public function getTermsAthlete(Request $request) {
-
-
-        $rules = [];
-        
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        // dd($category_id);
-        try {
-           
-            $model = new MyModel();
-            $model = $model->select('terms_and_conditions_athlete');
-            
-            return parent::success($model->get());
-
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
+    
     
 }
 
