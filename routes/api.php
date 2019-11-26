@@ -76,7 +76,7 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us','API\ConfigurationController@getaboutus');
-Route::get('terms/organiser','API\ConfigurationController@getTermsOrganiser');
+Route::post('terms','API\ConfigurationController@getTerms');
 Route::get('terms/coach','API\ConfigurationController@getTermsCoach');
 Route::get('terms/athlete','API\ConfigurationController@getTermsAthlete');
 
