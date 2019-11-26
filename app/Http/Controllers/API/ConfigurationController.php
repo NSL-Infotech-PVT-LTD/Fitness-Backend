@@ -30,7 +30,7 @@ class ConfigurationController extends ApiController {
         }
     }
     
-     public function getaboutus(Request $request) {
+     public function getTermsOrganiser(Request $request) {
 
 
         $rules = [];
@@ -49,7 +49,7 @@ class ConfigurationController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-     public function getaboutus(Request $request) {
+     public function getTermsCoach(Request $request) {
 
 
         $rules = [];
@@ -68,7 +68,7 @@ class ConfigurationController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-     public function getaboutus(Request $request) {
+     public function getTermsAthlete(Request $request) {
 
 
         $rules = [];
