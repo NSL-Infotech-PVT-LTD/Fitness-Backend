@@ -27,6 +27,7 @@
         <link rel="stylesheet" type="text/css" href="{{asset('login-styles/vendor/daterangepicker/daterangepicker.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('login-styles/css/util.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('login-styles/css/main.css')}}">
+        
         <!--login end-->
 </head>
 <body>
