@@ -61,7 +61,7 @@ class SessionController extends ApiController
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[$var] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
             endfor;
 
 //            if (count($images) > 0)
@@ -104,7 +104,7 @@ class SessionController extends ApiController
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','hourly_rate','location', 'latitude', 'longitude', 'images', 'phone', 'guest_allowed', 'guest_allowed_left','created_by');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','hourly_rate','location', 'latitude', 'longitude', 'images_1','images_2','images_3','images_4','images_5', 'phone', 'guest_allowed', 'guest_allowed_left','created_by');
             if ($request->order_by == 'upcoming')
                 $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
@@ -134,7 +134,7 @@ class SessionController extends ApiController
             return parent::error('Please use valid auth token');
 
 
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','location', 'latitude', 'longitude','hourly_rate', 'images', 'phone', 'guest_allowed','guest_allowed_left', 'created_by');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','location', 'latitude', 'longitude','hourly_rate', 'images_1','images_2','images_3','images_4','images_5', 'phone', 'guest_allowed','guest_allowed_left', 'created_by');
             if ($request->order_by == 'upcoming')
                 $model = $model->whereDate('start_date','>=',\Carbon\Carbon::now());
             if ($request->order_by == 'completed')
@@ -168,7 +168,7 @@ class SessionController extends ApiController
             $perPage = isset($request->limit) ? $request->limit : 20;
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','hourly_rate', 'location', 'latitude', 'longitude', 'images', 'phone', 'guest_allowed','guest_allowed_left','created_by', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time','end_time','hourly_rate', 'location', 'latitude', 'longitude', 'images_1','images_2','images_3','images_4','images_5', 'phone', 'guest_allowed','guest_allowed_left','created_by', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
