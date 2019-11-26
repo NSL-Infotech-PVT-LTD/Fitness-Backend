@@ -31,11 +31,11 @@ class SessionController extends ApiController
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/session'),true);
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/session'),true);
             endfor;
 
-            if (count($images) > 0)
-                $input['images'] = json_encode($images);
+//            if (count($images) > 0)
+//                $input['images'] = json_encode($images);
             $input['guest_allowed_left'] =$request->guest_allowed;
             $session = MyModel::create($input);
              parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $session->id,'target_model'=>'session']], '3', true);
@@ -61,11 +61,11 @@ class SessionController extends ApiController
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
+                    $images[$var] = parent::__uploadImage($request->file($var), public_path('uploads/session'));
             endfor;
 
-            if (count($images) > 0)
-                $input['images'] = json_encode($images);
+//            if (count($images) > 0)
+//                $input['images'] = json_encode($images);
             $input['state']= '1';
             $session = MyModel::findOrFail($request->id);
             $session->fill($input);

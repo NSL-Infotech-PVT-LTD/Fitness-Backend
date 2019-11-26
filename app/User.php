@@ -20,7 +20,7 @@ class User extends Authenticatable {
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'phone', 'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio', 'profession', 'expertise_years', 'hourly_rate', 'portfolio_image', 'service_ids', 'latitude', 'longitude','sport_id','achievements','experience_detail','profession','training_service_detail'
+        'name', 'email', 'password', 'phone', 'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio', 'profession', 'expertise_years', 'hourly_rate', 'portfolio_image_1', 'portfolio_image_2', 'portfolio_image_3', 'portfolio_image_4', 'service_ids', 'latitude', 'longitude', 'sport_id', 'achievements', 'experience_detail', 'profession', 'training_service_detail','is_notify','is_login'
     ];
 
     /**
@@ -50,16 +50,16 @@ class User extends Authenticatable {
         return $this->name;
     }
 
-    protected $appends = array('roles');
+    protected $appends = array('roles','portfolio_image');
 
     public function getServiceIdsAttribute($value) {
         return $value == null ? [] : json_decode($value);
     }
+
     public function getSportIdAttribute($value) {
 //        dd($value);
 //        return $value == null ? "" : json_decode($value);
         return $value == null ? "" : $value;
-
     }
 
     public function getRolesAttribute() {
@@ -76,10 +76,20 @@ class User extends Authenticatable {
         }
     }
 
-    public function getRatingAttribute($value)
-    {
-        return $value == null ? '0' : number_format((float)$value, 2, '.', '');
-
+    public function getRatingAttribute($value) {
+        return $value == null ? '0' : number_format((float) $value, 2, '.', '');
     }
+
+    public function getPortfolioImageAttribute() {
+        $portfolio_image = [];
+        for ($i = 1; $i <= 4; $i++):
+            $var = 'portfolio_image_' . $i;
+            if (isset($this->$var))
+                $portfolio_image[] = $this->$var;
+        endfor;
+//       dd($portfolio_image);
+        return json_encode($portfolio_image);
+    }
+
 
 }

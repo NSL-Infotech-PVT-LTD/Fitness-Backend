@@ -80,6 +80,9 @@ new WOW().init();
                              <li>
                                <a href="{{ url('/admin/session') }}"><i class="fa fa-bars nav_icon"></i>Session</a>
                             </li>
+                              <li>
+                               <a href="{{ url('/admin/configuration') }}"><i class="fa fa-bars nav_icon"></i>Configuration</a>
+                            </li>
                         </ul>
                         <div class="clearfix"></div>
                         <!-- //sidebar-collapse -->

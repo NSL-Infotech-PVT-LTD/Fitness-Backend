@@ -18,7 +18,11 @@ class CreateSpacesTable extends Migration {
                 $table->increments('id');
             }
             $table->string('name')->nullable();
-            $table->text('images')->nullable();
+            $table->text('images_1')->nullable();
+            $table->text('images_2')->nullable();
+            $table->text('images_3')->nullable();
+            $table->text('images_4')->nullable();
+            $table->text('images_5')->nullable();
             $table->text('description')->nullable();
             $table->integer('price_hourly')->default('0');
             $table->integer('price_daily')->default('0');

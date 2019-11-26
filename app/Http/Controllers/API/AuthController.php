@@ -44,6 +44,7 @@ class AuthController extends ApiController {
             $input = $request->all();
 //            dd(json_decode($request->service_ids));
             $input['password'] = Hash::make($request->password);
+            $input['is_notify'] = '1';
 //            $input['sport_id']= json_encode($request->sport_id);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'), true);
 
@@ -107,6 +108,7 @@ class AuthController extends ApiController {
 //            $input['sport_id']= json_encode($request->sport_id);
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/athlete/profile_image'), true);
+            $input['is_notify'] = '1';
             $user = \App\User::create($input);
             $user->assignRole(\App\Role::where('id', 3)->first()->name);
             $token = $user->createToken('netscape')->accessToken;
@@ -157,16 +159,17 @@ class AuthController extends ApiController {
             $input = $request->all();
             $input['password'] = Hash::make($request->password);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'), true);
+            $input['is_notify'] = '1';
             $portfolio_image = [];
 
             for ($i = 1; $i <= 4; $i++):
                 $var = 'portfolio_image_' . $i;
                 if (isset($request->$var))
-                    $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'), true);
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'));
             endfor;
 
-            if (count($portfolio_image) > 0)
-                $input['portfolio_image'] = json_encode($portfolio_image);
+//            if (count($portfolio_image) > 0)
+//                $input['portfolio_image'] = json_encode($portfolio_image);
             $user = \App\User::create($input);
             //add service module start
             self::addservices($request->service_ids, $user->id);
@@ -205,15 +208,14 @@ class AuthController extends ApiController {
 
                 $var = 'portfolio_image_' . $i;
                 if (isset($request->$var)):
-                    $portfolio_image[] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'), true);
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/organiser/portfolio_image'), true);
                 endif;
 
 
             endfor;
 
-            if (count($portfolio_image) > 0)
-                $input['portfolio_image'] = json_encode($portfolio_image);
-
+//            if (count($portfolio_image) > 0)
+//                $input['portfolio_image'] = json_encode($portfolio_image);
 //
             $user->fill($input);
             $user->save();
@@ -221,7 +223,7 @@ class AuthController extends ApiController {
             if (isset($request->service_ids))
                 self::addservices($request->service_ids, $user->id);
             //add service module end
-            $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'bio', 'service_ids', 'expertise_years', 'hourly_rate', 'business_hour_starts', 'business_hour_ends', 'portfolio_image', 'profile_image', 'experience_detail', 'training_service_detail')->first();
+            $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'bio', 'service_ids', 'expertise_years', 'hourly_rate', 'business_hour_starts', 'business_hour_ends', 'portfolio_image_1', 'portfolio_image_2', 'portfolio_image_3', 'portfolio_image_4', 'profile_image', 'experience_detail', 'training_service_detail')->first();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -240,6 +242,8 @@ class AuthController extends ApiController {
             //parent::addUserDeviceData($user, $request);
             if (Auth::attempt(['email' => request('email'), 'password' => request('password')])):
                 $user = \App\User::find(Auth::user()->id);
+                $input['is_login'] = '1';
+                $user->save();
                 $token = $user->createToken('netscape')->accessToken;
                 parent::addUserDeviceData($user, $request);
 //                $user = $user->with('roles');
@@ -306,7 +310,7 @@ class AuthController extends ApiController {
 
             $model = $model->wherein('users.id', $roleusersSA)
                     ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
-                    ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
+                    ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1','users.portfolio_image_2','users.portfolio_image_3','users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
@@ -419,7 +423,7 @@ class AuthController extends ApiController {
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
                     ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
-                    ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
+                    ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1','users.portfolio_image_2','users.portfolio_image_3','users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $model = $model->where('users.id', $request->id);
             if (isset($request->search))
@@ -454,6 +458,38 @@ class AuthController extends ApiController {
             else:
                 return parent::error('Please use valid old password');
             endif;
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function logout(Request $request) {
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $user = \App\User::findOrFail(\Auth::id());
+            $user->is_login = '0';
+            $user->save();
+            return parent::success('Logout Succefully');
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function toggleNotifyUser(Request $request) {
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $user = \App\User::findOrFail(\Auth::id());
+            $user->is_notify = ((\App\User::whereId(\Auth::id())->first()->is_notify === '1') ? '0' : '1');
+            $user->save();
+            return parent::success('Status Updated Successfully');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

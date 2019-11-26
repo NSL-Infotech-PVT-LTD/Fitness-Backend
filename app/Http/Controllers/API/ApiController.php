@@ -223,6 +223,10 @@ class ApiController extends \App\Http\Controllers\Controller {
     public static function pushNotifications($data = [], $userId, $saveNotification = true) {
         if ($saveNotification)
             self::savePushNotification($data, $userId);
+        if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty())
+            return true;
+        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty())
+            return true;
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
             self::pushNotification($data, $userDevice->token);
         endforeach;

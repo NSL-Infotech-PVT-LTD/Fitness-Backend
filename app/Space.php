@@ -28,7 +28,7 @@ class Space extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'images', 'description', 'price_hourly', 'availability_week','open_hours_from','open_hours_to','location', 'latitude', 'longitude', 'created_by', 'price_daily','state'];
+    protected $fillable = ['name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'open_hours_from', 'open_hours_to', 'location', 'latitude', 'longitude', 'created_by', 'price_daily', 'state'];
 
     /**
      * Change activity log event description
@@ -44,11 +44,21 @@ class Space extends Model {
     public function getDistanceAttribute($value) {
         return $value == null ? '0' : number_format((float) $value, 2, '.', '');
     }
-    
-     public function getRatingAttribute($value)
-    {
-        return $value == null ? '0' : number_format((float)$value, 2, '.', '');
 
+    public function getRatingAttribute($value) {
+        return $value == null ? '0' : number_format((float) $value, 2, '.', '');
+    }
+
+    protected $appends = array('images');
+
+    public function getImagesAttribute() {
+        $images = [];
+        for ($i = 1; $i <= 5; $i++):
+            $var = 'images_' . $i;
+            if (isset($this->$var))
+                $images[] = $this->$var;
+        endfor;
+        return json_encode($images);
     }
 
 }
