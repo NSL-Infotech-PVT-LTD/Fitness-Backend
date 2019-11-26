@@ -60,7 +60,7 @@ class SpacesController extends ApiController {
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[$var] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'));
             endfor;
 
 //            if (count($images) > 0)
@@ -101,7 +101,7 @@ class SpacesController extends ApiController {
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images_1','images_2','images_3','images_4', 'images_5','description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('description', 'LIKE', "%$request->search%");
@@ -126,7 +126,7 @@ class SpacesController extends ApiController {
             if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid token');
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images', 'description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images_1','images_2','images_3','images_4','images_5', 'description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
 
 
             if (isset($request->search))
@@ -158,7 +158,7 @@ class SpacesController extends ApiController {
 
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+            $model = $model->select('id', 'name', 'images_1', 'images_2','images_3','images_4','images_5','description', 'price_hourly', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))
