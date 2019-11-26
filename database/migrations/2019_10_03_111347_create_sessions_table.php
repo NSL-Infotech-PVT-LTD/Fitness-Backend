@@ -23,7 +23,11 @@ class CreateSessionsTable extends Migration {
             $table->string('location')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
-            $table->text('images')->nullable();
+            $table->text('images_1')->nullable();
+            $table->text('images_2')->nullable();
+            $table->text('images_3')->nullable();
+            $table->text('images_4')->nullable();
+            $table->text('images_5')->nullable();
             $table->string('phone')->nullable();
             $table->integer('guest_allowed')->nullable();
             if (\App::VERSION() >= '5.8') {

@@ -7,20 +7,20 @@
 
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Session {{ $session->id }}</div>
+                    <div class="card-header">Configuration {{ $configuration->id }}</div>
                     <div class="card-body">
 
-                        <a href="{{ url('/admin/session') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
-                        <a href="{{ url('/admin/session/' . $session->id . '/edit') }}" title="Edit Session"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
+                        <a href="{{ url('/admin/configuration') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/configuration/' . $configuration->id . '/edit') }}" title="Edit Configuration"><button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button></a>
                         {!! Form::open([
                             'method'=>'DELETE',
-                            'url' => ['admin/session', $session->id],
+                            'url' => ['admin/configuration', $configuration->id],
                             'style' => 'display:inline'
                         ]) !!}
                             {!! Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i> Delete', array(
                                     'type' => 'submit',
                                     'class' => 'btn btn-danger btn-sm',
-                                    'title' => 'Delete Session',
+                                    'title' => 'Delete Configuration',
                                     'onclick'=>'return confirm("Confirm delete?")'
                             ))!!}
                         {!! Form::close() !!}
@@ -31,9 +31,9 @@
                             <table class="table">
                                 <tbody>
                                     <tr>
-                                        <th>ID</th><td>{{ $session->id }}</td>
+                                        <th>ID</th><td>{{ $configuration->id }}</td>
                                     </tr>
-                                    <tr><th> Name </th><td> {{ $session->name }} </td></tr><tr><th> Description </th><td> {{ $session->description }} </td></tr><tr><th>Hourly Rate </th><td> {{ $session->hourly_rate }} </td></tr>
+                                    <tr><th> About Us </th><td> {{ $configuration->about_us }} </td></tr><tr><th> Terms And Conditions Organiser </th><td> {{ $configuration->terms_and_conditions_organiser }} </td></tr><tr><th> Terms And Conditions Coach </th><td> {{ $configuration->terms_and_conditions_coach }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

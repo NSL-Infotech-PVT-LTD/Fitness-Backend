@@ -7,9 +7,9 @@
 
             <div class="col-md-9">
                 <div class="card">
-                    <div class="card-header">Create New Session</div>
+                    <div class="card-header">Create New Configuration</div>
                     <div class="card-body">
-                        <a href="{{ url('/admin/session') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
+                        <a href="{{ url('/admin/configuration') }}" title="Back"><button class="btn btn-warning btn-sm"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</button></a>
                         <br />
                         <br />
 
@@ -21,9 +21,9 @@
                             </ul>
                         @endif
 
-                        {!! Form::open(['url' => '/admin/session', 'class' => 'form-horizontal', 'files' => true]) !!}
+                        {!! Form::open(['url' => '/admin/configuration', 'class' => 'form-horizontal', 'files' => true]) !!}
 
-                        @include ('admin.session.form', ['formMode' => 'create'])
+                        @include ('admin.configuration.form', ['formMode' => 'create'])
 
                         {!! Form::close() !!}
 

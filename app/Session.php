@@ -30,7 +30,7 @@ class Session extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'start_time','end_time','location', 'latitude', 'longitude','hourly_rate', 'images', 'phone', 'guest_allowed','guest_allowed_left', 'created_by','state'];
+    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'start_time','end_time','location', 'latitude', 'longitude','hourly_rate', 'images_1','images_2','images_3','images_4','images_5', 'phone', 'guest_allowed','guest_allowed_left', 'created_by','state'];
 
     /**
      * Change activity log event description
@@ -50,6 +50,18 @@ class Session extends Model {
     {
         return $value == null ? '0' : number_format((float)$value, 2, '.', '');
 
+    }
+    
+       protected $appends = array('images');
+
+    public function getImagesAttribute() {
+        $images = [];
+        for ($i = 1; $i <= 5; $i++):
+            $var = 'images_' . $i;
+            if (isset($this->$var))
+                $images[] = $this->$var;
+        endfor;
+        return json_encode($images);
     }
 
 }

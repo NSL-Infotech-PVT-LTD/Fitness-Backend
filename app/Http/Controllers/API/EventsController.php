@@ -33,11 +33,11 @@ class EventsController extends ApiController {
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'), true);
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/events'), true);
             endfor;
 
-            if (count($images) > 0)
-                $input['images'] = json_encode($images);
+//            if (count($images) > 0)
+//                $input['images'] = json_encode($images);
             $input['guest_allowed_left'] = $request->guest_allowed;
             $event = MyModel::create($input);
             parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $event->id, 'target_model' => 'event']], '3', true);
@@ -62,12 +62,12 @@ class EventsController extends ApiController {
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var)):
-                    $images[] = parent::__uploadImage($request->file($var), public_path('uploads/events'));
+                    $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/events'));
                 endif;
             endfor;
 
-            if (count($images) > 0)
-                $input['images'] = json_encode($images);
+//            if (count($images) > 0)
+//                $input['images'] = json_encode($images);
             $event = MyModel::findOrFail($request->id);
             $event->fill($input);
             $event->save();
@@ -91,7 +91,7 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1','images_2','images_3','images_4','images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
 
 //            dd(\Carbon\Carbon::now()->toDate());
             if ($request->order_by == 'upcoming')
@@ -125,7 +125,7 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1','images_2','images_3','images_4','images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
             if ($request->order_by == 'upcoming')
                 $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
@@ -177,7 +177,7 @@ class EventsController extends ApiController {
             endswitch;
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'service_id',
+            $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1','images_2','images_3','images_4','images_5', 'location', 'latitude', 'longitude', 'service_id',
                     'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance')); 
 
             if ($request->coach_id) {

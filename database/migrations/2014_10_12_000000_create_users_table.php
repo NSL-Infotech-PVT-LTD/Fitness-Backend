@@ -33,12 +33,17 @@ class CreateUsersTable extends Migration {
             $table->text('service_ids')->nullable();
             $table->float('expertise_years')->nullable();
             $table->integer('hourly_rate')->nullable();
-            $table->text('portfolio_image')->nullable();
+            $table->text('portfolio_image_1')->nullable();
+            $table->text('portfolio_image_2')->nullable();
+            $table->text('portfolio_image_3')->nullable();
+            $table->text('portfolio_image_4')->nullable();
             $table->text('sport_id')->nullable();
             $table->text('achievements')->nullable();
             $table->text('experience_detail')->nullable();
             $table->string('profession')->nullable();
             $table->string('training_service_detail')->nullable();
+            $table->integer('is_login')->nullable();
+            $table->integer('is_notify')->nullable();
             $table->rememberToken();
             \App\Helpers\DbExtender::defaultParams($table);
         });

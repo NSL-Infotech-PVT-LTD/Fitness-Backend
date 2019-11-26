@@ -75,6 +75,6 @@ Route::post('organiser/register', 'API\AuthController@OrganiserRegister');
 Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
-
+Route::get('about/us','API\ConfigurationController@getaboutus');
 
 

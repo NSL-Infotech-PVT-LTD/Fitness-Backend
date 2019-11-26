@@ -4,25 +4,24 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Sport extends Model {
-
+class Configuration extends Model
+{
     use LogsActivity;
-    use SoftDeletes;
+    
 
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'sports';
+    protected $table = 'configurations';
 
     /**
-     * The database primary key value.
-     *
-     * @var string
-     */
+    * The database primary key value.
+    *
+    * @var string
+    */
     protected $primaryKey = 'id';
 
     /**
@@ -30,7 +29,9 @@ class Sport extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['about_us', 'terms_and_conditions_organiser', 'terms_and_conditions_coach', 'terms_and_conditions_athlete'];
+
+    
 
     /**
      * Change activity log event description
@@ -39,12 +40,8 @@ class Sport extends Model {
      *
      * @return string
      */
-    public function getDescriptionForEvent($eventName) {
+    public function getDescriptionForEvent($eventName)
+    {
         return __CLASS__ . " model has been {$eventName}";
     }
-
-    public function getDistanceAttribute($value) {
-        return $value == null ? '0' : number_format((float) $value, 2, '.', '');
-    }
-
 }
