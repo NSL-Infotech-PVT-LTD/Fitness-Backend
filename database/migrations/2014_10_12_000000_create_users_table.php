@@ -42,8 +42,8 @@ class CreateUsersTable extends Migration {
             $table->text('experience_detail')->nullable();
             $table->string('profession')->nullable();
             $table->string('training_service_detail')->nullable();
-            $table->integer('is_login')->nullable();
-            $table->integer('is_notify')->nullable();
+            $table->enum('is_login', ['0', '1']);
+            $table->enum('is_notify', ['0', '1']);
             $table->rememberToken();
             \App\Helpers\DbExtender::defaultParams($table);
         });
