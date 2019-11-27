@@ -60,6 +60,11 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('organiser/coach/athlete/list', 'API\OrganiserCoachController@getOrganiseritems');
     Route::post('booking/rating','API\BookingController@rating');
     Route::post('booking/notifications','API\BookingController@getnotifications');
+    Route::get('terms','API\ConfigurationController@getTerms');
+    Route::get('logout','API\AuthController@logout');
+    Route::get('notify/toggle','API\AuthController@toggleNotifyUser');
+    
+
    
 
 
@@ -76,7 +81,6 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us','API\ConfigurationController@getaboutus');
-Route::post('terms','API\ConfigurationController@getTerms');
 Route::get('terms/coach','API\ConfigurationController@getTermsCoach');
 Route::get('terms/athlete','API\ConfigurationController@getTermsAthlete');
 
