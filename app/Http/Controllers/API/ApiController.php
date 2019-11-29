@@ -55,7 +55,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //        dd(\Request::route()->uri());
         if (!in_array(\Request::route()->uri(), self::$_allowedURIwithoutAuth)):
             if (!isset($headers['user_id'])):
-                return self::error('Loged in User Id is required', 422);
+                return self::error('Logged in User Id is required', 422);
             else:
                 $user = User::find($headers['user_id']);
                 if ($user === null)
@@ -223,9 +223,9 @@ class ApiController extends \App\Http\Controllers\Controller {
     public static function pushNotifications($data = [], $userId, $saveNotification = true) {
         if ($saveNotification)
             self::savePushNotification($data, $userId);
-        if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() == false)
+        if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() === false)
             return true;
-        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() == false)
+        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === false)
             return true;
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
             self::pushNotification($data, $userDevice->token);

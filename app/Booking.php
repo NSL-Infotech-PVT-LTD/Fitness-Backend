@@ -36,7 +36,7 @@ class Booking extends Model {
     public function userDetails() {
         return $this->hasOne(User::class, 'id', 'user_id')->select('name', 'email', 'phone',
                         'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio',
-                        'expertise_years', 'hourly_rate', 'portfolio_image', 'latitude', 'longitude', 'id');
+                        'expertise_years', 'hourly_rate', 'portfolio_image_1','portfolio_image_2','portfolio_image_3','portfolio_image_4', 'latitude', 'longitude', 'id');
     }
 
     protected $appends = array('target_data', 'booking_date');
@@ -72,16 +72,16 @@ class Booking extends Model {
             switch ($this->type):
                 case 'event':
                     $targetModel = new \App\Event();
-                    $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
+                    $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
                     $targetModel->whereYear('start_date', \Carbon\Carbon::now()->year)->whereMonth('start_date', \Carbon\Carbon::now()->month);
                     break;
                 case 'space':
                     $targetModel = new \App\Space();
-                    $targetModel = $targetModel->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
+                    $targetModel = $targetModel->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
                     break;
                 case 'session':
                     $targetModel = new \App\Session();
-                    $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'images', 'phone', 'location', 'latitude', 'longitude', 'guest_allowed', 'guest_allowed_left', 'created_by');
+                    $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'phone', 'location', 'latitude', 'longitude', 'guest_allowed', 'guest_allowed_left', 'created_by');
                     $targetModel->whereYear('start_date', \Carbon\Carbon::now()->year)->whereMonth('start_date', \Carbon\Carbon::now()->month);
                     break;
             endswitch;
@@ -100,15 +100,15 @@ class Booking extends Model {
 //    }
 
     public function event() {
-        return $this->hasOne(Event::class, 'id', 'target_id')->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
+        return $this->hasOne(Event::class, 'id', 'target_id')->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
     }
 
     public function session() {
-        return $this->hasOne(Session::class, 'id', 'target_id')->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'images', 'phone', 'location', 'latitude', 'longitude', 'guest_allowed', 'guest_allowed_left', 'created_by');
+        return $this->hasOne(Session::class, 'id', 'target_id')->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'phone', 'location', 'latitude', 'longitude', 'guest_allowed', 'guest_allowed_left', 'created_by');
     }
 
     public function space() {
-        return $this->hasOne(Space::class, 'id', 'target_id')->select('id', 'name', 'images', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
+        return $this->hasOne(Space::class, 'id', 'target_id')->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5','description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
     }
 
     public function getRatingAttribute($value) {
