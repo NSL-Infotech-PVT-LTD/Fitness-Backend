@@ -111,13 +111,15 @@ class BookingController extends ApiController {
             $input['owner_id'] = $targetModeldata->first()->created_by;
             $booking = \App\Booking::create($input);
 
-            $stripe = \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            \Stripe\Charge::create([
-                "amount" => $booking->price * 100,
-                "currency" => config('app.stripe_default_currency'),
-                "source" => $request->token, // obtained with Stripe.js
-                "description" => "Charge for the booking booked through utrain app"
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $stripe = \Stripe\Charge::create([
+                        "amount" => $booking->price * 100,
+                        "currency" => config('app.stripe_default_currency'),
+                        "source" => $request->token, // obtained with Stripe.js
+                        "description" => "Charge for the booking booked through utrain app"
             ]);
+            /*             * ***target model update start*** */
+//            Booking::findorfail($booking->id);
             $booking->payment_details = json_encode($stripe);
             $booking->payment_id = $stripe->id;
             $booking->save();
