@@ -73,7 +73,7 @@ class EventsController extends ApiController {
             if (isset($request->guest_allowed)):
                 if ($request->guest_allowed <= $event->guest_allowed)
                     return parent::error('You are not allowed to reduce guest allowed');
-                $input['guest_allowed_left'] = $event->guest_allowed_left + ($event->guest_allowed - $request->guest_allowed);
+                $input['guest_allowed_left'] = $event->guest_allowed_left + ($request->guest_allowed - $event->guest_allowed);
             endif;
             $event->fill($input);
             $event->save();
