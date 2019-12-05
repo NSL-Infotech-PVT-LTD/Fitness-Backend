@@ -140,7 +140,7 @@ class BookingController extends ApiController {
     }
 
     public function getBookingsAthleteAll(Request $request) {
-        $rules = ['limit' => '', 'filter_by' => 'required'];
+        $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -157,14 +157,10 @@ class BookingController extends ApiController {
                 if (empty($data['target_data']))
                     continue;
                 if ($data->type == 'space'):
-
                     $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
                     if ($date->month !== $requestDate->month)
                         continue;
                 endif;
-//                if ($data->type == 'space'):
-//                    $targetModel->whereYear('space_date_start', \Carbon\Carbon::now()->year)->whereMonth('space_date_start', \Carbon\Carbon::now()->month);
-//                endif;
                 $dataSend[] = $data;
             endforeach;
             return parent::success(['data' => $dataSend]);
