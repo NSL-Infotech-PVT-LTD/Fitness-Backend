@@ -228,7 +228,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //        dd(User::whereId($userId)->where('is_notify', '1')->get()->isEmpty());
         if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() === true)
             return true;
-        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === true)
+        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === false)
             return true;
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
 //            dd($userDevice->token);
