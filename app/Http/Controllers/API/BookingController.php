@@ -140,7 +140,7 @@ class BookingController extends ApiController {
     }
 
     public function getBookingsAthleteAll(Request $request) {
-        $rules = ['limit' => ''];
+        $rules = ['limit' => '', 'filter_by' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -150,10 +150,24 @@ class BookingController extends ApiController {
             $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'space_date_start', 'space_date_end', 'payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
 //            $model = $model->where('target_data','!=','');
-            $perPage = isset($request->limit) ? $request->limit : 20;
+//            $perPage = isset($request->limit) ? $request->limit : 20;
+            $dataSend = [];
+            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+            foreach ($model->get() as $data):
+                if (empty($data['target_data']))
+                    continue;
+                if ($data->type == 'space'):
 
-
-            return parent::success($model->paginate($perPage));
+                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
+                    if ($date->month !== $requestDate->month)
+                        continue;
+                endif;
+//                if ($data->type == 'space'):
+//                    $targetModel->whereYear('space_date_start', \Carbon\Carbon::now()->year)->whereMonth('space_date_start', \Carbon\Carbon::now()->month);
+//                endif;
+                $dataSend[] = $data;
+            endforeach;
+            return parent::success(['data' => $dataSend]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
