@@ -215,6 +215,7 @@ class ApiController extends \App\Http\Controllers\Controller {
     }
 
     public static function pushNotificationsUserRoles($data = [], $userRoleId, $saveNotification = true) {
+//        dd(\DB::table('role_user')->where('role_id', $userRoleId)->pluck('user_id')->toArray());
         foreach (\DB::table('role_user')->where('role_id', $userRoleId)->pluck('user_id')->toArray() as $userId):
             self::pushNotifications($data, $userId, $saveNotification);
         endforeach;
@@ -223,11 +224,14 @@ class ApiController extends \App\Http\Controllers\Controller {
     public static function pushNotifications($data = [], $userId, $saveNotification = true) {
         if ($saveNotification)
             self::savePushNotification($data, $userId);
-        if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() === false)
+//        echo $userId;
+//        dd(User::whereId($userId)->where('is_notify', '1')->get()->isEmpty());
+        if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() === true)
             return true;
-        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === false)
+        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === true)
             return true;
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
+//            dd($userDevice->token);
             self::pushNotification($data, $userDevice->token);
         endforeach;
         return true;
@@ -249,9 +253,10 @@ class ApiController extends \App\Http\Controllers\Controller {
         $data = $dataBuilder->build();
 
 //        $deviceToken = "dRyHOgfdDMA:APA91bFr-dj3_sDe3z7R3d30X12k6n4NnFWuyvbsh4xGRr-s0j2RfpKplfrc0rms5ZZ0aZu6taho3ZbGn_xvtSPdq0QBTcXTRjo94g2L5X5snSuJUW4yt-TfH5WRbEqYoKAktSkLPN5X";
+//        dd($option);
 
         $downstreamResponse = FCM::sendTo($deviceToken, $option, $notification, $data);
-//        $downstreamResponse->numberFailure();
+//        dd($downstreamResponse);
         return $downstreamResponse->numberSuccess() == '1' ? true : false;
     }
 
