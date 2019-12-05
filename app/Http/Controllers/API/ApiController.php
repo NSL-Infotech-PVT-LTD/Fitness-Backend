@@ -226,7 +226,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             self::savePushNotification($data, $userId);
 //        echo $userId;
 //        dd(User::whereId($userId)->where('is_notify', '1')->get()->isEmpty());
-        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === false)
+        if (User::whereId($userId)->where('is_login', '1')->get()->isEmpty() === true)
             return true;
         if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() === true)
             return true;
