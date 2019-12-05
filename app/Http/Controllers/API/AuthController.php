@@ -245,7 +245,10 @@ class AuthController extends ApiController {
                 $user->is_login = '1';
                 $user->save();
                 $token = $user->createToken('netscape')->accessToken;
-                parent::addUserDeviceData($user, $request);
+                $userdevice = \App\UserDevice::find(Auth::user()->id);
+               if ($userdevice->get()->isEmpty())
+             parent::addUserDeviceData($user, $request);
+               
 //                $user = $user->with('roles');
                 // Add user device details for firbase
                 return parent::successCreated(['message' => 'Login Successfully', 'token' => $token, 'user' => $user]);
