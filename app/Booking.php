@@ -36,7 +36,7 @@ class Booking extends Model {
     public function userDetails() {
         return $this->hasOne(User::class, 'id', 'user_id')->select('name', 'email', 'phone',
                         'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio',
-                        'expertise_years', 'hourly_rate', 'portfolio_image_1','portfolio_image_2','portfolio_image_3','portfolio_image_4', 'latitude', 'longitude', 'id');
+                        'expertise_years', 'hourly_rate', 'portfolio_image_1', 'portfolio_image_2', 'portfolio_image_3', 'portfolio_image_4', 'latitude', 'longitude', 'id');
     }
 
     protected $appends = array('target_data', 'booking_date');
@@ -68,12 +68,13 @@ class Booking extends Model {
     public function getTargetDataAttribute() {
 
 //            dd($_POST['filter_by']);
+        $date = \Carbon\Carbon::createFromFormat('Y-m', $_POST['filter_by']);
         try {
             switch ($this->type):
                 case 'event':
                     $targetModel = new \App\Event();
                     $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
-                    $targetModel->whereYear('start_date', \Carbon\Carbon::now()->year)->whereMonth('start_date', \Carbon\Carbon::now()->month);
+                    $targetModel->whereYear('start_date', $date->year)->whereMonth('start_date', $date->month);
                     break;
                 case 'space':
                     $targetModel = new \App\Space();
@@ -82,7 +83,8 @@ class Booking extends Model {
                 case 'session':
                     $targetModel = new \App\Session();
                     $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'phone', 'location', 'latitude', 'longitude', 'guest_allowed', 'guest_allowed_left', 'created_by');
-                    $targetModel->whereYear('start_date', \Carbon\Carbon::now()->year)->whereMonth('start_date', \Carbon\Carbon::now()->month);
+//                    dd(\Carbon\Carbon::now()->month);
+                    $targetModel->whereYear('start_date', $date->year)->whereMonth('start_date', $date->month);
                     break;
             endswitch;
             $model = $targetModel->whereId($this->target_id)->get();
@@ -108,7 +110,7 @@ class Booking extends Model {
     }
 
     public function space() {
-        return $this->hasOne(Space::class, 'id', 'target_id')->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5','description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
+        return $this->hasOne(Space::class, 'id', 'target_id')->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
     }
 
     public function getRatingAttribute($value) {
