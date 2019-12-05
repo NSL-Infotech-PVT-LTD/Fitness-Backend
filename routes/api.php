@@ -34,11 +34,11 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('spaces/coach/list', 'API\SpacesController@getCoachSpaces');
     Route::post('organisers/list', 'API\AuthController@getOrganisers');
     Route::post('coach/list', 'API\AuthController@getCoaches');
-     Route::post('session/store', 'API\SessionController@store');
-     Route::post('session/update', 'API\SessionController@Update');
+    Route::post('session/store', 'API\SessionController@store');
+    Route::post('session/update', 'API\SessionController@Update');
     Route::post('session/delete', 'API\SessionController@destroy');
-     Route::post('session/organiser/list','API\SessionController@getOrganiserSession');
-    Route::post('session/coach/list','API\SessionController@getCoachSession');
+    Route::post('session/organiser/list', 'API\SessionController@getOrganiserSession');
+    Route::post('session/coach/list', 'API\SessionController@getCoachSession');
     Route::post('session/athlete/list', 'API\SessionController@getAthleteSession');
     Route::post('event/details', 'API\EventsController@getitem');
     Route::post('booking/store', 'API\BookingController@store');
@@ -52,37 +52,36 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('booking/details', 'API\BookingController@getitem');
     Route::post('session/details', 'API\SessionController@getitem');
     Route::post('space/details', 'API\SpacesController@getitem');
-    Route::post('coach/details','API\AuthController@getcoach');
-    Route::post('organiser/details','API\AuthController@getorganiser');
-    Route::post('organiser/coach/store','API\OrganiserCoachController@store');
-    Route::post('organiser/coach/update','API\OrganiserCoachController@update');
+    Route::post('coach/details', 'API\AuthController@getcoach');
+    Route::post('organiser/details', 'API\AuthController@getorganiser');
+    Route::post('organiser/coach/store', 'API\OrganiserCoachController@store');
+    Route::post('organiser/coach/update', 'API\OrganiserCoachController@update');
     Route::post('organiser/coach/list', 'API\OrganiserCoachController@getitems');
     Route::post('organiser/coach/athlete/list', 'API\OrganiserCoachController@getOrganiseritems');
-    Route::post('booking/rating','API\BookingController@rating');
-    Route::post('booking/notifications','API\BookingController@getnotifications');
-    Route::get('terms','API\ConfigurationController@getTerms');
-    Route::get('logout','API\AuthController@logout');
-    Route::get('notify/toggle','API\AuthController@toggleNotifyUser');
-    
-
-   
-
-
- Route::post('password/change','API\AuthController@changePassword');
+    Route::post('booking/rating', 'API\BookingController@rating');
+    Route::post('booking/notifications', 'API\BookingController@getnotifications');
+    Route::get('dashboard', 'API\BookingController@getUserDashboard');
+    Route::get('notification/read', 'API\BookingController@MarkReadNotication');
+    Route::get('terms', 'API\ConfigurationController@getTerms');
+    Route::get('logout', 'API\AuthController@logout');
+    Route::get('notify/toggle', 'API\AuthController@toggleNotifyUser');
 
 
 
+
+
+    Route::post('password/change', 'API\AuthController@changePassword');
 });
- Route::post('reset/password','API\AuthController@resetPassword');
+Route::post('reset/password', 'API\AuthController@resetPassword');
 Route::post('coach/register', 'API\AuthController@CoachRegister');
 Route::post('athlete/register', 'API\AuthController@AtheleteRegister');
 Route::post('organiser/register', 'API\AuthController@OrganiserRegister');
 Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
-Route::get('about/us','API\ConfigurationController@getaboutus');
-Route::get('terms/coach','API\ConfigurationController@getTermsCoach');
-Route::get('terms/athlete','API\ConfigurationController@getTermsAthlete');
+Route::get('about/us', 'API\ConfigurationController@getaboutus');
+Route::get('terms/coach', 'API\ConfigurationController@getTermsCoach');
+Route::get('terms/athlete', 'API\ConfigurationController@getTermsAthlete');
 
 
 
