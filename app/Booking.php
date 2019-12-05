@@ -68,13 +68,15 @@ class Booking extends Model {
     public function getTargetDataAttribute() {
 
 //            dd($_POST['filter_by']);
-        $date = \Carbon\Carbon::createFromFormat('Y-m', $_POST['filter_by']);
+        if (isset($_POST['filter_by']))
+            $date = \Carbon\Carbon::createFromFormat('Y-m', $_POST['filter_by']);
         try {
             switch ($this->type):
                 case 'event':
                     $targetModel = new \App\Event();
                     $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required');
-                    $targetModel->whereYear('start_date', $date->year)->whereMonth('start_date', $date->month);
+                    if (isset($date))
+                        $targetModel->whereYear('start_date', $date->year)->whereMonth('start_date', $date->month);
                     break;
                 case 'space':
                     $targetModel = new \App\Space();
@@ -84,7 +86,8 @@ class Booking extends Model {
                     $targetModel = new \App\Session();
                     $targetModel = $targetModel->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'phone', 'location', 'latitude', 'longitude', 'guest_allowed', 'guest_allowed_left', 'created_by');
 //                    dd(\Carbon\Carbon::now()->month);
-                    $targetModel->whereYear('start_date', $date->year)->whereMonth('start_date', $date->month);
+                    if (isset($date))
+                        $targetModel->whereYear('start_date', $date->year)->whereMonth('start_date', $date->month);
                     break;
             endswitch;
             $model = $targetModel->whereId($this->target_id)->get();
