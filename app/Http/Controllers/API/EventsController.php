@@ -71,7 +71,7 @@ class EventsController extends ApiController {
 //                $input['images'] = json_encode($images);
             $event = MyModel::findOrFail($request->id);
             if (isset($request->guest_allowed)):
-                if ($request->guest_allowed <= $event->guest_allowed)
+                if ($request->guest_allowed < $event->guest_allowed)
                     return parent::error('You are not allowed to reduce guest allowed');
                 $input['guest_allowed_left'] = $event->guest_allowed_left + ($request->guest_allowed - $event->guest_allowed);
             endif;

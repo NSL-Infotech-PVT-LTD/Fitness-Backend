@@ -68,7 +68,7 @@ class SessionController extends ApiController {
             $input['state'] = '1';
             $session = MyModel::findOrFail($request->id);
             if (isset($request->guest_allowed)):
-                if ($request->guest_allowed <= $session->guest_allowed)
+                if ($request->guest_allowed < $session->guest_allowed)
                     return parent::error('You are not allowed to reduce guest allowed');
                 $input['guest_allowed_left'] = $session->guest_allowed_left + ($request->guest_allowed - $session->guest_allowed);
             endif;
