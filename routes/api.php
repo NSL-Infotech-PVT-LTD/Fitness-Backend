@@ -44,7 +44,8 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('booking/store', 'API\BookingController@store');
     Route::post('booking/space/store', 'API\BookingController@spacestore');
     Route::post('booking/athlete/list', 'API\BookingController@getBookingsAthlete');
-    Route::post('booking/athlete/list/all', 'API\BookingController@getBookingsAthleteAll');
+    Route::post('booking/list/all', 'API\BookingController@getBookingsAll');
+    Route::post('booking/space/list', 'API\BookingController@getSpaceBookings');
     Route::post('booking/coach/list/all', 'API\BookingController@getAllBookingsCoach');
     Route::post('booking/organiser/list/all', 'API\BookingController@getAllBookingsOrganiser');
     Route::post('booking/organiser/list', 'API\BookingController@getBookingsOrganiser');

@@ -139,7 +139,7 @@ class BookingController extends ApiController {
         }
     }
 
-    public function getBookingsAthleteAll(Request $request) {
+    public function getBookingsAll(Request $request) {
         $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -164,6 +164,22 @@ class BookingController extends ApiController {
                 $dataSend[] = $data;
             endforeach;
             return parent::success(['data' => $dataSend]);
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function getSpaceBookings(Request $request) {
+        $rules = ['limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'space_date_start', 'space_date_end', 'payment_id', 'status', 'rating');
+            $model = $model->with(['userDetails']);
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -424,5 +440,4 @@ class BookingController extends ApiController {
         }
     }
 
-   
 }
