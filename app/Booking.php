@@ -67,9 +67,9 @@ class Booking extends Model {
 
     public function getTargetDataAttribute() {
 
-//            dd($_POST['filter_by']);
-        if (isset($_POST['filter_by']))
-            $date = \Carbon\Carbon::createFromFormat('Y-m', $_POST['filter_by']);
+//            dd($_REQUEST['filter_by']);
+        if (isset($_REQUEST['filter_by']))
+            $date = \Carbon\Carbon::createFromFormat('Y-m', $_REQUEST['filter_by']);
         try {
             switch ($this->type):
                 case 'event':
