@@ -59,9 +59,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('organiser/coach/list', 'API\OrganiserCoachController@getitems');
     Route::post('organiser/coach/athlete/list', 'API\OrganiserCoachController@getOrganiseritems');
     Route::post('booking/rating', 'API\BookingController@rating');
-    Route::post('booking/notifications', 'API\BookingController@getnotifications');
-    Route::get('dashboard', 'API\BookingController@getUserDashboard');
-    Route::get('notification/read', 'API\BookingController@MarkReadNotication');
+    Route::post('notifications', 'API\NotificationController@getnotifications');
+    Route::get('dashboard', 'API\NotificationController@getUserDashboard');
+    Route::get('notification/read', 'API\NotificationController@MarkReadNotication');
     Route::get('terms', 'API\ConfigurationController@getTerms');
     Route::get('logout', 'API\AuthController@logout');
     Route::get('notify/toggle', 'API\AuthController@toggleNotifyUser');
