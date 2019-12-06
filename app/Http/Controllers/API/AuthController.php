@@ -45,6 +45,7 @@ class AuthController extends ApiController {
 //            dd(json_decode($request->service_ids));
             $input['password'] = Hash::make($request->password);
             $input['is_notify'] = '1';
+            $input['is_login'] = '1';
 //            $input['sport_id']= json_encode($request->sport_id);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'), true);
 
