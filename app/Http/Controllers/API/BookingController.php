@@ -338,7 +338,7 @@ class BookingController extends ApiController {
     }
 
     public function getAllBookingsCoach(Request $request) {
-        $rules = ['limit' => ''];
+        $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -347,16 +347,26 @@ class BookingController extends ApiController {
 //        dd(\Auth::id());
             $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
-            $perPage = isset($request->limit) ? $request->limit : 20;
-
-            return parent::success($model->paginate($perPage));
+            $dataSend = [];
+            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+            foreach ($model->get() as $data):
+                if (empty($data['target_data']))
+                    continue;
+                if ($data->type == 'space'):
+                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
+                    if ($date->month !== $requestDate->month)
+                        continue;
+                endif;
+                $dataSend[] = $data;
+            endforeach;
+            return parent::success(['data' => $dataSend]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
 
     public function getAllBookingsOrganiser(Request $request) {
-        $rules = ['limit' => ''];
+        $rules = ['limit' => '','filter_by' => 'required|date_format:Y-m'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -365,9 +375,21 @@ class BookingController extends ApiController {
 //        dd(\Auth::id());
             $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
-            $perPage = isset($request->limit) ? $request->limit : 20;
 
-            return parent::success($model->paginate($perPage));
+
+            $dataSend = [];
+            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+            foreach ($model->get() as $data):
+                if (empty($data['target_data']))
+                    continue;
+                if ($data->type == 'space'):
+                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
+                    if ($date->month !== $requestDate->month)
+                        continue;
+                endif;
+                $dataSend[] = $data;
+            endforeach;
+            return parent::success(['data' => $dataSend]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
