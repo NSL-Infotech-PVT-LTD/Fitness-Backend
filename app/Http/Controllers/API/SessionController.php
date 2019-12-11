@@ -183,10 +183,10 @@ class SessionController extends ApiController {
                     $model = $model->orderBy('created_at', 'desc');
                     break;
                 case 'distance':
-                    $model = $model->orderBy('distance');
+                    $model = $model->orderBy('distance', 'asc');
                     break;
                 default :
-                    $model = $model->orderBy('distance');
+                    $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
 

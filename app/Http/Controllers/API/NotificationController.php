@@ -11,8 +11,8 @@ use DB;
 use Auth;
 
 class NotificationController extends ApiController {
-    
-     public function getnotifications(Request $request) {
+
+    public function getnotifications(Request $request) {
         $rules = ['search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -28,6 +28,7 @@ class NotificationController extends ApiController {
                         ->orWhere('body', 'LIKE', "%$request->search%")
                         ->orWhere('data', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+            $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -70,4 +71,3 @@ class NotificationController extends ApiController {
     }
 
 }
-

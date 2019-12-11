@@ -75,8 +75,8 @@ class BookingController extends ApiController {
             $targetModelupdate->save();
             /*             * ***target model update end*** */
             // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
-            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id]], $booking->user_id);
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $targetModeldata->first()->created_by);
+            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -129,8 +129,8 @@ class BookingController extends ApiController {
             $targetModelupdate->save();
             /*             * ***target model update end*** */
             // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id]], $targetModeldata->first()->created_by);
-            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id]], $booking->user_id);
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $targetModeldata->first()->created_by);
+            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -197,9 +197,9 @@ class BookingController extends ApiController {
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
                     if ($request->type == 'event'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     elseif ($request->type == 'session'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
@@ -257,9 +257,9 @@ class BookingController extends ApiController {
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
                     if ($request->type == 'event'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     elseif ($request->type == 'session'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
@@ -312,9 +312,9 @@ class BookingController extends ApiController {
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
                     if ($request->type == 'event'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     elseif ($request->type == 'session'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
