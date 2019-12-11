@@ -174,6 +174,9 @@ class EventsController extends ApiController {
                 case 'price_low':
                     $model = $model->orderBy('price', 'asc');
                     break;
+                case 'distance':
+                    $model = $model->orderBy('distance', 'asc');
+                    break;
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
                     break;
@@ -191,7 +194,6 @@ class EventsController extends ApiController {
             }
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
-            $model = $model->orderBy('distance', 'desc');
             $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
