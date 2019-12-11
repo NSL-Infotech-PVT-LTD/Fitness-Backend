@@ -175,10 +175,10 @@ class SpacesController extends ApiController {
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
                 case 'distance':
-                    $model = $model->orderBy('distance');
+                     $model = $model->orderBy('distance', 'asc');
                     break;
                 default :
-                    $model = $model->orderBy('distance');
+                    $model = $model->orderBy('created_at', 'desc');
                     break;
             endswitch;
 
