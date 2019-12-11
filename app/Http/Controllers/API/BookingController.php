@@ -197,9 +197,9 @@ class BookingController extends ApiController {
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
                     if ($request->type == 'event'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     elseif ($request->type == 'session'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
@@ -257,9 +257,9 @@ class BookingController extends ApiController {
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
                     if ($request->type == 'event'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     elseif ($request->type == 'session'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
@@ -312,9 +312,9 @@ class BookingController extends ApiController {
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
                     if ($request->type == 'event'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     elseif ($request->type == 'session'):
-                        $targetOrderByKey = 'end_date';
+                        $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
                         $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
