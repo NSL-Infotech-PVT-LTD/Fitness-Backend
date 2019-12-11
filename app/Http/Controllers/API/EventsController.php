@@ -191,7 +191,7 @@ class EventsController extends ApiController {
             }
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
-            $model = $model->orderBy('distance');
+            $model = $model->orderBy('distance', 'desc');
             $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
