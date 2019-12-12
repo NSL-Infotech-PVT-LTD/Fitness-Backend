@@ -40,6 +40,7 @@
                                     <th>{{ucfirst($rule)}}</th>
                                 <?php endforeach; ?>
                                 <th>Actions</th>
+                               
                             </tr>
                         </thead>
                     </table>
