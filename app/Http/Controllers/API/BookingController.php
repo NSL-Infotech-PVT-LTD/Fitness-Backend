@@ -75,8 +75,8 @@ class BookingController extends ApiController {
             $targetModelupdate->save();
             /*             * ***target model update end*** */
             // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $targetModeldata->first()->created_by);
-            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $booking->user_id);
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking']], $targetModeldata->first()->created_by);
+            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking']], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -129,8 +129,8 @@ class BookingController extends ApiController {
             $targetModelupdate->save();
             /*             * ***target model update end*** */
             // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $targetModeldata->first()->created_by);
-            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id,'target_model'=>'booking']], $booking->user_id);
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking']], $targetModeldata->first()->created_by);
+            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking']], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -366,7 +366,7 @@ class BookingController extends ApiController {
     }
 
     public function getAllBookingsOrganiser(Request $request) {
-        $rules = ['limit' => '','filter_by' => 'required|date_format:Y-m'];
+        $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -390,6 +390,44 @@ class BookingController extends ApiController {
                 $dataSend[] = $data;
             endforeach;
             return parent::success(['data' => $dataSend]);
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function getAlllBookingsCoach(Request $request) {
+        $rules = ['limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $user = \App\User::find(Auth::user()->id);
+            if ($user->hasRole('coach') === false)
+                return parent::error('Please use valid auth token');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $model = $model->with(['userDetails']);
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+    
+    public function getAlllBookingsOrganiser(Request $request) {
+        $rules = ['limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $user = \App\User::find(Auth::user()->id);
+            if ($user->hasRole('organizer') === false)
+                return parent::error('Please use valid auth token');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $model = $model->with(['userDetails']);
+            $perPage = isset($request->limit) ? $request->limit : 20;
+            return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
