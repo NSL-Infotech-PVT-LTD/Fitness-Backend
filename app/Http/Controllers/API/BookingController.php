@@ -397,7 +397,7 @@ class BookingController extends ApiController {
 
     public function getAlllBookingsCoach(Request $request) {
         $rules = ['limit' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -416,7 +416,7 @@ class BookingController extends ApiController {
     
     public function getAlllBookingsOrganiser(Request $request) {
         $rules = ['limit' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
