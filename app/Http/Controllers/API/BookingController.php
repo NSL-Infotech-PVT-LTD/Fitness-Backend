@@ -88,12 +88,13 @@ class BookingController extends ApiController {
     public function spacestore(Request $request) {
 
         $rules = ['type' => 'required|in:space', 'target_id' => 'required', 'user_id' => '', 'price' => 'required',
-            'payment_details' => '', 'token' => 'required', 'status' => 'required', 'space_date_start' => 'required|date_format:"Y-m-d H:i|after_or_equal:\' . \Carbon\Carbon::now()', 'space_date_end' => 'required|date_format:"Y-m-d H:i|after_or_equal:\' . \Carbon\Carbon::now()'];
+            'payment_details' => '', 'token' => 'required', 'status' => 'required', 'booking' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
+            $params = json_decode($request->booking);
             if (!isset($request->token))
                 return parent::error('Please add token');
             $input = $request->all();
@@ -123,6 +124,9 @@ class BookingController extends ApiController {
             $booking->payment_details = json_encode($stripe);
             $booking->payment_id = $stripe->id;
             $booking->save();
+             foreach ($params as $param):
+             \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time,'to_time' => $param->to_time,'hours'=>$param->hours]);
+                endforeach;
 //            $booking->payment_id = $stripe->id;
             /*             * ***target model update start*** */
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
@@ -281,7 +285,7 @@ class BookingController extends ApiController {
         }
     }
 
-    public function getBookingsCoach(Request $request) {
+    public function getBookingscoachOrg(Request $request) {
         $rules = ['search' => '', 'target_id' => '', 'type' => 'required|in:event,session,space', 'order_by' => 'required_if:type,event|required_if:type,session', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -332,64 +336,6 @@ class BookingController extends ApiController {
             endif;
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
-
-    public function getAllBookingsCoach(Request $request) {
-        $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        try {
-//        dd(\Auth::id());
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
-            $model = $model->with(['userDetails']);
-            $dataSend = [];
-            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
-            foreach ($model->get() as $data):
-                if (empty($data['target_data']))
-                    continue;
-                if ($data->type == 'space'):
-                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
-                    if ($date->month !== $requestDate->month)
-                        continue;
-                endif;
-                $dataSend[] = $data;
-            endforeach;
-            return parent::success(['data' => $dataSend]);
-        } catch (\Exception $ex) {
-            return parent::error($ex->getMessage());
-        }
-    }
-
-    public function getAllBookingsOrganiser(Request $request) {
-        $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        try {
-//        dd(\Auth::id());
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
-            $model = $model->with(['userDetails']);
-
-
-            $dataSend = [];
-            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
-            foreach ($model->get() as $data):
-                if (empty($data['target_data']))
-                    continue;
-                if ($data->type == 'space'):
-                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
-                    if ($date->month !== $requestDate->month)
-                        continue;
-                endif;
-                $dataSend[] = $data;
-            endforeach;
-            return parent::success(['data' => $dataSend]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
