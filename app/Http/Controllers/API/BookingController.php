@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Booking as MyModel;
 use App\UserNotification;
 use Twilio\Rest\Client;
+use App\Http\Controllers\API\DatePeriod;
 use Validator;
 use DB;
 use Auth;
@@ -103,10 +104,10 @@ class BookingController extends ApiController {
             $targetModeldata = $targetModel->whereId($request->target_id)->get();
             if ($targetModeldata->isEmpty())
                 return parent::error('Please use valid target id');
-            $checkData = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->get();
-            if ($checkData->isEmpty() === false):
-                return parent::error(['message' => $request->target_id . ' already booked']);
-            endif;
+//            $checkData = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->get();
+//            if ($checkData->isEmpty() === false):
+//                return parent::error(['message' => $request->target_id . ' already booked']);
+//            endif;
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
@@ -124,9 +125,9 @@ class BookingController extends ApiController {
             $booking->payment_details = json_encode($stripe);
             $booking->payment_id = $stripe->id;
             $booking->save();
-             foreach ($params as $param):
-             \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time,'to_time' => $param->to_time,'hours'=>$param->hours]);
-                endforeach;
+            foreach ($params as $param):
+                \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time, 'hours' => $param->hours]);
+            endforeach;
 //            $booking->payment_id = $stripe->id;
             /*             * ***target model update start*** */
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
@@ -359,7 +360,7 @@ class BookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-    
+
     public function getAlllBookingsOrganiser(Request $request) {
         $rules = ['limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -440,6 +441,92 @@ class BookingController extends ApiController {
             $model = $model->with($model->first()->type);
 //            dd($model);
             return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    private static function splitTime($StartTime, $EndTime, $Duration = "60") {
+        $ReturnArray = array(); // Define output
+        $StartTime = strtotime($StartTime); //Get Timestamp
+        $EndTime = strtotime($EndTime); //Get Timestamp
+
+        $AddMins = $Duration * 60;
+
+        while ($StartTime <= $EndTime) { //Run loop
+            $ReturnArray[] = date("G:i:s", $StartTime);
+            $StartTime += $AddMins; //Endtime check
+        }
+        return $ReturnArray;
+    }
+
+    public function getavailability(Request $request) {
+//        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
+        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'hours' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $request->hours = '1';
+            $model = new \App\Space();
+            $model = $model->where('id', $request->target_id);
+
+//            if ($request->from_time < $model->first()->open_hours_from):
+//                return parent::error('Time is less than the space open_hours_from timing');
+//            endif;
+//            if ($request->to_time > $model->first()->open_hours_to):
+//                return parent::error('Time is more than the space open_hours_to timing');
+//            endif;
+
+            $requestDay = date('N', strtotime($request->date));
+            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
+                return parent::error('availabilty week does not matches');
+
+//            $slot = self::SplitTime($request->from_time, $request->to_time, $request->hours * 60);
+
+            $booking = new \App\Booking();
+            $booking = $booking->where('target_id', $request->target_id);
+            $bookingIds = $booking->get()->pluck('id')->toarray();
+//             dd($bookingIds);
+            $bookingspaces = \App\BookingSpace::whereIn('booking_id', $bookingIds)->whereDate('booking_date', $request->date);
+            $bookingspaces = $bookingspaces->get();
+//            dd($bookingspace->pluck('from_time')->toarray());
+            $slots = self::splitTime($model->first()->open_hours_from, $model->first()->open_hours_to, $request->hours * 60);
+//                 dd($slots);
+//            $a = '12:30';
+////            dd($a);
+//            $b = '15:30';
+//            $slotss = self::splitTime($a, $b, 1 * 60);
+//            dd($slotss);
+//       
+
+
+            
+            $bookedslotss = [];
+            foreach ($bookingspaces as $bookingspace):
+
+                $bookedslots = self::splitTime($bookingspace->from_time, $bookingspace->to_time, 1 * 60);
+                unset($bookedslots[count($bookedslots) - 1]);
+                $bookedslotss=array_merge($bookedslotss,$bookedslots);
+//            dd($bookedslotss);
+            endforeach;
+
+//            dd($bookedslotss);
+            $available = [];
+            foreach ($slots as $slot):
+                if (in_array($slot, $bookedslotss))
+                    continue;
+             $slots = date('H:i:s',strtotime($slot.'+ 1 hour'));
+                $available[] =[$slot,$slots];
+            endforeach;
+                unset($available[count($available) - 1]);
+            dd($available);
+//            if (in_array($requestDay, json_decode($booking->first()->date)))
+//                return parent::error('Sorry,requested date is not available');
+
+            return parent::success(['available_slot' => $available]);
         } catch (\Exception $ex) {
 
             return parent::error($ex->getMessage());

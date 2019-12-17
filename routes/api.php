@@ -84,6 +84,7 @@ Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us', 'API\ConfigurationController@getaboutus');
 Route::get('terms/coach', 'API\ConfigurationController@getTermsCoach');
 Route::get('terms/athlete', 'API\ConfigurationController@getTermsAthlete');
+Route::post('availability','API\BookingController@getavailability');
 
 
 
