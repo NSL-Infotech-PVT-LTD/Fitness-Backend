@@ -469,6 +469,7 @@ class BookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+            $user = \App\User::find(Auth::user()->id);
             $request->hours = '1';
             $model = new \App\Space();
             $model = $model->where('id', $request->target_id);
@@ -503,13 +504,13 @@ class BookingController extends ApiController {
 //       
 
 
-            
+
             $bookedslotss = [];
             foreach ($bookingspaces as $bookingspace):
 
                 $bookedslots = self::splitTime($bookingspace->from_time, $bookingspace->to_time, 1 * 60);
                 unset($bookedslots[count($bookedslots) - 1]);
-                $bookedslotss=array_merge($bookedslotss,$bookedslots);
+                $bookedslotss = array_merge($bookedslotss, $bookedslots);
 //            dd($bookedslotss);
             endforeach;
 
@@ -518,10 +519,10 @@ class BookingController extends ApiController {
             foreach ($slots as $slot):
                 if (in_array($slot, $bookedslotss))
                     continue;
-             $slots = date('H:i:s',strtotime($slot.'+ 1 hour'));
-                $available[] =[$slot,$slots];
+                $slots = date('H:i:s', strtotime($slot . '+ 1 hour'));
+                $available[] = [$slot, $slots];
             endforeach;
-                unset($available[count($available) - 1]);
+            unset($available[count($available) - 1]);
 //            dd($available);
 //            if (in_array($requestDay, json_decode($booking->first()->date)))
 //                return parent::error('Sorry,requested date is not available');

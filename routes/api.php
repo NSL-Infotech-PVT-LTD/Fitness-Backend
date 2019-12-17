@@ -67,6 +67,8 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('terms', 'API\ConfigurationController@getTerms');
     Route::get('logout', 'API\AuthController@logout');
     Route::get('notify/toggle', 'API\AuthController@toggleNotifyUser');
+    Route::post('availability','API\BookingController@getavailability');
+
 
 
 
@@ -84,7 +86,6 @@ Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us', 'API\ConfigurationController@getaboutus');
 Route::get('terms/coach', 'API\ConfigurationController@getTermsCoach');
 Route::get('terms/athlete', 'API\ConfigurationController@getTermsAthlete');
-Route::post('availability','API\BookingController@getavailability');
 
 
 
