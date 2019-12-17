@@ -518,9 +518,10 @@ class BookingController extends ApiController {
             foreach ($slots as $slot):
                 if (in_array($slot, $bookedslotss))
                     continue;
-                $available[] = $slot;
+             $slots = date('H:i:s',strtotime($slot.'+ 1 hour'));
+                $available[] =[$slot,$slots];
             endforeach;
-
+                unset($available[count($available) - 1]);
             dd($available);
 //            if (in_array($requestDay, json_decode($booking->first()->date)))
 //                return parent::error('Sorry,requested date is not available');
