@@ -126,7 +126,7 @@ class BookingController extends ApiController {
             $booking->payment_id = $stripe->id;
             $booking->save();
             foreach ($params as $param):
-                \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time, 'hours' => $param->hours]);
+                \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time]);
             endforeach;
 //            $booking->payment_id = $stripe->id;
             /*             * ***target model update start*** */
