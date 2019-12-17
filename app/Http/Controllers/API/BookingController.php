@@ -519,8 +519,10 @@ class BookingController extends ApiController {
             foreach ($slots as $slot):
                 if (in_array($slot, $bookedslotss))
                     continue;
-                $slots = date('H:i:s', strtotime($slot . '+ 1 hour'));
-                $available[] = [$slot, $slots];
+               
+                $slots = date('H:i', strtotime($slot . '+ 1 hour'));
+                 $slott = date('H:i', strtotime($slot));
+                $available[] = [$slott, $slots];
             endforeach;
             unset($available[count($available) - 1]);
 //            dd($available);
