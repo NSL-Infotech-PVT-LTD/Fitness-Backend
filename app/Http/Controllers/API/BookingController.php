@@ -519,6 +519,8 @@ class BookingController extends ApiController {
             $bookingspaces = $bookingspaces->get();
 //            dd($bookingspace->pluck('from_time')->toarray());
             $bookedslotss = [];
+            
+            
             foreach ($bookingspaces as $bookingspace):
                 $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
             endforeach;
