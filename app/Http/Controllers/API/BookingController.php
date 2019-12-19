@@ -499,7 +499,7 @@ class BookingController extends ApiController {
     public function getavailability(Request $request) {
 //        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
         $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -524,7 +524,7 @@ class BookingController extends ApiController {
             foreach ($bookingspaces as $bookingspace):
                 $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
             endforeach;
-            $slots = self::splitTimeWithBookedhours($model->first()->open_hours_from, $model->first()->open_hours_to, $request->hours * 60, $bookedslotss);
+            $slots = self::splitTimeWithBookedhours($model->first()->open_hours_from, $model->first()->open_hours_to, 1 * 60, $bookedslotss);
 //            dd($slots);
             $available = [];
             foreach ($slots as $slot):
