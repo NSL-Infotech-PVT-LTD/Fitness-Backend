@@ -447,6 +447,8 @@ class BookingController extends ApiController {
         }
     }
 
+    
+    
     private static function splitTime($StartTime, $EndTime, $Duration = "60") {
         $ReturnArray = array(); // Define output
         $StartTime = strtotime($StartTime); //Get Timestamp
