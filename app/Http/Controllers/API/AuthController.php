@@ -54,6 +54,8 @@ class AuthController extends ApiController {
 
             self::addservices($request->service_ids, $user->id);
 
+            
+            
             $user->assignRole(\App\Role::where('id', 2)->first()->name);
             // create user token for authorization
             $token = $user->createToken('netscape')->accessToken;
