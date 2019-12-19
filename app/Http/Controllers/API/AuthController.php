@@ -49,7 +49,7 @@ class AuthController extends ApiController {
 //            $input['sport_id']= json_encode($request->sport_id);
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/coach/profile_image'), true);
 
-          
+            $user = \App\User::create($input);
             //Assign role to created user[1=>10,2=>20,]
 
             self::addservices($request->service_ids, $user->id);
