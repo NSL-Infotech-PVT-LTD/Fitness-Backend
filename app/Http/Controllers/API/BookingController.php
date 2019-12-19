@@ -473,24 +473,41 @@ class BookingController extends ApiController {
             $StartTime += $AddMins; //Endtime check
         }
 //        dd($ReturnArray);
+//        dd($bookedSlots);
         $uniqueR = [];
         foreach ($bookedSlots as $slots):
-            foreach ($ReturnArray as $rrrrrr):
-                if ((strtotime($rrrrrr) > strtotime($slots[0] . ' + 1 minute')) && (strtotime($rrrrrr) < strtotime($slots[count($slots) - 1] . ' - 1 minute'))):
+//            dd((strtotime($slots[count($slots) - 1]) - strtotime($slots[0])) / 60);
+            if (((strtotime($slots[count($slots) - 1]) - strtotime($slots[0])) / 60) == 60):
+//                    dd($slots[0]);
+//                echo array_search(date('H:i', strtotime($slots[0])), $ReturnArray);
+                unset($ReturnArray[array_search(date('H:i', strtotime($slots[0])), $ReturnArray)]);
+            else:
+                foreach ($ReturnArray as $rrrrrr):
+                    if ((strtotime($rrrrrr) > strtotime($slots[0] . ' + 1 minute')) && (strtotime($rrrrrr) < strtotime($slots[count($slots) - 1] . ' - 1 minute'))):
 //                    dd(array_search($rrrrrr, $ReturnArray));
-                    $uniqueR[] = array_search($rrrrrr, $ReturnArray);
-                    unset($ReturnArray[array_search($rrrrrr, $ReturnArray)]);
-                endif;
-            endforeach;
+//                        $uniqueR[] = array_search($rrrrrr, $ReturnArray);
+                        unset($ReturnArray[array_search($rrrrrr, $ReturnArray)]);
+                    endif;
+                endforeach;
+            endif;
         endforeach;
 //        dd($ReturnArray);
         $rr = [];
         $k = 0;
         foreach (array_keys($ReturnArray) as $ret):
-            if (isset($ReturnArray[$ret + 1]))
-                $rr[$k][] = $ReturnArray[$ret];
-            else
-                $k++;
+            try {
+//                if ($k == 0)
+//                    $rr[$k][] = $ReturnArray[$ret];
+                if (isset($ReturnArray[$ret + 1])):
+                    $rr[$k][] = $ReturnArray[$ret];
+                else:
+//                    $rr[$k] = array_values(array_unique($rr[$k]));
+//                dd(array_values($rr[$k]));
+                    $k++;
+                endif;
+            } catch (\Exception $ex) {
+                continue;
+            }
         endforeach;
 //        dd($rr);
         return $rr;
@@ -519,8 +536,8 @@ class BookingController extends ApiController {
             $bookingspaces = $bookingspaces->get();
 //            dd($bookingspace->pluck('from_time')->toarray());
             $bookedslotss = [];
-            
-            
+
+
             foreach ($bookingspaces as $bookingspace):
                 $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
             endforeach;
