@@ -527,7 +527,8 @@ class BookingController extends ApiController {
             $model = $model->where('id', $request->target_id);
             $requestDay = date('N', strtotime($request->date));
 //            dd(json_decode($model->first()->availability_week));
-            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
+//            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
+            if (!in_array($requestDay,$model->first()->availability_week))
                 return parent::error('availabilty week does not matches');
             $booking = new \App\Booking();
             $booking = $booking->where('target_id', $request->target_id);
