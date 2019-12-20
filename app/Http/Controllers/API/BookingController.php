@@ -152,7 +152,7 @@ class BookingController extends ApiController {
         endif;
         try {
 //            dd($request->filter_by);
-            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'space_date_start', 'space_date_end', 'payment_id', 'status', 'rating');
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
 //            $model = $model->where('target_data','!=','');
 //            $perPage = isset($request->limit) ? $request->limit : 20;
