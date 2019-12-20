@@ -49,6 +49,20 @@ class Space extends Model {
         return $value == null ? '0' : number_format((float) $value, 2, '.', '');
     }
 
+//    public function getAvailabilityWeekAttribute($value) {
+//        try {
+//            $weekdays = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wekhd'];
+//            $return = [];
+//            foreach (json_decode($value) as $key):
+//                $return[] = $weekdays[$key];
+//            endforeach;
+//            return $return;
+//        } catch (\Exception $ex) {
+//            return [];
+//        }
+////        return $value == null ? "" : $value;
+//    }
+
     protected $appends = array('images');
 
     public function getImagesAttribute() {
