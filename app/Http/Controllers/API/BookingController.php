@@ -182,7 +182,7 @@ class BookingController extends ApiController {
         endif;
         try {
             $perPage = isset($request->limit) ? $request->limit : 20;
-            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'space_date_start', 'space_date_end', 'payment_id', 'status', 'rating');
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
