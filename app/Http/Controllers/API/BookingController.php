@@ -8,6 +8,7 @@ use App\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Booking as MyModel;
+use App\BookingSpace;
 use App\UserNotification;
 use Twilio\Rest\Client;
 use App\Http\Controllers\API\DatePeriod;
@@ -158,16 +159,18 @@ class BookingController extends ApiController {
 //            $perPage = isset($request->limit) ? $request->limit : 20;
             $dataSend = [];
             $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+//            dd($model->get());
             foreach ($model->get() as $data):
                 if (empty($data['target_data']))
                     continue;
-                if ($data->type == 'space'):
-                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->space_date_start);
-                    if ($date->month !== $requestDate->month)
-                        continue;
-                endif;
+//                if ($data->type == 'space'):
+//                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->booking_date);
+//                    if ($date->month !== $requestDate->month)
+//                        continue;
+//                endif;
                 $dataSend[] = $data;
             endforeach;
+//            dd($dataSend);
             return parent::success(['data' => $dataSend]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -390,7 +393,7 @@ class BookingController extends ApiController {
         // dd($category_id);
         try {
             $model = new \App\Booking();
-            $model = $model->where('id', $request->id)->with('userDetails');
+            $model = $model->where('id', $request->id)->with('userDetails')->with('booking_details');
             $model = $model->with($model->first()->type);
 //            dd($model);
             return parent::success($model->first());
@@ -399,6 +402,27 @@ class BookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
+    
+     public function getspace(Request $request) {
+
+        $rules = ['id' => 'required|exists:booking_spaces,id'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        // dd($category_id);
+        try {
+            $model = new \App\BookingSpace();
+            $model = $model->where('id', $request->id)->with('userDetails');
+            $model = $model->with($model->first());
+//            dd($model);
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
 
     public function rating(Request $request) {
         $rules = ['booking_id' => 'required', 'rating' => 'required|in:1,2,3,4,5'];

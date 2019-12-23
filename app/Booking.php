@@ -31,7 +31,7 @@ class Booking extends Model {
      *
      * @var array
      */
-    protected $fillable = ['type', 'user_id', 'target_id', 'tickets', 'price', 'status', 'payment_details', 'payment_id','owner_id', 'rating'];
+    protected $fillable = ['type', 'user_id', 'target_id', 'tickets', 'price', 'status', 'payment_details', 'payment_id', 'owner_id', 'rating'];
 
     public function userDetails() {
         return $this->hasOne(User::class, 'id', 'user_id')->select('name', 'email', 'phone',
@@ -51,9 +51,12 @@ class Booking extends Model {
                     return ['start' => $model->first()->start_date, 'end' => $model->first()->end_date];
                 break;
             case 'space':
-                $targetModel = new \App\Booking();
-                $model = $targetModel->whereId($this->id)->get();
-                return ['start' => date('Y-m-d', strtotime($model->first()->space_date_start)), 'end' => date('Y-m-d', strtotime($model->first()->space_date_end))];
+                $targetModel = new \App\BookingSpace();
+                $model = $targetModel->where('booking_id',$this->id)->get();
+//                dd($this->id);
+//                dd($model->first()->booking_date);
+                if ($model->isEmpty() !== true)
+                    return ['start' => $model->first()->booking_date,'end' => $model->last()->booking_date];
                 break;
             case 'session':
                 $targetModel = new \App\Session();
@@ -114,6 +117,10 @@ class Booking extends Model {
 
     public function space() {
         return $this->hasOne(Space::class, 'id', 'target_id')->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
+    }
+    
+    public function booking_details() {
+        return $this->hasMany(BookingSpace::class, 'booking_id', 'id')->select('id', 'booking_id', 'booking_date', 'from_time', 'to_time');
     }
 
     public function getRatingAttribute($value) {
