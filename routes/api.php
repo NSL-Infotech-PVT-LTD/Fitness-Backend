@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('booking/organiser/list', 'API\BookingController@getBookingsOrganiser');
     Route::post('booking/coach/list', 'API\BookingController@getBookingsCoach');
     Route::post('booking/details', 'API\BookingController@getitem');
+    Route::post('both/bookings','API\BookingController@getbothbookings');
     Route::post('session/details', 'API\SessionController@getitem');
     Route::post('space/details', 'API\SpacesController@getitem');
     Route::post('coach/details', 'API\AuthController@getcoach');
@@ -67,13 +68,8 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('terms', 'API\ConfigurationController@getTerms');
     Route::get('logout', 'API\AuthController@logout');
     Route::get('notify/toggle', 'API\AuthController@toggleNotifyUser');
-    Route::post('availability','API\BookingController@getavailability');
-
-
-
-
-
-
+    Route::post('availability', 'API\BookingController@getavailability');
+    Route::get('configuration/{column}', 'API\ConfigurationController@getConfigurationColumn');
     Route::post('password/change', 'API\AuthController@changePassword');
 });
 Route::post('reset/password', 'API\AuthController@resetPassword');
@@ -84,8 +80,6 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us', 'API\ConfigurationController@getaboutus');
-Route::get('terms/coach', 'API\ConfigurationController@getTermsCoach');
-Route::get('terms/athlete', 'API\ConfigurationController@getTermsAthlete');
 
 
 

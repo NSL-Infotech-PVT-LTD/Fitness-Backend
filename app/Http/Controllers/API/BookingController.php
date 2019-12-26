@@ -382,6 +382,52 @@ class BookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
+    
+     public function getbothbookings(Request $request) {
+        $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $user = \App\User::find(Auth::user()->id);
+            $owner = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $owner = $owner->with(['userDetails']);
+             $dataSend = [];
+            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+//            dd($model->get());
+            foreach ($owner->get() as $data):
+                if (empty($data['target_data']))
+                    continue;
+//                if ($data->type == 'space'):
+//                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->booking_date);
+//                    if ($date->month !== $requestDate->month)
+//                        continue;
+//                endif;
+                $dataSend[] = $data;
+            endforeach;
+            
+             $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $booked = $booked->with(['userDetails']);
+             $dataSend = [];
+            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+//            dd($model->get());
+            foreach ($booked->get() as $book):
+                if (empty($book['target_data']))
+                    continue;
+//                if ($data->type == 'space'):
+//                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->booking_date);
+//                    if ($date->month !== $requestDate->month)
+//                        continue;
+//                endif;
+                $booksend[] = $book;
+            endforeach;
+//            dd($dataSend);
+            return parent::success(['Bookings for me' => $dataSend,'MY Bookings'=>$booksend]);
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
 
     public function getitem(Request $request) {
 

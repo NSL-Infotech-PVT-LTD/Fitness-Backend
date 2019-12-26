@@ -162,7 +162,9 @@ class ApiController extends \App\Http\Controllers\Controller {
 
     public static function success($data, $code = 200, $returnType = 'object') {
 //        print_r($data);die;
-        if ($returnType == 'array')
+        if ($returnType == 'data')
+            $data = $data;
+        elseif ($returnType == 'array')
             $data = (array) $data;
         else
             $data = (object) $data;
@@ -230,7 +232,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             return true;
         if (User::whereId($userId)->where('is_notify', '1')->get()->isEmpty() === true)
             return true;
-        
+
         foreach (\App\UserDevice::whereUserId($userId)->get() as $userDevice):
 //            dd($userDevice->token);
             self::pushNotification($data, $userDevice->token);
