@@ -392,7 +392,7 @@ class AuthController extends ApiController {
         // dd($category_id);
         try {
             $user = \App\User::findOrFail(\Auth::id());
-            if ($user->hasRole('athlete') === false)
+            if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid auth token');
 
             $model = new \App\User();
@@ -425,7 +425,7 @@ class AuthController extends ApiController {
         // dd($category_id);
         try {
             $user = \App\User::findOrFail(\Auth::id());
-            if ($user->hasRole('athlete') === false)
+            if ($user->hasRole('organiser') === false)
                 return parent::error('Please use valid auth token');
             $model = new \App\User();
             $model = new \App\User();
