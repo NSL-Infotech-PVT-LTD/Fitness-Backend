@@ -77,8 +77,8 @@ class BookingController extends ApiController {
             $targetModelupdate->save();
             /*             * ***target model update end*** */
             // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking','target_type'=>$booking->type]], $targetModeldata->first()->created_by);
-            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking','target_type'=>$booking->type]], $booking->user_id);
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking', 'target_type' => $booking->type]], $targetModeldata->first()->created_by);
+            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking', 'target_type' => $booking->type]], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -135,8 +135,8 @@ class BookingController extends ApiController {
             $targetModelupdate->save();
             /*             * ***target model update end*** */
             // Push notification start
-            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking','target_type'=>$booking->type]], $targetModeldata->first()->created_by);
-            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking','target_type'=>$booking->type]], $booking->user_id);
+            parent::pushNotifications(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking', 'target_type' => $booking->type]], $targetModeldata->first()->created_by);
+            parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking', 'target_type' => $booking->type]], $booking->user_id);
             // Push notification end
 
             return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
@@ -185,7 +185,7 @@ class BookingController extends ApiController {
         endif;
         try {
             $perPage = isset($request->limit) ? $request->limit : 20;
-            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price','payment_id', 'status', 'rating');
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -382,8 +382,8 @@ class BookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-    
-     public function getbothbookings(Request $request) {
+
+    public function getbothbookings(Request $request) {
         $rules = ['limit' => '', 'filter_by' => 'required|date_format:Y-m'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -393,37 +393,41 @@ class BookingController extends ApiController {
             $user = \App\User::find(Auth::user()->id);
             $owner = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $owner = $owner->with(['userDetails']);
-             $dataSend = [];
+
+            $dataSend = [];
             $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
-//            dd($model->get());
+            if (isset($requestDate)):
+                $bookingSpaceIds = BookingSpace::whereYear('booking_date', $requestDate->year)->whereMonth('booking_date', $requestDate->month)->get()->pluck('booking_id')->toarray();
+//                    dd($bookingSpaceIds);
+//                $owner = $owner->whereIn('id', $bookingSpaceIds);
+            endif;
+//            dd($owner->get()->toarray());
             foreach ($owner->get() as $data):
                 if (empty($data['target_data']))
                     continue;
-//                if ($data->type == 'space'):
-//                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->booking_date);
-//                    if ($date->month !== $requestDate->month)
-//                        continue;
-//                endif;
+                if ($data->type == 'space'):
+                    if (!in_array($data->id, $bookingSpaceIds))
+                        continue;
+                endif;
                 $dataSend[] = $data;
             endforeach;
-            
-             $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+
+            $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $booked = $booked->with(['userDetails']);
-             $dataSend = [];
-            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
-//            dd($model->get());
+            $bookSend = [];
+//            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
+//            dd($booked->get()->toarray());
             foreach ($booked->get() as $book):
                 if (empty($book['target_data']))
                     continue;
-//                if ($data->type == 'space'):
-//                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->booking_date);
-//                    if ($date->month !== $requestDate->month)
-//                        continue;
-//                endif;
-                $booksend[] = $book;
+                if ($book->type == 'space'):
+                    if (!in_array($book->id, $bookingSpaceIds))
+                        continue;
+                endif;
+                $bookSend[] = $book;
             endforeach;
 //            dd($dataSend);
-            return parent::success(['Bookings for me' => $dataSend,'MY Bookings'=>$booksend]);
+            return parent::success(['bookings_as_owner' => $dataSend, 'bookings_as_user' => $bookSend]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -448,8 +452,8 @@ class BookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-    
-     public function getspace(Request $request) {
+
+    public function getspace(Request $request) {
 
         $rules = ['id' => 'required|exists:booking_spaces,id'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
@@ -468,7 +472,6 @@ class BookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
-
 
     public function rating(Request $request) {
         $rules = ['booking_id' => 'required', 'rating' => 'required|in:1,2,3,4,5'];
@@ -598,7 +601,7 @@ class BookingController extends ApiController {
             $requestDay = date('N', strtotime($request->date));
 //            dd(json_decode($model->first()->availability_week));
 //            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
-            if (!in_array($requestDay,$model->first()->availability_week))
+            if (!in_array($requestDay, $model->first()->availability_week))
                 return parent::error('availabilty week does not matches');
             $booking = new \App\Booking();
             $booking = $booking->where('target_id', $request->target_id);
