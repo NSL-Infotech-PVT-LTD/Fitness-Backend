@@ -52,11 +52,11 @@ class Booking extends Model {
                 break;
             case 'space':
                 $targetModel = new \App\BookingSpace();
-                $model = $targetModel->where('booking_id',$this->id)->get();
+                $model = $targetModel->where('booking_id', $this->id)->get();
 //                dd($this->id);
 //                dd($model->first()->booking_date);
                 if ($model->isEmpty() !== true)
-                    return ['start' => $model->first()->booking_date,'end' => $model->last()->booking_date];
+                    return ['start' => $model->first()->booking_date, 'end' => $model->last()->booking_date];
                 break;
             case 'session':
                 $targetModel = new \App\Session();
@@ -84,6 +84,12 @@ class Booking extends Model {
                 case 'space':
                     $targetModel = new \App\Space();
                     $targetModel = $targetModel->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
+//                    if (isset($date)):
+//                        $bookingSpaceIds = BookingSpace::whereYear('booking_date', $date->year)->whereMonth('booking_date', $date->month)->get()->pluck('booking_id')->toarray();
+//                    dd($bookingSpaceIds);
+//                        $targetModel = $targetModel->whereIn('id', $bookingSpaceIds);
+//                        dd($this->target_id);
+//                    endif;
                     break;
                 case 'session':
                     $targetModel = new \App\Session();
@@ -118,7 +124,7 @@ class Booking extends Model {
     public function space() {
         return $this->hasOne(Space::class, 'id', 'target_id')->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'location', 'latitude', 'longitude', 'created_by', 'price_daily');
     }
-    
+
     public function booking_details() {
         return $this->hasMany(BookingSpace::class, 'booking_id', 'id')->select('id', 'booking_id', 'booking_date', 'from_time', 'to_time');
     }
