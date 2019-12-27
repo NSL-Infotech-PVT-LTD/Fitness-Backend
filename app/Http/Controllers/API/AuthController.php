@@ -362,7 +362,9 @@ class AuthController extends ApiController {
             $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+                $model = $model->Where('name', 'LIKE', "%$request->search%")
+                    ->orWhere('sport_id','LIKE',"%$request->search%");
+            
             switch ($request->order_by):
                 case 'latest':
                     $model = $model->orderBy('users.created_at', 'desc');
