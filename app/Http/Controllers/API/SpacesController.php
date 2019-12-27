@@ -109,6 +109,7 @@ class SpacesController extends ApiController {
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
+            $model = $model->orderBy('created_at', 'desc');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -136,6 +137,7 @@ class SpacesController extends ApiController {
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
+            $model = $model->orderBy('created_at', 'desc');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

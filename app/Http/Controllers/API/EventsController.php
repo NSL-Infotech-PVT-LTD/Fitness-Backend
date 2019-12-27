@@ -109,6 +109,7 @@ class EventsController extends ApiController {
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
+            $model = $model->orderBy('created_at', 'desc');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -140,6 +141,7 @@ class EventsController extends ApiController {
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+              $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
