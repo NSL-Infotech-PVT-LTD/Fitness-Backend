@@ -85,7 +85,7 @@ class EventsController extends ApiController {
 
     public function getOrganiserEvents(Request $request) {
 
-        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
+        $rules = ['order_by' => '', 'search' => '', 'limit' => ''];
 
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -117,7 +117,7 @@ class EventsController extends ApiController {
 
     public function getCoachEvents(Request $request) {
         //Validating attributes
-        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
+        $rules = ['order_by' => '', 'search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;

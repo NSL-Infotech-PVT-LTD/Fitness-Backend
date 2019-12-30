@@ -98,7 +98,7 @@ class SessionController extends ApiController {
     }
 
     public function getOrganiserSession(Request $request) {
-        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
+        $rules = ['order_by' => '', 'search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -123,7 +123,7 @@ class SessionController extends ApiController {
 
     public function getCoachSession(Request $request) {
         //Validating attributes
-        $rules = ['order_by' => 'required|in:upcoming,completed', 'search' => '', 'limit' => ''];
+        $rules = ['order_by' => '', 'search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
