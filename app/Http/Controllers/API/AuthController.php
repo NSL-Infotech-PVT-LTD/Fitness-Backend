@@ -76,7 +76,7 @@ class AuthController extends ApiController {
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
         $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'profession' => '', 'experience_detail' => '', 'training_service_detail' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -132,7 +132,7 @@ class AuthController extends ApiController {
         if ($user->hasRole('athlete') === false)
             return parent::error('Please use valid token');
         $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -196,7 +196,7 @@ class AuthController extends ApiController {
         if ($user->hasRole('organizer') === false)
             return parent::error('Please use valid token');
         $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '', 'experience_detail' => '', 'training_service_detail' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
