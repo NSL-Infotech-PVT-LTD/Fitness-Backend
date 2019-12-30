@@ -289,7 +289,7 @@ class BookingController extends ApiController {
         }
     }
 
-    public function getBookingscoachOrg(Request $request) {
+    public function getBookingsCoach(Request $request) {
         $rules = ['search' => '', 'target_id' => '', 'type' => 'required|in:event,session,space', 'order_by' => 'required_if:type,event|required_if:type,session', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):

@@ -92,7 +92,7 @@ class AuthController extends ApiController {
 //            add service module end
             $user->fill($input);
             $user->save();
-            parent::addUserDeviceData($user, $request);
+           
             $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'business_hour_starts', 'business_hour_ends', 'bio', 'service_ids', 'expertise_years', 'hourly_rate', 'profile_image', 'sport_id', 'profession', 'experience_detail', 'training_service_detail')->first();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
