@@ -42,7 +42,7 @@ class AuthController extends ApiController {
         endif;
         try {
             $input = $request->all();
-//            dd(json_decode($request->service_ids));
+//           $input['service_ids']= json_encode($request->service_ids);
             $input['password'] = Hash::make($request->password);
             $input['is_notify'] = '1';
             $input['is_login'] = '1';
@@ -76,7 +76,7 @@ class AuthController extends ApiController {
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
         $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'profession' => '', 'experience_detail' => '', 'training_service_detail' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
