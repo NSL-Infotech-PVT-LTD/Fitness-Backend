@@ -39,10 +39,10 @@
     {!! $errors->first('profile_pic', '<p class="help-block">:message</p>') !!}
 </div>
 
-<div class="form-group{{ $errors->has('roles') ? ' has-error' : ''}}">
+<!--<div class="form-group{{ $errors->has('roles') ? ' has-error' : ''}}">
     {!! Form::label('role', 'Role: ', ['class' => 'control-label']) !!}
     {!! Form::select('roles[]', $roles, isset($user_roles) ? $user_roles : [], ['class' => 'form-control', 'multiple' => true]) !!}
-</div>
+</div>-->
 <div class="form-group{{ $errors->has('portfolio_image') ? ' has-error' : ''}}">
     {!! Form::label('portfolio_image', 'Portfolio Image: ', ['class' => 'control-label']) !!}
     {!! Form::file('portfolio_image', null, ['class' => 'form-control', 'required' => 'required']) !!}
