@@ -54,12 +54,12 @@ class AuthController extends ApiController {
 
             self::addservices($request->service_ids, $user->id);
 
-            
-            
+
+
             $user->assignRole(\App\Role::where('id', 2)->first()->name);
             // create user token for authorization
             $token = $user->createToken('netscape')->accessToken;
-            
+
 //            testing comment
             // Add user device details for firbase
             parent::addUserDeviceData($user, $request);
@@ -75,7 +75,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('coach') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'profession' => '', 'experience_detail' => '', 'training_service_detail' => ''];
+        $rules = ['name' => '', 'phone' => 'unique:users,phone,' . $user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'profession' => '', 'experience_detail' => '', 'training_service_detail' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -92,7 +92,7 @@ class AuthController extends ApiController {
 //            add service module end
             $user->fill($input);
             $user->save();
-           
+
             $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'business_hour_starts', 'business_hour_ends', 'bio', 'service_ids', 'expertise_years', 'hourly_rate', 'profile_image', 'sport_id', 'profession', 'experience_detail', 'training_service_detail')->first();
             return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
@@ -131,7 +131,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('athlete') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => ''];
+        $rules = ['name' => '', 'phone' => 'unique:users,phone,' . $user->id, 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -195,7 +195,7 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('organizer') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'phone' => 'unique:users,phone,'.$user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '', 'experience_detail' => '', 'training_service_detail' => ''];
+        $rules = ['name' => '', 'phone' => 'unique:users,phone,' . $user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '', 'experience_detail' => '', 'training_service_detail' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
@@ -250,11 +250,11 @@ class AuthController extends ApiController {
                 $user->is_login = '1';
                 $user->save();
                 $token = $user->createToken('netscape')->accessToken;
-               
-              
-             parent::addUserDeviceData($user, $request);
-              
-               
+
+
+                parent::addUserDeviceData($user, $request);
+
+
 //                $user = $user->with('roles');
                 // Add user device details for firbase
                 return parent::successCreated(['message' => 'Login Successfully', 'token' => $token, 'user' => $user]);
@@ -363,8 +363,8 @@ class AuthController extends ApiController {
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
-                    ->orWhere('sport_id','LIKE',"%$request->search%");
-            
+                        ->orWhere('sport_id', 'LIKE', "%$request->search%");
+
             switch ($request->order_by):
                 case 'latest':
                     $model = $model->orderBy('users.created_at', 'desc');
@@ -386,8 +386,8 @@ class AuthController extends ApiController {
 
     public function getcoach(Request $request) {
 
-        $rules = ['id' => 'required'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $rules = [];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -403,7 +403,7 @@ class AuthController extends ApiController {
                     ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
                     ->Select('users.id', 'users.name', 'users.email', 'users.phone', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.sport_id', 'users.hourly_rate', 'users.service_ids', 'users.profession', 'users.experience_detail', 'users.training_service_detail', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
-            $model = $model->where('users.id', $request->id);
+            $model = $model->where('users.id', \Auth::id());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('email', 'LIKE', "%$request->search%")
