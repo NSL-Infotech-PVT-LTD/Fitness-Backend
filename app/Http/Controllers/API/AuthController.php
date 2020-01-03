@@ -153,7 +153,7 @@ class AuthController extends ApiController {
     }
 
     public function OrganiserRegister(Request $request) {
-        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required', 'portfolio_image_1' => 'required', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '', 'experience_detail' => 'required', 'training_service_detail' => 'required'];
+        $rules = ['name' => 'required', 'email' => 'required|email|unique:users', 'password' => 'required', 'phone' => 'required|unique:users', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'profile_image' => 'required', 'business_hour_starts' => 'required', 'business_hour_ends' => 'required', 'bio' => 'required', 'service_ids' => 'required', 'expertise_years' => 'required', 'hourly_rate' => 'required', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '', 'experience_detail' => 'required', 'training_service_detail' => 'required'];
 
         $rules = array_merge($this->requiredParams, $rules);
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -166,7 +166,9 @@ class AuthController extends ApiController {
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'), true);
             $input['is_notify'] = '1';
             $portfolio_image = [];
-
+            if (!isset($request->portfolio_image_1) && !isset($request->portfolio_image_2) && !isset($request->portfolio_image_3) && !isset($request->portfolio_image_4)):
+                return parent::error('Please upload any one portfolio image ');
+            endif;
             for ($i = 1; $i <= 4; $i++):
                 $var = 'portfolio_image_' . $i;
                 if (isset($request->$var))
