@@ -431,7 +431,7 @@ class BookingController extends ApiController {
 //            dd($dataSend);
             $bookings = array_merge($dataSend,$bookSend);
 //            return parent::success(['bookings_as_owner' => $dataSend, 'bookings_as_user' => $bookSend]);
-            return parent::success(['bookings'=> $bookings]);
+            return parent::success(['data'=> $bookings]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
