@@ -30,7 +30,13 @@ class EventsController extends ApiController {
             $input['state'] = '1';
 
             $images = [];
-
+//
+            if (!isset($request->images_1) || !isset($request->images_2) || !isset($request->images_3) || !isset($request->images_4)):
+                return parent::error('Please upload any one image ');
+            
+            
+            if(!isset($request->images_1)):
+                 return parent::error('Please upload any one image ');
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
