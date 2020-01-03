@@ -160,11 +160,12 @@ class BookingController extends ApiController {
             $dataSend = [];
             $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
 //            dd($model->get());
+            $bookingSpaceIds = BookingSpace::whereYear('booking_date', $requestDate->year)->whereMonth('booking_date', $requestDate->month)->get()->pluck('booking_id')->toarray();
             foreach ($model->get() as $data):
                 if (empty($data['target_data']))
-                    continue;
-                if ($model->type == 'space'):
-                    if (!in_array($model->id, $bookingSpaceIds))
+                    continue;               
+                if ($data->type == 'space'):
+                    if (!in_array($data->id, $bookingSpaceIds))
                         continue;
                 endif;
                 $dataSend[] = $data;
