@@ -15,3 +15,8 @@ Auth::routes();
 Route::resource('admin/configuration', 'Admin\\ConfigurationController');
 Route::resource('admin/configuration', 'Admin\\ConfigurationController');
 Route::resource('admin/configuration', 'Admin\\ConfigurationController');
+Route::resource('admin/contact_us', 'Admin\\Contact_usController');
+Route::resource('admin/contact', 'Admin\\ContactController');
+Route::resource('admin/contact', 'Admin\\ContactController');
+Route::resource('admin/contact', 'Admin\\ContactController');
+Route::resource('admin/contact', 'Admin\\ContactController');
