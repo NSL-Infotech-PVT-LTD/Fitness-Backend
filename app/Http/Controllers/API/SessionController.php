@@ -144,8 +144,9 @@ class SessionController extends ApiController {
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+             $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
-            $model = $model->orderBy('created_at', 'desc');
+           
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
