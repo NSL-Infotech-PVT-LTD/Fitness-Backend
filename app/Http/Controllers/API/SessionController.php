@@ -17,7 +17,7 @@ class SessionController extends ApiController {
 
     public function store(Request $request) {
 
-        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required|numeric|gt:5', 'images_1' => 'required', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'guest_allowed' => 'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'hourly_rate' => 'required|numeric|gt:5', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'phone' => 'required', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'guest_allowed' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -27,7 +27,9 @@ class SessionController extends ApiController {
             $input['created_by'] = \Auth::id();
             $input['state'] = '1';
             $images = [];
-
+            if (!isset($request->images_1) && !isset($request->images_2) && !isset($request->images_3) && !isset($request->images_4)):
+                return parent::error('Please upload any one image ');
+            endif;
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
                 if (isset($request->$var))
@@ -144,9 +146,8 @@ class SessionController extends ApiController {
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
-             $model = $model->orderBy('created_at', 'desc');
+            $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
-           
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
