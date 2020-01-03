@@ -402,32 +402,36 @@ class BookingController extends ApiController {
 //                $owner = $owner->whereIn('id', $bookingSpaceIds);
             endif;
 //            dd($owner->get()->toarray());
-            foreach ($owner->get() as $data):
+            foreach ($owner->get() as $k => $data):
                 if (empty($data['target_data']))
                     continue;
                 if ($data->type == 'space'):
                     if (!in_array($data->id, $bookingSpaceIds))
                         continue;
                 endif;
-                $dataSend[] = $data;
+                $dataSend[$k] = $data;
+                $dataSend[$k]['is_booking_my'] = true;
             endforeach;
-
+//dd($dataSend);
             $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $booked = $booked->with(['userDetails']);
             $bookSend = [];
 //            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
 //            dd($booked->get()->toarray());
-            foreach ($booked->get() as $book):
+            foreach ($booked->get() as $h => $book):
                 if (empty($book['target_data']))
                     continue;
                 if ($book->type == 'space'):
                     if (!in_array($book->id, $bookingSpaceIds))
                         continue;
                 endif;
-                $bookSend[] = $book;
+                $bookSend[$h] = $book;
+                $bookSend[$h]['is_booking_my'] = false;
             endforeach;
 //            dd($dataSend);
-            return parent::success(['bookings_as_owner' => $dataSend, 'bookings_as_user' => $bookSend]);
+            $bookings = array_merge($dataSend,$bookSend);
+//            return parent::success(['bookings_as_owner' => $dataSend, 'bookings_as_user' => $bookSend]);
+            return parent::success(['bookings'=> $bookings]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
