@@ -163,8 +163,8 @@ class BookingController extends ApiController {
             foreach ($model->get() as $data):
                 if (empty($data['target_data']))
                     continue;
-                if ($book->type == 'space'):
-                    if (!in_array($book->id, $bookingSpaceIds))
+                if ($model->type == 'space'):
+                    if (!in_array($model->id, $bookingSpaceIds))
                         continue;
                 endif;
                 $dataSend[] = $data;
