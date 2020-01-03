@@ -163,9 +163,11 @@ class BookingController extends ApiController {
             foreach ($model->get() as $data):
                 if (empty($data['target_data']))
                     continue;
-                if ($data->type == 'space'):
-                if (!in_array ($data->id, $bookingSpaceIds))
-                continue;
+//                if ($data->type == 'space'):
+//                    $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->booking_date);
+//                    if ($date->month !== $requestDate->month)
+//                        continue;
+//                endif;
                 $dataSend[] = $data;
             endforeach;
 //            dd($dataSend);
@@ -427,9 +429,9 @@ class BookingController extends ApiController {
                 $bookSend[$h]['is_booking_my'] = false;
             endforeach;
 //            dd($dataSend);
-            $bookings = array_merge($dataSend, $bookSend);
+            $bookings = array_merge($dataSend,$bookSend);
 //            return parent::success(['bookings_as_owner' => $dataSend, 'bookings_as_user' => $bookSend]);
-            return parent::success(['data' => $bookings]);
+            return parent::success(['data'=> $bookings]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
