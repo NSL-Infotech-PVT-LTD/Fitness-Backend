@@ -34,9 +34,9 @@ class EventsController extends ApiController {
 //            if (!isset($request->images_1) || !isset($request->images_2) || !isset($request->images_3) || !isset($request->images_4)):
 //                return parent::error('Please upload any one image ');
 //            endif;
-            
-            if(!isset($request->images_1) && !isset($request->images_2) && !isset($request->images_3) && !isset($request->images_4)):
-                 return parent::error('Please upload any one image ');
+
+            if (!isset($request->images_1) && !isset($request->images_2) && !isset($request->images_3) && !isset($request->images_4)):
+                return parent::error('Please upload any one image ');
             endif;
             for ($i = 1; $i <= 5; $i++):
                 $var = 'images_' . $i;
@@ -62,6 +62,12 @@ class EventsController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+            if (\App\Booking::where('target_id', $request->id)->get()->isEmpty() === false)
+                return parent::error('Sorry, cant update because booking is done');
+            if (MyModel::where('start_date', '<=', \Carbon\Carbon::now()))
+                return parent::error('Sorry, You cant update after start date');
+
+
             if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
                 return parent::error('Please use valid id');
             $input = $request->all();

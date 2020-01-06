@@ -53,6 +53,9 @@ class SpacesController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+             if (\App\Booking::where('target_id', $request->id)->get()->isEmpty() === false)
+                return parent::error('Sorry, cant update because booking is done');
+           
             if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
                 return parent::error('Please use valid created_by id');
             $input = $request->all();
