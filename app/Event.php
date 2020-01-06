@@ -51,10 +51,20 @@ class Event extends Model {
         return $value == null ? '0' : number_format((float) $value, 2, '.', '');
     }
 
-    protected $appends = array('images');
+    protected $appends = array('images', 'IsBooked');
 
     public function getBookingAttribute($value) {
         return $value == null ? '0' : number_format((float) $value, 2, '.', '');
+    }
+
+    public function getIsBookedAttribute() {
+
+        $model = Booking::where('target_id', $this->id)->get();
+        if ($model->isEmpty() !== true):
+            return true;
+        else:
+            return false;
+        endif;
     }
 
     public function getImagesAttribute() {
