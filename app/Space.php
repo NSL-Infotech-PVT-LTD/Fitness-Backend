@@ -68,7 +68,7 @@ class Space extends Model {
 ////        return $value == null ? "" : $value;
 //    }
 
-    protected $appends = array('images');
+    protected $appends = array('images','IsBooked');
 
     public function getImagesAttribute() {
         $images = [];
@@ -78,6 +78,16 @@ class Space extends Model {
                 $images[] = $this->$var;
         endfor;
         return json_encode($images);
+    }
+    
+     public function getIsBookedAttribute() {
+
+        $model = Booking::where('target_id', $this->id)->get();
+        if ($model->isEmpty() !== true):
+            return true;
+        else:
+            return false;
+        endif;
     }
 
 }
