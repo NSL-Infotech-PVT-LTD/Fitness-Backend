@@ -53,6 +53,10 @@ class Event extends Model {
 
     protected $appends = array('images');
 
+    public function getBookingAttribute($value) {
+        return $value == null ? '0' : number_format((float) $value, 2, '.', '');
+    }
+
     public function getImagesAttribute() {
         $images = [];
         for ($i = 1; $i <= 5; $i++):
