@@ -44,6 +44,7 @@ class CreateUsersTable extends Migration {
             $table->string('training_service_detail')->nullable();
             $table->enum('is_login', ['0', '1'])->default('0');
             $table->enum('is_notify', ['0', '1'])->default('1');
+            $table->text('police_doc')->nullable();
             $table->rememberToken();
             \App\Helpers\DbExtender::defaultParams($table);
         });
