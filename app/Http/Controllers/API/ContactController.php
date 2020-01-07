@@ -22,7 +22,7 @@ class ContactController extends ApiController {
             $input = $request->all();
             $input['created_by'] = \Auth::id();
             if (isset($request->media))
-            $input['media'] = parent::__uploadImage($request->file('media'), public_path('uploads/contact'), true);
+            $input['media'] = parent::__uploadImage($request->file('media'), public_path('uploads/contact'), false);
             $contact = MyModel::create($input);
             return parent::successCreated(['message' => 'Submitted Successfully', 'contact' => $contact]);
         } catch (\Exception $ex) {
