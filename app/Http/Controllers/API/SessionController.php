@@ -54,12 +54,13 @@ class SessionController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-             if (\App\Booking::where('target_id', $request->id)->get()->isEmpty() === false)
-                return parent::error('Sorry, cant update because booking is done');
-            if (MyModel::where('start_date', '<=', \Carbon\Carbon::now()))
-                return parent::error('Sorry, You cant update after start date');
             if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
                 return parent::error('Please use valid id');
+            if (\App\Booking::where('target_id', $request->id)->where('type', 'session')->get()->isEmpty() === false)
+                return parent::error('Sorry, cant update because booking is done');
+//            dd(Mymodel::where('id', $request->id)->where('created_by', \Auth::id())->whereDate('start_date', '<=', \Carbon\Carbon::now())->get()->isEmpty());
+            if (Mymodel::where('id', $request->id)->where('created_by', \Auth::id())->whereDate('start_date', '<=', \Carbon\Carbon::now())->get()->isEmpty() != true)
+                return parent::error('Sorry, You cant update after start date');
             $input = $request->all();
             $images = [];
 
