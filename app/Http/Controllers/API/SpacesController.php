@@ -74,7 +74,7 @@ class SpacesController extends ApiController {
             $space = MyModel::findOrFail($request->id);
             $space->fill($input);
             $space->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'space' => $space]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'space' => $space]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

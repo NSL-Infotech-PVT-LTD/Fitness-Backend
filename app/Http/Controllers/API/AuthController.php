@@ -99,7 +99,7 @@ class AuthController extends ApiController {
             $user->save();
 
             $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'business_hour_starts', 'business_hour_ends', 'bio', 'service_ids', 'expertise_years', 'hourly_rate', 'profile_image', 'sport_id', 'profession', 'experience_detail', 'training_service_detail', 'police_doc')->first();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -125,7 +125,7 @@ class AuthController extends ApiController {
             $token = $user->createToken('netscape')->accessToken;
             // Add user device details for firbase
             parent::addUserDeviceData($user, $request);
-            return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
+            return parent::successCreated(['message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -152,7 +152,7 @@ class AuthController extends ApiController {
             $user->fill($input);
             $user->save();
             $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'address', 'latitude', 'longitude', 'profile_image', 'sport_id', 'achievements', 'experience_detail')->first();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -192,7 +192,7 @@ class AuthController extends ApiController {
             $token = $user->createToken('netscape')->accessToken;
             // Add user device details for firbase
             parent::addUserDeviceData($user, $request);
-            return parent::successCreated(['Message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
+            return parent::successCreated(['message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -241,7 +241,7 @@ class AuthController extends ApiController {
                 self::addservices($request->service_ids, $user->id);
             //add service module end
             $user = \App\User::whereId($user->id)->select('id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'bio', 'service_ids', 'expertise_years', 'hourly_rate', 'business_hour_starts', 'business_hour_ends', 'portfolio_image_1', 'portfolio_image_2', 'portfolio_image_3', 'portfolio_image_4', 'profile_image', 'experience_detail', 'training_service_detail', 'police_doc')->first();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'user' => $user]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'user' => $user]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

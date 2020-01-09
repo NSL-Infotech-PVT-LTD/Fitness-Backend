@@ -60,7 +60,7 @@ class OrganiserCoachController extends ApiController
             $organiserCoach->fill($input);
             $organiserCoach->save();
 
-            return parent::successCreated(['Message' => 'Updated Successfully', 'organiserCoach' => $organiserCoach]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'organiserCoach' => $organiserCoach]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
