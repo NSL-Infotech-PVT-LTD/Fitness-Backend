@@ -81,7 +81,7 @@ class SessionController extends ApiController {
             endif;
             $session->fill($input);
             $session->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'session' => $session]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'session' => $session]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

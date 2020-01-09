@@ -93,7 +93,7 @@ class EventsController extends ApiController {
             endif;
             $event->fill($input);
             $event->save();
-            return parent::successCreated(['Message' => 'Updated Successfully', 'event' => $event]);
+            return parent::successCreated(['message' => 'Updated Successfully', 'event' => $event]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
