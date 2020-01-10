@@ -17,7 +17,7 @@ class EventsController extends ApiController {
     public function store(Request $request) {
 //        parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => '1', 'target_model' => 'event']], '3', true);
 //        dd('s');
-        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'price' => 'required', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => '', 'guest_allowed' => 'required', 'equipment_required' => '','sport_id'=>'required'];
+        $rules = ['name' => 'required', 'description' => 'required', 'start_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'end_date' => 'required|date_format:"Y-m-d"|after_or_equal:\' . \Carbon\Carbon::now()', 'start_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'end_time' => 'required|after_or_equal:\' . \Carbon\Carbon::now()', 'price' => 'required', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => 'required', 'latitude' => 'required', 'longitude' => 'required', 'service_id' => '', 'guest_allowed' => 'required', 'equipment_required' => '', 'sport_id' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -57,7 +57,7 @@ class EventsController extends ApiController {
 
     public function Update(Request $request) {
 
-        $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_date' => '', 'end_date' => '', 'start_time' => '', 'end_time' => '', 'price' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => '','sport_id'=>''];
+        $rules = ['id' => 'required', 'name' => '', 'description' => '', 'start_date' => '', 'end_date' => '', 'start_time' => '', 'end_time' => '', 'price' => '', 'images_1' => '', 'images_2' => '', 'images_3' => '', 'images_4' => '', 'images_5' => '', 'location' => '', 'latitude' => '', 'longitude' => '', 'guest_allowed' => '', 'equipment_required' => '', 'sport_id' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -113,7 +113,7 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required','sport_id');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'sport_id');
 
 //            dd(\Carbon\Carbon::now()->toDate());
             if ($request->order_by == 'upcoming')
@@ -124,6 +124,7 @@ class EventsController extends ApiController {
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+            $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now())->get();
             $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -148,7 +149,7 @@ class EventsController extends ApiController {
 
 
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required','sport_id');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'sport_id');
             if ($request->order_by == 'upcoming')
                 $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
@@ -205,7 +206,7 @@ class EventsController extends ApiController {
             $latKey = 'latitude';
             $lngKey = 'longitude';
             $model = $model->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id',
-                    'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required','sport_id', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+                    'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'sport_id', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
             if ($request->coach_id) {
                 $model = $model->where('created_by', $request->input('coach_id'));

@@ -172,7 +172,7 @@ class AuthController extends ApiController {
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'), true);
             $input['police_doc'] = parent::__uploadImage($request->file('police_doc'), public_path('uploads/organiser/police_doc'), false);
             $input['is_notify'] = '1';
-             $input['is_login'] = '1';
+            $input['is_login'] = '1';
             $portfolio_image = [];
             if (!isset($request->portfolio_image_1) && !isset($request->portfolio_image_2) && !isset($request->portfolio_image_3) && !isset($request->portfolio_image_4)):
                 return parent::error('Please upload any one portfolio image ');
@@ -206,21 +206,21 @@ class AuthController extends ApiController {
         if ($user->hasRole('organizer') === false)
             return parent::error('Please use valid token');
         $rules = ['name' => '', 'phone' => 'unique:users,phone,' . $user->id, 'location' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '', 'business_hour_starts' => '', 'business_hour_ends' => '', 'bio' => '', 'service_ids' => '', 'expertise_years' => '', 'hourly_rate' => '', 'portfolio_image_1' => '', 'portfolio_image_2' => '', 'portfolio_image_3' => '', 'portfolio_image_4' => '', 'experience_detail' => '', 'training_service_detail' => '', 'police_doc' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
             $input = $request->all();
             if (isset($request->profile_image))
-                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'), true);
+                $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'), false);
 
             if (isset($request->police_doc))
                 $input['police_doc'] = parent::__uploadImage($request->file('police_doc'), public_path('uploads/organiser/police_doc'), false);
 //            var_dump(json_decode($input['category_id']));
 //            dd('s');
-
-            $portfolio_image = [];
+            if (isset($request->portfolio_image))
+                $portfolio_image = [];
 
             for ($i = 1; $i <= 4; $i++):
 
