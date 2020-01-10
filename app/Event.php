@@ -30,7 +30,7 @@ class Event extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'state','sport_id'];
+    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude','created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'state','sport_id'];
 
     /**
      * Change activity log event description
