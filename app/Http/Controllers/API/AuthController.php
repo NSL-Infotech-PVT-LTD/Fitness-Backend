@@ -172,6 +172,7 @@ class AuthController extends ApiController {
             $input['profile_image'] = parent::__uploadImage($request->file('profile_image'), public_path('uploads/organiser/profile_image'), true);
             $input['police_doc'] = parent::__uploadImage($request->file('police_doc'), public_path('uploads/organiser/police_doc'), false);
             $input['is_notify'] = '1';
+             $input['is_login'] = '1';
             $portfolio_image = [];
             if (!isset($request->portfolio_image_1) && !isset($request->portfolio_image_2) && !isset($request->portfolio_image_3) && !isset($request->portfolio_image_4)):
                 return parent::error('Please upload any one portfolio image ');
@@ -192,7 +193,7 @@ class AuthController extends ApiController {
             $token = $user->createToken('netscape')->accessToken;
             // Add user device details for firbase
             parent::addUserDeviceData($user, $request);
-            return parent::successCreated(['message' => 'Created Successfully', 'token' => $token, 'user' => $user]);
+            return parent::successCreated(['message' => 'Please wait while Admin will approve your account']);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

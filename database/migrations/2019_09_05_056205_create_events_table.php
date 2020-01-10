@@ -47,6 +47,8 @@ class CreateEventsTable extends Migration {
             $table->integer('guest_allowed')->default(0);
             $table->string('equipment_required')->nullable();
             $table->integer('guest_allowed_left')->default(0);
+            $table->bigInteger('sport_id')->unsigned()->index();
+            $table->foreign('sport_id')->references('id')->on('sports')->onDelete('cascade');
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }
