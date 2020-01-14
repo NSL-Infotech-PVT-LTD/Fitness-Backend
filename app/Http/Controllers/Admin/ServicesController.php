@@ -12,7 +12,7 @@ class ServicesController extends AdminCommonController {
 
     public static $_basePath = '/public/uploads/services/';
     public static $_urlPath = '/uploads/services/';
-    protected $__rulesforindex = ['name' => 'required', 'image' => 'required'];
+    protected $__rulesforindex = ['name' => 'required'];
 
     /**
      * Display a listing of the resource.

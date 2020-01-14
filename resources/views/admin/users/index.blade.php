@@ -41,6 +41,7 @@
                                 <?php endforeach; ?>
                                 <th>Actions</th>
                                
+                               
                             </tr>
                         </thead>
                     </table>

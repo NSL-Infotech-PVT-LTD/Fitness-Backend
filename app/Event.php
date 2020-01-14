@@ -30,7 +30,7 @@ class Event extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude',  'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'state','sport_id'];
+    protected $fillable = ['name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'state', 'sport_id'];
 
     /**
      * Change activity log event description
@@ -60,6 +60,17 @@ class Event extends Model {
     public function getIsBookedAttribute() {
 
         $model = Booking::where('target_id', $this->id)->get();
+        if ($model->isEmpty() !== true):
+            return true;
+        else:
+            return false;
+        endif;
+    }
+
+    public function getIsExpiredAttribute() {
+        $model = Event::where('id', $this->id)->get();
+
+        $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now())->get();
         if ($model->isEmpty() !== true):
             return true;
         else:
