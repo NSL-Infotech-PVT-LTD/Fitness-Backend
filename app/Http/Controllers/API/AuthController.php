@@ -331,7 +331,7 @@ class AuthController extends ApiController {
             if ($user->hasRole('athlete') === false)
                 return parent::error('Please use valid token');
             $model = new \App\User();
-            $model = $model->where('state', '1');
+          
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
 
             $model = $model->wherein('users.id', $roleusersSA)
