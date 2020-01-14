@@ -8,20 +8,27 @@ use App\Event;
 use Illuminate\Http\Request;
 use DataTables;
 
-class EventsController extends AdminCommonController
-{
+class EventsController extends AdminCommonController {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\View\View
      */
-     protected $__rulesforindex = ['name' => 'required', 'location' => 'required','guest_allowed'=>'required'];
-    public function index(Request $request)
-    {
+    protected $__rulesforindex = ['name' => 'required', 'location' => 'required', 'guest_allowed' => 'required'];
+
+    public function index(Request $request) {
         if ($request->ajax()) {
             $events = Event::all();
             return Datatables::of($events)
                             ->addIndexColumn()
+                            ->addColumn('is_expired', function($item) {
+                                if ($item->start_date <= \Carbon\Carbon::now()) {
+                                    return 'true';
+                                } else {
+                                    return 'false';
+                                }
+                            })
                             ->addColumn('action', function($item) {
                                 $return = '';
 
@@ -35,7 +42,7 @@ class EventsController extends AdminCommonController
                                         . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/events/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action'])
+                            ->rawColumns(['is_expired', 'action'])
                             ->make(true);
         }
         return view('admin.events.index', ['rules' => array_keys($this->__rulesforindex)]);
@@ -46,8 +53,7 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function create()
-    {
+    public function create() {
         return view('admin.events.create');
     }
 
@@ -58,17 +64,16 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $this->validate($request, [
-			'name' => 'required',
-			'start_at' => 'required',
-			'end_at' => 'required',
-			'location' => 'required',
-			'service_id' => 'required',
-			'organizer_id' => 'required',
-			'guest_allowed' => 'required'
-		]);
+            'name' => 'required',
+            'start_at' => 'required',
+            'end_at' => 'required',
+            'location' => 'required',
+            'service_id' => 'required',
+            'organizer_id' => 'required',
+            'guest_allowed' => 'required'
+        ]);
         $requestData = $request->all();
 
         Event::create($requestData);
@@ -83,8 +88,7 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function show($id)
-    {
+    public function show($id) {
         $event = Event::findOrFail($id);
 
         return view('admin.events.show', compact('event'));
@@ -97,8 +101,7 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $event = Event::findOrFail($id);
 
         return view('admin.events.edit', compact('event'));
@@ -112,17 +115,16 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $this->validate($request, [
-			'name' => 'required',
-			'start_at' => 'required',
-			'end_at' => 'required',
-			'location' => 'required',
-			'service_id' => 'required',
-			'organizer_id' => 'required',
-			'guest_allowed' => 'required'
-		]);
+            'name' => 'required',
+            'start_at' => 'required',
+            'end_at' => 'required',
+            'location' => 'required',
+            'service_id' => 'required',
+            'organizer_id' => 'required',
+            'guest_allowed' => 'required'
+        ]);
         $requestData = $request->all();
 
         $event = Event::findOrFail($id);
@@ -138,17 +140,17 @@ class EventsController extends AdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         Event::destroy($id);
 
         return redirect('admin/events')->with('flash_message', 'Event deleted!');
     }
 
-     public function changeStatus(Request $request) {
+    public function changeStatus(Request $request) {
         $appointment = Event::findOrFail($request->id);
         $appointment->state = $request->status == 'Block' ? '0' : '1';
         $appointment->save();
         return response()->json(["success" => true, 'message' => 'Event updated!']);
     }
+
 }

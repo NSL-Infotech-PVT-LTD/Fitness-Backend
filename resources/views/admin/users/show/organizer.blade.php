@@ -43,6 +43,12 @@
                                     <td><img width="50" src="{{url('uploads/organiser/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
 
+                                <tr>
+                                    <th>Police Doc.</th>
+
+                                    <td><a href="{{url('uploads/organiser/police_doc/'.$user->police_doc)}}" target="_blank"><img width="50" src="{{url('click.jpeg')}}"></a></td>
+                                </tr>
+
 
 
                             </tbody>

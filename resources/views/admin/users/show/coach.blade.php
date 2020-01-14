@@ -42,6 +42,12 @@
                                     <th>Profile.</th>
                                     <td><img width="50" src="{{url('uploads/coach/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
+                                <tr>
+                                    <th>Police Doc.</th>
+                                    
+                                    <td><a href="{{url('uploads/coach/police_doc/'.$user->police_doc)}}" target="_blank"><img width="50" src="{{url('click.jpeg')}}"></a></td>
+                                </tr>
+
 
                             </tbody>
                         </table>
