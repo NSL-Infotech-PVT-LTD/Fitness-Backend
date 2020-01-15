@@ -42,7 +42,7 @@ class EventsController extends AdminCommonController {
                                         . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/events/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['is_expired', 'action'])
+                            ->rawColumns(['status', 'action'])
                             ->make(true);
         }
         return view('admin.events.index', ['rules' => array_keys($this->__rulesforindex)]);

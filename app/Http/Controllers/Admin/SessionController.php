@@ -22,6 +22,13 @@ class SessionController extends Controller {
             $session = Session::all();
             return Datatables::of($session)
                             ->addIndexColumn()
+                            ->addColumn('status', function($item) {
+                                if ($item->start_date <= \Carbon\Carbon::now()) {
+                                    return 'expired';
+                                } elseif ($item->start_date >= \Carbon\Carbon::now()) {
+                                    return 'not yet started';
+                                }
+                            })
                             ->addColumn('action', function($item) {
                                 $return = '';
 
@@ -35,7 +42,7 @@ class SessionController extends Controller {
                                         . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/session/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action'])
+                            ->rawColumns(['status','action'])
                             ->make(true);
         }
         return view('admin.session.index', ['rules' => array_keys($this->__rulesforindex)]);
@@ -137,7 +144,7 @@ class SessionController extends Controller {
         return redirect('admin/session')->with('flash_message', 'Session deleted!');
     }
 
-     public function changeStatus(Request $request) {
+    public function changeStatus(Request $request) {
         $appointment = Session::findOrFail($request->id);
         $appointment->state = $request->status == 'Block' ? '0' : '1';
         $appointment->save();
