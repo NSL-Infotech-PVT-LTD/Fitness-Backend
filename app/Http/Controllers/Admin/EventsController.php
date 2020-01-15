@@ -22,11 +22,11 @@ class EventsController extends AdminCommonController {
             $events = Event::all();
             return Datatables::of($events)
                             ->addIndexColumn()
-                            ->addColumn('is_expired', function($item) {
+                            ->addColumn('status', function($item) {
                                 if ($item->start_date <= \Carbon\Carbon::now()) {
-                                    return 'true';
-                                } else {
-                                    return 'false';
+                                    return 'expired';
+                                } elseif ($item->start_date >= \Carbon\Carbon::now()) {
+                                    return 'not yet started';
                                 }
                             })
                             ->addColumn('action', function($item) {

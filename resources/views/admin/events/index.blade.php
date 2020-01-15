@@ -25,7 +25,7 @@
                                     <th>{{ucfirst($rule)}}</th>
                                 <?php endforeach; ?>
                                 <th>Action</th>
-                                <th>is_expired</th>
+                                <th>status</th>
                             </tr>
                         </thead>
                     </table>
@@ -47,7 +47,7 @@
                     {data: "{{$rule}}", name: "{{$rule}}"},
 <?php endforeach; ?>
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-                {data: 'is_expired', name: 'is_expired', orderable: false, searchable: false}
+                {data: 'status', name: 'status', orderable: false, searchable: false}
                 ,
 
                 ]

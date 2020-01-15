@@ -62,13 +62,12 @@ class ServicesController extends AdminCommonController {
     public function store(Request $request) {
         $this->validate($request, [
             'name' => 'required',
-            'image' => 'required',
             'description' => 'required'
         ]);
         $requestData = $request->all();
-        $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-        $request->file('image')->move(base_path() . '/public/uploads/services/', $imageName);
-        $requestData['image'] = $imageName;
+//        $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+//        $request->file('image')->move(base_path() . '/public/uploads/services/', $imageName);
+//        $requestData['image'] = $imageName;
         Service::create($requestData);
 
         return redirect('admin/services')->with('flash_message', 'Service added!');
@@ -111,17 +110,16 @@ class ServicesController extends AdminCommonController {
     public function update(Request $request, $id) {
         $this->validate($request, [
             'name' => 'required',
-            'image' => '',
             'description' => 'required'
         ]);
         $requestData = $request->all();
 
         $service = Service::findOrFail($id);
-        if (isset($request->image)):
-            $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(base_path() . '/public/uploads/services/', $imageName);
-            $requestData['image'] = $imageName;
-        endif;
+//        if (isset($request->image)):
+//            $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+//            $request->file('image')->move(base_path() . '/public/uploads/services/', $imageName);
+//            $requestData['image'] = $imageName;
+//        endif;
 
         $service->update($requestData);
 
