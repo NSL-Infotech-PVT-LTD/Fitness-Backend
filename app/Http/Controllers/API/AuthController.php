@@ -393,7 +393,7 @@ class AuthController extends ApiController {
                 case 'rating':
                     $model = $model->orderBy('rating', 'desc');
                 default :
-                    $model = $model->orderBy('created_at', 'desc');
+                    $model = $model->orderBy('users.created_at', 'desc');
                     break;
             endswitch;
 
