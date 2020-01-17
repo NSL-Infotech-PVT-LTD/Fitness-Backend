@@ -163,7 +163,7 @@ class BookingController extends ApiController {
             $bookingSpaceIds = BookingSpace::whereYear('booking_date', $requestDate->year)->whereMonth('booking_date', $requestDate->month)->get()->pluck('booking_id')->toarray();
             foreach ($model->get() as $data):
                 if (empty($data['target_data']))
-                    continue;               
+                    continue;
                 if ($data->type == 'space'):
                     if (!in_array($data->id, $bookingSpaceIds))
                         continue;
@@ -185,8 +185,9 @@ class BookingController extends ApiController {
         endif;
         try {
             $perPage = isset($request->limit) ? $request->limit : 20;
-            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating','created_at');
+            $model = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating', 'created_at');
             $model = $model->with(['userDetails']);
+            $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

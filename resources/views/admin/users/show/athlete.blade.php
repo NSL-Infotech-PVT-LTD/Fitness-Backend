@@ -32,14 +32,14 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'name', 'email', 'experience_detail'] as $column): ?>
+                                <?php foreach (['id', 'name', 'email', 'phone', 'address', 'latitude', 'longitude', 'achievements', 'experience_detail'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
                                         <td>{{ $user->$column }}</td>
                                     </tr>
                                 <?php endforeach; ?>
                                 <tr>
-                                    <th>Profile.</th>
+                                    <th>Profile Image.</th>
                                     <td><img width="50" src="{{url('uploads/athlete/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
 

@@ -23,17 +23,17 @@
         <link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
         <!--datatable starts-->
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />-->
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>-->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>-->
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />-->
+        <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+        <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>-->
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>-->
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
-    <!--datatable ends-->
+        <!--datatable ends-->
         <!--//webfonts-->
         <!--animate-->
         <link href="{{asset('adminMedia/css/animate.css')}}" rel="stylesheet" type="text/css" media="all">
@@ -69,19 +69,22 @@ new WOW().init();
                                 </ul>
                             </li>
                             <li>
-                               <a href="{{ url('/admin/services') }}"><i class="fa fa-bars nav_icon"></i>Services</a>
+                                <a href="{{ url('/admin/services') }}"><i class="fa fa-bars nav_icon"></i>Services</a>
                             </li>
                             <li>
-                               <a href="{{ url('/admin/events') }}"><i class="fa fa-bars nav_icon"></i>Events</a>
+                                <a href="{{ url('/admin/events') }}"><i class="fa fa-bars nav_icon"></i>Events</a>
                             </li>
                             <li>
-                               <a href="{{ url('/admin/spaces') }}"><i class="fa fa-bars nav_icon"></i>Spaces</a>
+                                <a href="{{ url('/admin/spaces') }}"><i class="fa fa-bars nav_icon"></i>Spaces</a>
                             </li>
-                             <li>
-                               <a href="{{ url('/admin/session') }}"><i class="fa fa-bars nav_icon"></i>Session</a>
+                            <li>
+                                <a href="{{ url('/admin/session') }}"><i class="fa fa-bars nav_icon"></i>Session</a>
                             </li>
-                              <li>
-                               <a href="{{ url('/admin/configuration') }}"><i class="fa fa-bars nav_icon"></i>Configuration</a>
+                            <li>
+                                <a href="{{ url('/admin/configuration') }}"><i class="fa fa-bars nav_icon"></i>Configuration</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/admin/contact') }}"><i class="fa fa-bars nav_icon"></i>Contact Portal</a>
                             </li>
                         </ul>
                         <div class="clearfix"></div>

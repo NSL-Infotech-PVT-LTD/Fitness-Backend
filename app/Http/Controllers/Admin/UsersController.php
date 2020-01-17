@@ -184,7 +184,7 @@ class UsersController extends AdminCommonController {
 //         $role_id = \DB::table('role_user')->select('role_id')->get();
 
         $role_id = $user->roles->first()->id;
-//        dd($role_id);
+        dd($role_id);
         return redirect('admin/users/role/'.$role_id)->with('flash_message', 'User Updated!');
     }
 

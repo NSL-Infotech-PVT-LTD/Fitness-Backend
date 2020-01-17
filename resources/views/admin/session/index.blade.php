@@ -40,7 +40,11 @@
             columns: [
             {data: 'id', name: 'id'},
 <?php foreach ($rules as $rule): ?>
-                {data: "{{$rule}}", name: "{{$rule}}"},
+    <?php if ($rule == 'phone'): ?>
+                    {data: 'phone', name: 'phone', orderable: false, searchable: false},
+    <?php else: ?>
+                    {data: "{{$rule}}", name: "{{$rule}}"},
+    <?php endif; ?>
 <?php endforeach; ?>
             {data: 'action', name: 'action', orderable: false, searchable: false},
             {data: 'status', name: 'status', orderable: false, searchable: false

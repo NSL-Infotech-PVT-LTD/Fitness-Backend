@@ -32,19 +32,19 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'name', 'email', 'experience_detail', 'hourly_rate', 'bio'] as $column): ?>
+                                <?php foreach (['id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'business_hour_starts', 'business_hour_ends', 'bio', 'expertise_years', 'hourly_rate', 'profession', 'experience_detail', 'training_service_detail'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
                                         <td>{{ $user->$column }}</td>
                                     </tr>
                                 <?php endforeach; ?>
                                 <tr>
-                                    <th>Profile.</th>
+                                    <th>Profile Image.</th>
                                     <td><img width="50" src="{{url('uploads/coach/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
                                 <tr>
                                     <th>Police Doc.</th>
-                                    
+
                                     <td><a href="{{url('uploads/coach/police_doc/'.$user->police_doc)}}" target="_blank"><img width="50" src="{{url('click.jpeg')}}"></a></td>
                                 </tr>
 
