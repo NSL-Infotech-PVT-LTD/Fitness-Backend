@@ -32,7 +32,7 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'name', 'email', 'experience_detail', 'hourly_rate'] as $column): ?>
+                                <?php foreach (['id', 'name', 'email', 'phone', 'location', 'latitude', 'longitude', 'bio', 'expertise_years', 'hourly_rate', 'business_hour_starts', 'business_hour_ends','experience_detail','training_service_detail'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
                                         <td>{{ $user->$column }}</td>

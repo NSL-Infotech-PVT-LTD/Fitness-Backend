@@ -4,32 +4,38 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Contact;
 use Illuminate\Http\Request;
+use DataTables;
 
-class ContactController extends Controller
-{
+class ContactController extends AdminCommonController {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\View\View
      */
-    public function index(Request $request)
-    {
-        $keyword = $request->get('search');
-        $perPage = 25;
+    protected $__rulesforindex = ['message' => 'required', 'media' => 'required', 'created_by' => 'required'];
 
-        if (!empty($keyword)) {
-            $contact = Contact::where('message', 'LIKE', "%$keyword%")
-                ->orWhere('media', 'LIKE', "%$keyword%")
-                ->orWhere('created_by', 'LIKE', "%$keyword%")
-                ->latest()->paginate($perPage);
-        } else {
-            $contact = Contact::latest()->paginate($perPage);
+    public function index(Request $request) {
+        if ($request->ajax()) {
+            $contact = Contact::all();
+            return Datatables::of($contact)
+                            ->addIndexColumn()
+                           
+                            ->addColumn('action', function($item) {
+                                $return = '';
+
+                               
+                                $return .= " <a href=" . url('/admin/contact/' . $item->id) . " title='View Query'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                        <a href=" . url('/admin/contact/' . $item->id . '/edit') . " title='Edit Query'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
+                                        . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/contact/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                return $return;
+                            })
+                            ->rawColumns(['action'])
+                            ->make(true);
         }
-
-        return view('admin.contact.index', compact('contact'));
+        return view('admin.contact.index', ['rules' => array_keys($this->__rulesforindex)]);
     }
 
     /**
@@ -37,8 +43,7 @@ class ContactController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
-    {
+    public function create() {
         return view('admin.contact.create');
     }
 
@@ -49,14 +54,13 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $this->validate($request, [
-			'message' => 'required',
-			'media' => 'required'
-		]);
+            'message' => 'required',
+            'media' => 'required'
+        ]);
         $requestData = $request->all();
-        
+
         Contact::create($requestData);
 
         return redirect('admin/contact')->with('flash_message', 'Contact added!');
@@ -69,8 +73,7 @@ class ContactController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show($id)
-    {
+    public function show($id) {
         $contact = Contact::findOrFail($id);
 
         return view('admin.contact.show', compact('contact'));
@@ -83,8 +86,7 @@ class ContactController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $contact = Contact::findOrFail($id);
 
         return view('admin.contact.edit', compact('contact'));
@@ -98,14 +100,13 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $this->validate($request, [
-			'message' => 'required',
-			'media' => 'required'
-		]);
+            'message' => 'required',
+            'media' => 'required'
+        ]);
         $requestData = $request->all();
-        
+
         $contact = Contact::findOrFail($id);
         $contact->update($requestData);
 
@@ -119,10 +120,10 @@ class ContactController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         Contact::destroy($id);
 
         return redirect('admin/contact')->with('flash_message', 'Contact deleted!');
     }
+
 }

@@ -8,20 +8,23 @@ use App\Space;
 use Illuminate\Http\Request;
 use DataTables;
 
-class SpacesController extends AdminCommonController
-{
+class SpacesController extends AdminCommonController {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\View\View
      */
-     protected $__rulesforindex = ['name' => 'required', 'description'=>'required','price_hourly' => 'required'];
-    public function index(Request $request)
-    {
-      if ($request->ajax()) {
+    protected $__rulesforindex = ['name' => 'required', 'description' => 'required', 'price_hourly' => 'required'];
+
+    public function index(Request $request) {
+        if ($request->ajax()) {
             $spaces = Space::all();
             return Datatables::of($spaces)
                             ->addIndexColumn()
+                            ->editColumn('price_hourly', function($item) {
+                                return ' <i class="fa fa-' . config('app.stripe_default_currency') . '" aria-hidden="true"></i> ' . $item->price_hourly;
+                            })
                             ->addColumn('action', function($item) {
                                 $return = '';
 
@@ -35,7 +38,7 @@ class SpacesController extends AdminCommonController
                                         . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/spaces/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action'])
+                            ->rawColumns(['action','price_hourly'])
                             ->make(true);
         }
         return view('admin.spaces.index', ['rules' => array_keys($this->__rulesforindex)]);
@@ -46,8 +49,7 @@ class SpacesController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function create()
-    {
+    public function create() {
         return view('admin.spaces.create');
     }
 
@@ -58,12 +60,11 @@ class SpacesController extends AdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $this->validate($request, [
-			'name' => 'required',
-			'price_hourly' => 'required'
-		]);
+            'name' => 'required',
+            'price_hourly' => 'required'
+        ]);
         $requestData = $request->all();
 
         Space::create($requestData);
@@ -78,8 +79,7 @@ class SpacesController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function show($id)
-    {
+    public function show($id) {
         $space = Space::findOrFail($id);
 
         return view('admin.spaces.show', compact('space'));
@@ -92,8 +92,7 @@ class SpacesController extends AdminCommonController
      *
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $space = Space::findOrFail($id);
 
         return view('admin.spaces.edit', compact('space'));
@@ -107,12 +106,11 @@ class SpacesController extends AdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $this->validate($request, [
-			'name' => 'required',
-			'price_hourly' => 'required'
-		]);
+            'name' => 'required',
+            'price_hourly' => 'required'
+        ]);
         $requestData = $request->all();
 
         $space = Space::findOrFail($id);
@@ -128,16 +126,17 @@ class SpacesController extends AdminCommonController
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         Space::destroy($id);
 
         return redirect('admin/spaces')->with('flash_message', 'Space deleted!');
     }
-     public function changeStatus(Request $request) {
+
+    public function changeStatus(Request $request) {
         $appointment = Space::findOrFail($request->id);
         $appointment->state = $request->status == 'Block' ? '0' : '1';
         $appointment->save();
         return response()->json(["success" => true, 'message' => 'Space updated!']);
     }
+
 }

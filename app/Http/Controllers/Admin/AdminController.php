@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
+use App\Event;
+use App\Session;
+use App\Space;
 use Carbon\Carbon;
 use DB;
 
@@ -18,12 +21,15 @@ class AdminController extends AdminCommonController {
     public function index() {
         $users = [];
         foreach (\App\Role::all() as $role):
-            if($role->name=='super admin')
+            if ($role->name == 'super admin')
                 continue;
             $users[$role->name]['role_id'] = $role->id;
             $users[$role->name]['count'] = User::wherein('id', DB::table('role_user')->where('role_id', $role->id)->pluck('user_id'))->get()->count();
         endforeach;
-        return view('admin.dashboard', compact('users'));
+        $events = Event::all();
+        $session = Session::all();
+        $spaces = Space::all();
+        return view('admin.dashboard', compact('users', 'events', 'session','spaces'));
     }
 
     public function display(Request $request) {
@@ -88,7 +94,5 @@ class AdminController extends AdminCommonController {
 
         return redirect('admin/display')->with('flash_message', 'Category deleted!');
     }
-
-    
 
 }

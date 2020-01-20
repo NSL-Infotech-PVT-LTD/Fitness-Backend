@@ -331,12 +331,12 @@ class AuthController extends ApiController {
             if ($user->hasRole('athlete') === false)
                 return parent::error('Please use valid token');
             $model = new \App\User();
-          
+
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
 
             $model = $model->wherein('users.id', $roleusersSA)
                     ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
-                    ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1', 'users.portfolio_image_2', 'users.portfolio_image_3', 'users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc','users.state', \DB::raw('AVG(bookings.rating) as rating'));
+                    ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1', 'users.portfolio_image_2', 'users.portfolio_image_3', 'users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', 'users.state', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search))
@@ -382,9 +382,11 @@ class AuthController extends ApiController {
             $model = $model->groupBy('users.id');
 
             $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%")
+            if (isset($request->search)) {
+                $model =  $model->wherein('users.id', $roleusersSA)->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('sport_id', 'LIKE', "%$request->search%");
+            }
+//            dd($model);
 
             switch ($request->order_by):
                 case 'latest':
