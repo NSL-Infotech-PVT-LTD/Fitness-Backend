@@ -145,7 +145,7 @@ class UsersController extends AdminCommonController {
     public function edit($id) {
         $roles = Role::select('id', 'name', 'label')->get();
         $roles = $roles->pluck('label', 'name');
-        $user = User::with('roles')->select('id', 'name', 'email', 'password')->findOrFail($id);
+        $user = User::with('roles')->select('id', 'name', 'email')->findOrFail($id);
         $user_roles = [];
         foreach ($user->roles as $role) {
             $user_roles[] = $role->name;
@@ -172,9 +172,9 @@ class UsersController extends AdminCommonController {
                 ]
         );
         $data = $request->except('password');
-        if ($request->has('password')) {
-            $data['password'] = bcrypt($request->password);
-        }
+//        if ($request->has('password')) {
+//            $data['password'] = bcrypt($request->password);
+//        }
         $user = User::findOrFail($id);
         $user->update($data);
         $user->roles()->detach();
@@ -184,7 +184,7 @@ class UsersController extends AdminCommonController {
 //         $role_id = \DB::table('role_user')->select('role_id')->get();
 
         $role_id = $user->roles->first()->id;
-        dd($role_id);
+//        dd($role_id);
         return redirect('admin/users/role/'.$role_id)->with('flash_message', 'User Updated!');
     }
 
