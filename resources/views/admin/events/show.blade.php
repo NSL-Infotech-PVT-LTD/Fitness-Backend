@@ -39,8 +39,37 @@
                                 <tr><th> End Date </th><td> {{ $event->end_date }} </td></tr>
                                 <tr><th> Name </th><td> {{ $event->name }} </td></tr>
                                 <tr><th> Description </th><td> {{ $event->description }} </td></tr>
-                                <tr><th> Start Date </th><td> {{ $event->start_date }} </td></tr>
-                                <tr><th> End Date </th><td> {{ $event->end_date }} </td></tr>
+                                <tr><th> Start Time </th><td> {{ $event->start_time }} </td></tr>
+                                <tr><th> End Time </th><td> {{ $event->end_time }} </td></tr>
+                                <tr><th>Image 1.</th>
+                                    <?php if (!empty($event->images_1)) { ?>
+                                        <td><img width="50" src="{{url('uploads/events/'.$event->images_1)}}"></td>
+                                    <?php } else { ?>
+                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                    <?php } ?>
+                                </tr>
+                                <tr><th>Image 2.</th>
+                                    <?php if (!empty($event->images_2)) { ?>
+                                        <td><img width="50" src="{{url('uploads/events/'.$event->images_2)}}"></td>
+                                    <?php } else { ?>
+                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                    <?php } ?>
+                                </tr>
+                                <tr><th>Image 3.</th>
+                                    <?php if (!empty($event->images_3)) { ?>
+                                        <td><img width="50" src="{{url('uploads/events/'.$event->images_3)}}"></td>
+                                    <?php } else { ?>
+                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                    <?php } ?>
+                                </tr>
+                                <tr><th>Image 4.</th>
+                                    <?php if (!empty($event->images_4)) { ?>
+                                        <td><img width="50" src="{{url('uploads/events/'.$event->images_4)}}"></td>
+                                    <?php } else { ?>
+                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                    <?php } ?>
+                                </tr>
+
                             </tbody>
                         </table>
                     </div>

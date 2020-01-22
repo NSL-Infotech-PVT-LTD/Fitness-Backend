@@ -20,3 +20,4 @@ Route::resource('admin/contact', 'Admin\\ContactController');
 Route::resource('admin/contact', 'Admin\\ContactController');
 Route::resource('admin/contact', 'Admin\\ContactController');
 Route::resource('admin/contact', 'Admin\\ContactController');
+Route::resource('admin/exercise', 'Admin\\ExerciseController');

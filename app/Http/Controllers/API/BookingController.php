@@ -96,6 +96,7 @@ class BookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+            
             $params = json_decode($request->booking);
             if (!isset($request->token))
                 return parent::error('Please add token');
@@ -112,6 +113,9 @@ class BookingController extends ApiController {
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
+           
+            if(\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
+              return parent::error('Sorry, You cant book your own space');  
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -271,9 +275,9 @@ class BookingController extends ApiController {
                         $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
-                        $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
+                        $query->whereDate($targetOrderByKey, '>', \Carbon\Carbon::now());
                     elseif ($request->order_by == 'completed'):
-                        $query->whereDate($targetOrderByKey, '<', \Carbon\Carbon::now());
+                        $query->whereDate($targetOrderByKey, '<=', \Carbon\Carbon::now());
                     endif;
                 });
             endif;
@@ -326,9 +330,9 @@ class BookingController extends ApiController {
                         $targetOrderByKey = 'start_date';
                     endif;
                     if ($request->order_by == 'upcoming'):
-                        $query->whereDate($targetOrderByKey, '>=', \Carbon\Carbon::now());
+                        $query->whereDate($targetOrderByKey, '>', \Carbon\Carbon::now());
                     elseif ($request->order_by == 'completed'):
-                        $query->whereDate($targetOrderByKey, '<', \Carbon\Carbon::now());
+                        $query->whereDate($targetOrderByKey, '<=', \Carbon\Carbon::now());
                     endif;
                 });
             endif;
