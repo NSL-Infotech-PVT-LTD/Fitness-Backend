@@ -115,12 +115,13 @@ class SessionController extends ApiController {
 //            $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'hourly_rate', 'location', 'latitude', 'longitude', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'phone', 'guest_allowed', 'guest_allowed_left', 'created_by', 'sport_id');
             if ($request->order_by == 'upcoming')
-                $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->whereDate('start_date', '<=', \Carbon\Carbon::now());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+            $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -145,12 +146,13 @@ class SessionController extends ApiController {
 
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'location', 'latitude', 'longitude', 'hourly_rate', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'phone', 'guest_allowed', 'guest_allowed_left', 'created_by', 'sport_id');
             if ($request->order_by == 'upcoming')
-                $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
                 $model = $model->whereDate('start_date', '<=', \Carbon\Carbon::now());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+            $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -203,7 +205,7 @@ class SessionController extends ApiController {
             if ($request->coach_id) {
                 $model = $model->where('created_by', $request->input('coach_id'));
             }
-            $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
+            $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

@@ -117,14 +117,14 @@ class EventsController extends ApiController {
 
 //            dd(\Carbon\Carbon::now()->toDate());
             if ($request->order_by == 'upcoming')
-                $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->whereDate('start_date', '<', \Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '<=', \Carbon\Carbon::now());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
-            $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now())->get();
+//            $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now())->get();
             $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -151,13 +151,14 @@ class EventsController extends ApiController {
             $model = new MyModel();
             $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'created_by', 'guest_allowed', 'guest_allowed_left', 'equipment_required', 'sport_id');
             if ($request->order_by == 'upcoming')
-                $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             if ($request->order_by == 'completed')
-                $model = $model->whereDate('start_date', '<', \Carbon\Carbon::now());
+                $model = $model->whereDate('start_date', '<=', \Carbon\Carbon::now());
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('description', 'LIKE', "%$request->search%");
             $perPage = isset($request->limit) ? $request->limit : 20;
+//            $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now())->get();
             $model = $model->orderBy('created_at', 'desc');
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
@@ -214,7 +215,7 @@ class EventsController extends ApiController {
             }
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
-            $model = $model->whereDate('start_date', '>=', \Carbon\Carbon::now());
+            $model = $model->whereDate('start_date', '>', \Carbon\Carbon::now());
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

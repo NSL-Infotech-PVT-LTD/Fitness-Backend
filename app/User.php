@@ -68,7 +68,7 @@ class User extends Authenticatable {
             if ($rolesID->isEmpty() !== true):
                 $role = Role::whereIn('id', $rolesID);
                 if ($role->get()->isEmpty() !== true)
-                    return $role->select('name')->get();
+                    return $role->select('id','name')->get();
             endif;
             return [];
         } catch (Exception $ex) {

@@ -339,8 +339,12 @@ class AuthController extends ApiController {
                     ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1', 'users.portfolio_image_2', 'users.portfolio_image_3', 'users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', 'users.state', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
-            if (isset($request->search))
-                $model = $model->Where('name', 'LIKE', "%$request->search%");
+            if (isset($request->search)) {
+                $model = $model->where(function($query) use ($request) {
+                    $query->where('name', 'LIKE', "%$request->search%")
+                            ->orWhere('sport_id', 'LIKE', "%$request->search%");
+                });
+            }
             switch ($request->order_by):
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
@@ -383,8 +387,10 @@ class AuthController extends ApiController {
 
             $perPage = isset($request->limit) ? $request->limit : 20;
             if (isset($request->search)) {
-                $model =  $model->wherein('users.id', $roleusersSA)->Where('name', 'LIKE', "%$request->search%")
-                        ->orWhere('sport_id', 'LIKE', "%$request->search%");
+                $model = $model->where(function($query) use ($request) {
+                    $query->where('name', 'LIKE', "%$request->search%")
+                            ->orWhere('sport_id', 'LIKE', "%$request->search%");
+                });
             }
 //            dd($model);
 
