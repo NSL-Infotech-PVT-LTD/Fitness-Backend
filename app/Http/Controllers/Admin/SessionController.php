@@ -145,9 +145,9 @@ class SessionController extends Controller {
     }
 
     public function changeStatus(Request $request) {
-        $appointment = Session::findOrFail($request->id);
-        $appointment->state = $request->status == 'Block' ? '0' : '1';
-        $appointment->save();
+        $session = Session::findOrFail($request->id);
+        $session->state = $request->status == 'Block' ? '0' : '1';
+        $session->save();
         return response()->json(["success" => true, 'message' => 'Session updated!']);
     }
 
