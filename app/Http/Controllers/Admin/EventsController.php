@@ -15,13 +15,16 @@ class EventsController extends AdminCommonController {
      *
      * @return \Illuminate\View\View
      */
-    protected $__rulesforindex = ['name' => 'required', 'location' => 'required', 'guest_allowed' => 'required','price'=>'required'];
+    protected $__rulesforindex = ['name' => 'required', 'location' => 'required', 'guest_allowed' => 'required', 'price' => 'required'];
 
     public function index(Request $request) {
         if ($request->ajax()) {
             $events = Event::all();
             return Datatables::of($events)
                             ->addIndexColumn()
+                            ->editColumn('price', function($item) {
+                                return ' <i class="fa fa-' . config('app.stripe_default_currency') . '" aria-hidden="true"></i> ' . $item->price;
+                            })
                             ->addColumn('status', function($item) {
                                 if ($item->start_date <= \Carbon\Carbon::now()) {
                                     return 'expired';
@@ -37,12 +40,10 @@ class EventsController extends AdminCommonController {
                                 else:
                                     $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
-                                $return .= " <a href=" . url('/admin/events/' . $item->id) . " title='View Event'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
-                                        <a href=" . url('/admin/events/' . $item->id . '/edit') . " title='Edit Event'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
-                                        . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/events/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                $return .= " <a href=" . url('/admin/events/' . $item->id) . " title='View Event'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['status', 'action'])
+                            ->rawColumns(['status', 'action','price'])
                             ->make(true);
         }
         return view('admin.events.index', ['rules' => array_keys($this->__rulesforindex)]);
