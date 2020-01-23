@@ -37,10 +37,17 @@
                                 <tr><th> Description </th><td> {{ $event->description }} </td></tr>
                                 <tr><th> Start Date </th><td> {{ $event->start_date }} </td></tr>
                                 <tr><th> End Date </th><td> {{ $event->end_date }} </td></tr>
-                                <tr><th> Name </th><td> {{ $event->name }} </td></tr>
-                                <tr><th> Description </th><td> {{ $event->description }} </td></tr>
                                 <tr><th> Start Time </th><td> {{ $event->start_time }} </td></tr>
                                 <tr><th> End Time </th><td> {{ $event->end_time }} </td></tr>
+                                <tr><th> Location </th><td> {{ $event->location }} </td></tr>
+                                <tr><th> Latitude </th><td> {{ $event->latitude }} </td></tr>
+                                <tr><th> Longitude </th><td> {{ $event->longitude }} </td></tr>
+                                <tr><th> Guest Allowed </th><td> {{ $event->guest_allowed }} </td></tr>
+                                <tr><th> Equipment Required </th><td> {{ $event->equipment_required }}
+                                <tr><th> Guest Allowed Left </th><td> {{ $event->guest_allowed_left }} </td></tr>
+                                <tr><th> Price </th><td> {{ $event->price }} </td></tr>
+
+
                                 <tr><th>Image 1.</th>
                                     <?php if (!empty($event->images_1)) { ?>
                                         <td><img width="50" src="{{url('uploads/events/'.$event->images_1)}}"></td>
