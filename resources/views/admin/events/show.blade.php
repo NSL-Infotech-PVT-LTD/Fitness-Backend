@@ -45,28 +45,28 @@
                                     <?php if (!empty($event->images_1)) { ?>
                                         <td><img width="50" src="{{url('uploads/events/'.$event->images_1)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                        <td><img width="50" src="{{url('uploads/events/noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
                                 <tr><th>Image 2.</th>
                                     <?php if (!empty($event->images_2)) { ?>
                                         <td><img width="50" src="{{url('uploads/events/'.$event->images_2)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                        <td><img width="50" src="{{url('uploads/events/noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
                                 <tr><th>Image 3.</th>
                                     <?php if (!empty($event->images_3)) { ?>
                                         <td><img width="50" src="{{url('uploads/events/'.$event->images_3)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                        <td><img width="50" src="{{url('uploads/events/noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
                                 <tr><th>Image 4.</th>
                                     <?php if (!empty($event->images_4)) { ?>
                                         <td><img width="50" src="{{url('uploads/events/'.$event->images_4)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/events/noimage.jpg')}}"></td>                           
+                                        <td><img width="50" src="{{url('uploads/events/noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
 
