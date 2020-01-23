@@ -22,6 +22,9 @@ class SessionController extends Controller {
             $session = Session::all();
             return Datatables::of($session)
                             ->addIndexColumn()
+                            ->editColumn('hourly_rate', function($item) {
+                                return ' <i class="fa fa-' . config('app.stripe_default_currency') . '" aria-hidden="true"></i> ' . $item->hourly_rate;
+                            })
                             ->addColumn('status', function($item) {
                                 if ($item->start_date <= \Carbon\Carbon::now()) {
                                     return 'expired';
@@ -37,12 +40,10 @@ class SessionController extends Controller {
                                 else:
                                     $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
-                                $return .= "<a href=" . url('/admin/session/' . $item->id) . " title='View Session'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
-                                        <a href=" . url('/admin/session/' . $item->id . '/edit') . " title='Edit Session'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
-                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/session/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                $return .= "<a href=" . url('/admin/session/' . $item->id) . " title='View Session'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['status','action'])
+                            ->rawColumns(['status', 'action','hourly_rate'])
                             ->make(true);
         }
         return view('admin.session.index', ['rules' => array_keys($this->__rulesforindex)]);

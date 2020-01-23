@@ -18,16 +18,16 @@
                 $user = \App\Role::whereId($role_id)->first()->name . ' User';
                 ?>
                 <div class="card-header  text-center"><h3 >{{ucfirst($user)}}</h3></div>
-                <div class="card-body">
-                    <?php if (isset($role_id)): ?>
-                        <?php if ($role_id === "1"): ?>
+<!--                <div class="card-body">
+                     if (isset($role_id)): 
+                        if ($role_id === "1"): 
                             <a href="{{ url('/admin/users/create') }}" class="btn btn-success btn-sm" title="Add New User">
                                 <i class="fa fa-plus" aria-hidden="true"></i> Add New
                             </a>
-                        <?php endif; ?>
-                    <?php endif; ?>
+                         endif;
+                     endif;
 
-                </div>
+                </div>-->
 
                 <br/>
                 <br/>
