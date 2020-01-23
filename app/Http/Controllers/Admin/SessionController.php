@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Session;
+use App\User;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -43,7 +44,7 @@ class SessionController extends Controller {
                                 $return .= "<a href=" . url('/admin/session/' . $item->id) . " title='View Session'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['status', 'action','hourly_rate'])
+                            ->rawColumns(['status', 'action', 'hourly_rate'])
                             ->make(true);
         }
         return view('admin.session.index', ['rules' => array_keys($this->__rulesforindex)]);
@@ -90,8 +91,10 @@ class SessionController extends Controller {
      */
     public function show($id) {
         $session = Session::findOrFail($id);
+        $createdBy = User::where('id', $session->created_by)->value('name');
+//dd($createdBy);
 
-        return view('admin.session.show', compact('session'));
+        return view('admin.session.show', compact('session','createdBy'));
     }
 
     /**

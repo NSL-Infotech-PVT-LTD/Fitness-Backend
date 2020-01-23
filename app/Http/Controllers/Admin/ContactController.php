@@ -22,17 +22,19 @@ class ContactController extends AdminCommonController {
             $contact = Contact::all();
             return Datatables::of($contact)
                             ->addIndexColumn()
-                           
+                            ->editColumn('media', function($item) {
+                                return "<img width='50' src=" . url('uploads/contact/' . $item->media) . ">";
+                            })
                             ->addColumn('action', function($item) {
                                 $return = '';
 
-                               
+
                                 $return .= " <a href=" . url('/admin/contact/' . $item->id) . " title='View Query'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
                                         <a href=" . url('/admin/contact/' . $item->id . '/edit') . " title='Edit Query'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
                                         . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/contact/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action'])
+                            ->rawColumns(['action','media'])
                             ->make(true);
         }
         return view('admin.contact.index', ['rules' => array_keys($this->__rulesforindex)]);

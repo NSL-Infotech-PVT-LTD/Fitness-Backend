@@ -37,7 +37,9 @@
                             <tr><th>Location</th><td> {{ $space->location }} </td></tr>
                             <tr><th>Latitude</th><td> {{ $space->latitude }} </td></tr>
                             <tr><th>Open Hours From</th><td> {{ $space->open_hours_from }} </td></tr>
-                            <tr><th>Open Hours To</th><td> {{ $space->open_hours_to }} </td></tr>
+                            <tr><th>Open Hours To</th><td> {{ $space->open_hours_to }}
+                            <tr><th> Created By</th><td>{{$createdBy}}</td></tr>
+         
                             <tr><th>Image 1.</th>
                                 <?php if (!empty($space->images_1)) { ?>
                                     <td><img width="50" src="{{url('uploads/spaces/'.$space->images_1)}}"></td>

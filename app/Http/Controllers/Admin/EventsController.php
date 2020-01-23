@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Event;
+use App\User;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -91,8 +92,9 @@ class EventsController extends AdminCommonController {
      */
     public function show($id) {
         $event = Event::findOrFail($id);
-
-        return view('admin.events.show', compact('event'));
+        $createdBy= User::where('id',$event->created_by)->value('name');
+//dd($createdBy);
+        return view('admin.events.show', compact('event','createdBy'));
     }
 
     /**
