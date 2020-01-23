@@ -4,27 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Space;
+use App\Sport;
 use Illuminate\Http\Request;
 use DataTables;
 
-class SpacesController extends AdminCommonController {
+class SportsController extends Controller {
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\View\View
      */
-    protected $__rulesforindex = ['name' => 'required', 'description' => 'required', 'price_hourly' => 'required'];
+    protected $__rulesforindex = ['name' => 'required'];
 
     public function index(Request $request) {
         if ($request->ajax()) {
-            $spaces = Space::all();
-            return Datatables::of($spaces)
+            $sports = Sport::all();
+            return Datatables::of($sports)
                             ->addIndexColumn()
-                            ->editColumn('price_hourly', function($item) {
-                                return ' <i class="fa fa-' . config('app.stripe_default_currency') . '" aria-hidden="true"></i> ' . $item->price_hourly;
-                            })
                             ->addColumn('action', function($item) {
                                 $return = '';
 
@@ -33,15 +30,15 @@ class SpacesController extends AdminCommonController {
                                 else:
                                     $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
-                                $return .= "<a href=" . url('/admin/spaces/' . $item->id) . " title='View Space'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
-                                        <a href=" . url('/admin/spaces/' . $item->id . '/edit') . " title='Edit Event'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
-                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/spaces/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                $return .= "<a href=" . url('/admin/sports/' . $item->id) . " title='View Sports'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>
+                                        <a href=" . url('/admin/sports/' . $item->id . '/edit') . " title='Edit Sports'><button class='btn btn-primary btn-sm'><i class='fa fa-pencil-square-o' aria-hidden='true'></i></button></a>"
+                                        . "<button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/sports/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action','price_hourly'])
+                            ->rawColumns(['action'])
                             ->make(true);
         }
-        return view('admin.spaces.index', ['rules' => array_keys($this->__rulesforindex)]);
+        return view('admin.sports.index', ['rules' => array_keys($this->__rulesforindex)]);
     }
 
     /**
@@ -50,7 +47,7 @@ class SpacesController extends AdminCommonController {
      * @return \Illuminate\View\View
      */
     public function create() {
-        return view('admin.spaces.create');
+        return view('admin.sports.create');
     }
 
     /**
@@ -63,13 +60,12 @@ class SpacesController extends AdminCommonController {
     public function store(Request $request) {
         $this->validate($request, [
             'name' => 'required',
-            'price_hourly' => 'required'
         ]);
         $requestData = $request->all();
 
-        Space::create($requestData);
+        Sport::create($requestData);
 
-        return redirect('admin/spaces')->with('flash_message', 'Space added!');
+        return redirect('admin/sports')->with('flash_message', 'Sports added!');
     }
 
     /**
@@ -80,9 +76,9 @@ class SpacesController extends AdminCommonController {
      * @return \Illuminate\View\View
      */
     public function show($id) {
-        $space = Space::findOrFail($id);
+        $sports = Sport::findOrFail($id);
 
-        return view('admin.spaces.show', compact('space'));
+        return view('admin.sports.show', compact('sports'));
     }
 
     /**
@@ -93,9 +89,9 @@ class SpacesController extends AdminCommonController {
      * @return \Illuminate\View\View
      */
     public function edit($id) {
-        $space = Space::findOrFail($id);
+        $sports = Sport::findOrFail($id);
 
-        return view('admin.spaces.edit', compact('space'));
+        return view('admin.sports.edit', compact('sports'));
     }
 
     /**
@@ -109,14 +105,13 @@ class SpacesController extends AdminCommonController {
     public function update(Request $request, $id) {
         $this->validate($request, [
             'name' => 'required',
-            
         ]);
         $requestData = $request->all();
 
-        $space = Space::findOrFail($id);
-        $space->update($requestData);
+        $sports = Sport::findOrFail($id);
+        $sports->update($requestData);
 
-        return redirect('admin/spaces')->with('flash_message', 'Space updated!');
+        return redirect('admin/sports')->with('flash_message', 'Sport updated!');
     }
 
     /**
@@ -127,16 +122,16 @@ class SpacesController extends AdminCommonController {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id) {
-        Space::destroy($id);
+        Sport::destroy($id);
 
-        return redirect('admin/spaces')->with('flash_message', 'Space deleted!');
+        return redirect('admin/sports')->with('flash_message', 'sport deleted!');
     }
 
     public function changeStatus(Request $request) {
-        $appointment = Space::findOrFail($request->id);
-        $appointment->state = $request->status == 'Block' ? '0' : '1';
-        $appointment->save();
-        return response()->json(["success" => true, 'message' => 'Space updated!']);
+        $sports = Sport::findOrFail($request->id);
+        $sports->state = $request->status == 'Block' ? '0' : '1';
+        $sports->save();
+        return response()->json(["success" => true, 'message' => 'Sport updated!']);
     }
 
 }

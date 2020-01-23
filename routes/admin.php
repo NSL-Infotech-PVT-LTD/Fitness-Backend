@@ -45,6 +45,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::post('users/change-status', 'UsersController@changeStatus')->name('user.changeStatus');
     Route::post('services/change-status', 'ServicesController@changeStatus')->name('service.changeStatus');
     Route::post('events/change-status', 'EventsController@changeStatus')->name('events.changeStatus');
+    Route::post('sports/change-status', 'SportsController@changeStatus')->name('sports.changeStatus');
+
     Route::post('spaces/change-status', 'SpacesController@changeStatus')->name('spaces.changeStatus');
     Route::post('session/change-status', 'SessionController@changeStatus')->name('session.changeStatus');
     Route::resource('roles', 'RolesController');
@@ -60,8 +62,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('services', 'ServicesController');
     Route::resource('spaces', 'SpacesController');
     Route::resource('session', 'SessionController');
+    Route::resource('sports', 'SportsController');
 
     Route::resource('configuration', 'ConfigurationController');
     Route::get('configuration', 'ConfigurationController@customEdit');
-    
 });
