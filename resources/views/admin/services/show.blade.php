@@ -34,9 +34,7 @@
                                         <th>ID</th><td>{{ $service->id }}</td>
                                     </tr>
                                     <tr><th> Name </th><td> {{ $service->name }} </td></tr>
-                                    <th> Image</th>
-                                        <td><img width="50" src="{{url('uploads/services/'.$service->image)}}"></td>
-                                    </tr>
+                                   
                                 </tbody>
                             </table>
                         </div>
