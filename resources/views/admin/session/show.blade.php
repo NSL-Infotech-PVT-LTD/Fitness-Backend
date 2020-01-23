@@ -39,9 +39,12 @@
                                 <tr><th>End Date</th><td> {{ $session->end_date }} </td></tr>
                                 <tr><th>Start Time</th><td> {{ $session->start_time }} </td></tr>
                                 <tr><th>End Time</th><td> {{ $session->end_time }} </td></tr>
+                                <tr><th>Hourly Rate</th><td> {{ $session->hourly_rate }} </td></tr>
                                 <tr><th>Guest Allowed</th><td> {{ $session->guest_allowed }} </td></tr>
                                 <tr><th>Location</th><td> {{ $session->location }} </td></tr>
                                 <tr><th>Latitude</th><td> {{ $session->latitude }} </td></tr>
+                                <tr><th>Longitude</th><td> {{ $session->longitude }} </td></tr>
+                                <tr><th>Guest Allowed Left</th><td> {{ $session->guest_allowed_left}} </td></tr>
                                 <tr><th>Image 1.</th>
                                     <?php if (!empty($session->images_1)) { ?>
                                         <td><img width="50" src="{{url('uploads/session/'.$session->images_1)}}"></td>
