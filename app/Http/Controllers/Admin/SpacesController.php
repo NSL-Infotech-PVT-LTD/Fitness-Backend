@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Space;
+use App\User;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -79,8 +80,9 @@ class SpacesController extends AdminCommonController {
      */
     public function show($id) {
         $space = Space::findOrFail($id);
+        $createdBy = User::where('id', $space->created_by)->value('name');
 
-        return view('admin.spaces.show', compact('space'));
+        return view('admin.spaces.show', compact('space','createdBy'));
     }
 
     /**
@@ -93,7 +95,7 @@ class SpacesController extends AdminCommonController {
     public function edit($id) {
         $space = Space::findOrFail($id);
 
-        return view('admin.spaces.edit', compact('space'));
+        return view('admin.spaces.edit', compact('space','createdBy'));
     }
 
     /**
