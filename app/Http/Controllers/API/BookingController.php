@@ -81,7 +81,7 @@ class BookingController extends ApiController {
             parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking', 'target_type' => $booking->type]], $booking->user_id);
             // Push notification end
 
-            return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
+            return parent::successCreated(['message' => 'Booked Successfully', 'booking' => $booking]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
@@ -143,7 +143,7 @@ class BookingController extends ApiController {
             parent::pushNotifications(['title' => $this->_MSGAthCreate['title'], 'body' => $this->_MSGAthCreate['body'], 'data' => ['target_id' => $booking->id, 'target_model' => 'booking', 'target_type' => $booking->type]], $booking->user_id);
             // Push notification end
 
-            return parent::successCreated(['message' => 'Created Successfully', 'booking' => $booking]);
+            return parent::successCreated(['message' => 'Booked Successfully', 'booking' => $booking]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

@@ -33,7 +33,7 @@
                                     <tr>
                                         <th>ID</th><td>{{ $contact->id }}</td>
                                     </tr>
-                                    <tr><th> Message </th><td> {{ $contact->message }} </td></tr><tr><th> Media </th><td> {{ $contact->media }} </td></tr><tr><th> Created By </th><td> {{ $contact->created_by }} </td></tr>
+                                    <tr><th> Message </th><td> {{ $contact->message }} </td></tr><tr><th> Media </th><td><img width="50" src="{{url('uploads/contact/'.$contact->media)}}"></td></tr><tr><th> Created By </th><td> {{ $createdBy }} </td></tr>
                                 </tbody>
                             </table>
                         </div>

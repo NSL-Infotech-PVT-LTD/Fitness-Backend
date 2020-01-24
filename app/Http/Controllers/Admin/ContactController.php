@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Contact;
+use App\User;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -22,6 +23,18 @@ class ContactController extends AdminCommonController {
             $contact = Contact::all();
             return Datatables::of($contact)
                             ->addIndexColumn()
+                            ->editColumn('created_by', function($item) {
+                                $return = \App\User::select('name')->where('id', $item->created_by)->first();
+                                return $return->name;
+                            })
+                            ->addColumn('created_by_email', function($item) {
+                                $return = \App\User::select('email')->where('id', $item->created_by)->first();
+                                return $return->email;
+                            })
+                            ->addColumn('created_by_phone', function($item) {
+                                $return = \App\User::select('phone')->where('id', $item->created_by)->first();
+                                return $return->phone;
+                            })
                             ->editColumn('media', function($item) {
                                 return "<img width='50' src=" . url('uploads/contact/' . $item->media) . ">";
                             })
@@ -34,7 +47,7 @@ class ContactController extends AdminCommonController {
                                         . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/contact/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action','media'])
+                            ->rawColumns(['action', 'media', 'created_by_email', 'created_by_phone'])
                             ->make(true);
         }
         return view('admin.contact.index', ['rules' => array_keys($this->__rulesforindex)]);
@@ -77,8 +90,8 @@ class ContactController extends AdminCommonController {
      */
     public function show($id) {
         $contact = Contact::findOrFail($id);
-
-        return view('admin.contact.show', compact('contact'));
+        $createdBy = User::where('id', $contact->created_by)->value('name');
+        return view('admin.contact.show', compact('contact', 'createdBy'));
     }
 
     /**

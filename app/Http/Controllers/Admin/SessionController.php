@@ -29,7 +29,7 @@ class SessionController extends Controller {
                             ->addColumn('status', function($item) {
                                 if ($item->start_date <= \Carbon\Carbon::now()) {
                                     return 'expired';
-                                } elseif ($item->start_date >= \Carbon\Carbon::now()) {
+                                } elseif ($item->start_date > \Carbon\Carbon::now()) {
                                     return 'not yet started';
                                 }
                             })
@@ -92,9 +92,10 @@ class SessionController extends Controller {
     public function show($id) {
         $session = Session::findOrFail($id);
         $createdBy = User::where('id', $session->created_by)->value('name');
+        $sport = \App\Sport::where('id', $session->sport_id)->value('name');
 //dd($createdBy);
 
-        return view('admin.session.show', compact('session','createdBy'));
+        return view('admin.session.show', compact('session', 'createdBy','sport'));
     }
 
     /**
