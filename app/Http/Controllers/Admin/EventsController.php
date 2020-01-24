@@ -29,7 +29,7 @@ class EventsController extends AdminCommonController {
                             ->addColumn('status', function($item) {
                                 if ($item->start_date <= \Carbon\Carbon::now()) {
                                     return 'expired';
-                                } elseif ($item->start_date >= \Carbon\Carbon::now()) {
+                                } elseif ($item->start_date > \Carbon\Carbon::now()) {
                                     return 'not yet started';
                                 }
                             })
@@ -93,8 +93,9 @@ class EventsController extends AdminCommonController {
     public function show($id) {
         $event = Event::findOrFail($id);
         $createdBy= User::where('id',$event->created_by)->value('name');
+        $sport = \App\Sport::where('id',$event->sport_id)->value('name');
 //dd($createdBy);
-        return view('admin.events.show', compact('event','createdBy'));
+        return view('admin.events.show', compact('event','createdBy','sport'));
     }
 
     /**
@@ -150,9 +151,9 @@ class EventsController extends AdminCommonController {
     }
 
     public function changeStatus(Request $request) {
-        $appointment = Event::findOrFail($request->id);
-        $appointment->state = $request->status == 'Block' ? '0' : '1';
-        $appointment->save();
+        $event = Event::findOrFail($request->id);
+        $event->state = $request->status == 'Block' ? '0' : '1';
+        $event->save();
         return response()->json(["success" => true, 'message' => 'Event updated!']);
     }
 

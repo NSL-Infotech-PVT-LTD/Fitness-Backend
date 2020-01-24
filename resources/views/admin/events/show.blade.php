@@ -47,6 +47,8 @@
                                 <tr><th> Guest Allowed Left </th><td> {{ $event->guest_allowed_left }} </td></tr>
                                 <tr><th> Price </th><td> {{ $event->price }} </td></tr>
                                 <tr><th> Created By</th><td>{{$createdBy}}</td></tr>
+                                <tr><th> Sport</th><td>{{$sport}}</td></tr>
+
 
 
                                 <tr><th>Image 1.</th>

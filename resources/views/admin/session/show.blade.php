@@ -46,6 +46,8 @@
                                 <tr><th>Longitude</th><td> {{ $session->longitude }} </td></tr>
                                 <tr><th>Guest Allowed Left</th><td> {{ $session->guest_allowed_left}} </td></tr>
                                 <tr><th> Created By</th><td>{{$createdBy}}</td></tr>
+                                <tr><th> Sport</th><td>{{$sport}}</td></tr>
+
                                 <tr><th>Image 1.</th>
                                     <?php if (!empty($session->images_1)) { ?>
                                         <td><img width="50" src="{{url('uploads/session/'.$session->images_1)}}"></td>

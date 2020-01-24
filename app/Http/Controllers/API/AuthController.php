@@ -282,17 +282,13 @@ class AuthController extends ApiController {
         }
     }
 
-    public function resetPassword(Request $request, Factory $view) {
+   public function resetPassword(Request $request, Factory $view) {
         //Validating attributes
-        $validateAttributes = parent::validateAttributes($request, 'POST', array_merge(['email' => 'required']), array_keys(['email' => 'required']), true);
+        $rules = ['email' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
-        //Validating Client Details
-//        $validateClientSecret = parent::validateClientSecret();
-//        if ($validateClientSecret):
-//            return $validateClientSecret;
-//        endif;
         $view->composer('emails.auth.password', function($view) {
             $view->with([
                 'title' => trans('front/password.email-title'),
@@ -304,12 +300,12 @@ class AuthController extends ApiController {
         });
 //        dd($request->only('email'));
         $response = Password::sendResetLink($request->only('email'), function (Message $message) {
-                    $message->subject(trans('front/password.reset'));
+                    $message->subject(trans('admin/users/index'));
                 });
 //        dd($response);
         switch ($response) {
             case Password::RESET_LINK_SENT:
-                return parent::successCreated('Password sent please check inbox');
+                return parent::successCreated('Password reset link sent please check inbox');
             case Password::INVALID_USER:
                 return parent::error(trans($response));
             default :
