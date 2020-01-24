@@ -110,7 +110,7 @@ new WOW().init();
                 </div>
                 <div class="header-right">
                     <div class="profile_details_left"><!--notifications of menu start -->
-                        <ul class="nofitications-dropdown">
+<!--                        <ul class="nofitications-dropdown">
                             <li class="dropdown head-dpdn">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell"></i><span class="badge blue">3</span></a>
                                 <ul class="dropdown-menu">
@@ -150,7 +150,7 @@ new WOW().init();
                                     </li>
                                 </ul>
                             </li>
-                        </ul>
+                        </ul>-->
                         <div class="clearfix"> </div>
                     </div>
                     <!--notification menu end -->

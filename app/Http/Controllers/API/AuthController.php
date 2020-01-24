@@ -282,7 +282,7 @@ class AuthController extends ApiController {
         }
     }
 
-   public function resetPassword(Request $request, Factory $view) {
+    public function resetPassword(Request $request, Factory $view) {
         //Validating attributes
         $rules = ['email' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
@@ -528,6 +528,29 @@ class AuthController extends ApiController {
             $user->is_notify = ((\App\User::whereId(\Auth::id())->first()->is_notify === '1') ? '0' : '1');
             $user->save();
             return parent::success('Notify Status Updated Successfully');
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function AuthCheck(Request $request) {
+        $rules = ['type' => 'required|in:email,phone'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $rules = [$request->type => 'unique:users'];
+            $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+            if ($validateAttributes):
+                return $validateAttributes;
+            endif;
+             try {
+                 
+             } catch (Exception $ex) {
+
+             }
+            return parent::success('It is not available in database');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }

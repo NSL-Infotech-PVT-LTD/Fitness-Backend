@@ -42,8 +42,6 @@
                                 <tr><th>Hourly Rate</th><td> {{ $session->hourly_rate }} </td></tr>
                                 <tr><th>Guest Allowed</th><td> {{ $session->guest_allowed }} </td></tr>
                                 <tr><th>Location</th><td> {{ $session->location }} </td></tr>
-                                <tr><th>Latitude</th><td> {{ $session->latitude }} </td></tr>
-                                <tr><th>Longitude</th><td> {{ $session->longitude }} </td></tr>
                                 <tr><th>Guest Allowed Left</th><td> {{ $session->guest_allowed_left}} </td></tr>
                                 <tr><th> Created By</th><td>{{$createdBy}}</td></tr>
                                 <tr><th> Sport</th><td>{{$sport}}</td></tr>

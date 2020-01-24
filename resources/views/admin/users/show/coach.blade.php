@@ -47,7 +47,19 @@
 
                                     <td><a href="{{url('uploads/coach/police_doc/'.$user->police_doc)}}" target="_blank"><img width="50" src="{{url('click.jpeg')}}"></a></td>
                                 </tr>
+                                <tr>
+                                    <th>Service Id Name.</th>
 
+                                    <td>
+                                        <?php
+                                        $services = [];
+                                        foreach ($user->service_ids as $data):
+                                            $services[] = $data->name;
+                                        endforeach;
+                                        echo (implode(',', $services));
+                                        ?>
+                                    </td>
+                                </tr>
 
                             </tbody>
                         </table>

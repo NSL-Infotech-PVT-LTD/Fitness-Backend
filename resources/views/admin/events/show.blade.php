@@ -40,8 +40,6 @@
                                 <tr><th> Start Time </th><td> {{ $event->start_time }} </td></tr>
                                 <tr><th> End Time </th><td> {{ $event->end_time }} </td></tr>
                                 <tr><th> Location </th><td> {{ $event->location }} </td></tr>
-                                <tr><th> Latitude </th><td> {{ $event->latitude }} </td></tr>
-                                <tr><th> Longitude </th><td> {{ $event->longitude }} </td></tr>
                                 <tr><th> Guest Allowed </th><td> {{ $event->guest_allowed }} </td></tr>
                                 <tr><th> Equipment Required </th><td> {{ $event->equipment_required }}
                                 <tr><th> Guest Allowed Left </th><td> {{ $event->guest_allowed_left }} </td></tr>
