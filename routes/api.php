@@ -81,6 +81,7 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us', 'API\ConfigurationController@getaboutus');
+Route::post('auth/check','API\AuthController@AuthCheck');
 
 
 

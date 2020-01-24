@@ -33,7 +33,7 @@ class UsersController extends AdminCommonController {
         return view('admin.users.index', compact('users'));
     }
 
-        public function indexByRoleId(Request $request, $role_id) {
+    public function indexByRoleId(Request $request, $role_id) {
 //        $keyword = $request->get('search');
 //        $perPage = 5;
 //
@@ -63,13 +63,13 @@ class UsersController extends AdminCommonController {
                                     endif;
                                 endif;
                                 $return .= " <a href=" . url('/admin/users/' . $item->id) . " title='View User'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
-                                       
+
                                 return $return;
                             })
                             ->rawColumns(['action'])
                             ->make(true);
         }
-            return view('admin.users.index', ['rules' => array_keys($this->__rulesforindex), 'role_id' => $role_id]);
+        return view('admin.users.index', ['rules' => array_keys($this->__rulesforindex), 'role_id' => $role_id]);
     }
 
     /**
@@ -118,7 +118,7 @@ class UsersController extends AdminCommonController {
      */
     public function show($id) {
         $user = User::findOrFail($id);
-
+//      
         if ($user->hasRole('super admin')):
             return view('admin.users.show.admin', compact('user'));
         else:
@@ -128,8 +128,8 @@ class UsersController extends AdminCommonController {
                 if ($user->hasRole('organizer')):
                     return view('admin.users.show.organizer', compact('user'));
                 else:
-            return view('admin.users.show.athlete', compact('user'));
-        endif;
+                    return view('admin.users.show.athlete', compact('user'));
+                endif;
             endif;
         endif;
     }
@@ -144,7 +144,7 @@ class UsersController extends AdminCommonController {
     public function edit($id) {
         $roles = Role::select('id', 'name', 'label')->get();
         $roles = $roles->pluck('label', 'name');
-        $user = User::with('roles')->select('id', 'name', 'email','password')->findOrFail($id);
+        $user = User::with('roles')->select('id', 'name', 'email', 'password')->findOrFail($id);
         $user_roles = [];
         foreach ($user->roles as $role) {
             $user_roles[] = $role->name;
@@ -185,7 +185,7 @@ class UsersController extends AdminCommonController {
 //         $role_id = \DB::table('role_user')->select('role_id')->get();
         $role_id = $user->roles->first()->id;
 //        dd($role_id);
-        return redirect('admin/users/role/'.$role_id)->with('flash_message', 'User Updated!');
+        return redirect('admin/users/role/' . $role_id)->with('flash_message', 'User Updated!');
     }
 
     /**

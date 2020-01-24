@@ -91,7 +91,12 @@ class ContactController extends AdminCommonController {
     public function show($id) {
         $contact = Contact::findOrFail($id);
         $createdBy = User::where('id', $contact->created_by)->value('name');
-        return view('admin.contact.show', compact('contact', 'createdBy'));
+        $createdEmail = User::where('id', $contact->created_by)->value('email');
+        $createdPhone = User::where('id', $contact->created_by)->value('phone');
+
+
+
+        return view('admin.contact.show', compact('contact', 'createdBy', 'createdEmail', 'createdPhone'));
     }
 
     /**

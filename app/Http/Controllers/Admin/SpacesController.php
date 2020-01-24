@@ -81,9 +81,9 @@ class SpacesController extends AdminCommonController {
     public function show($id) {
         $space = Space::findOrFail($id);
         $createdBy = User::where('id', $space->created_by)->value('name');
-//        $availability = 
+        $availability = $space->availability_week;
 
-        return view('admin.spaces.show', compact('space','createdBy'));
+        return view('admin.spaces.show', compact('space','createdBy','availability'));
     }
 
     /**
