@@ -59,6 +59,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::resource('orders', 'OrderController');
     Route::resource('subscriptions', 'SubscriptionController');
     Route::resource('events', 'EventsController');
+    Route::resource('bookings', 'BookingController');
     Route::resource('services', 'ServicesController');
     Route::resource('spaces', 'SpacesController');
     Route::resource('session', 'SessionController');

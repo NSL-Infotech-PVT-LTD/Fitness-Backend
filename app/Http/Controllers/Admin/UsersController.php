@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Role;
 use App\User;
+use App\OrganiserCoach;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use HasRoles;
@@ -118,6 +119,7 @@ class UsersController extends AdminCommonController {
      */
     public function show($id) {
         $user = User::findOrFail($id);
+        $orgcoach = \App\OrganiserCoach::whereOrganisationId($id)->get();
 //      
         if ($user->hasRole('super admin')):
             return view('admin.users.show.admin', compact('user'));
@@ -126,7 +128,7 @@ class UsersController extends AdminCommonController {
                 return view('admin.users.show.coach', compact('user'));
             else:
                 if ($user->hasRole('organizer')):
-                    return view('admin.users.show.organizer', compact('user'));
+                    return view('admin.users.show.organizer', compact('user','orgcoach'));
                 else:
                     return view('admin.users.show.athlete', compact('user'));
                 endif;
