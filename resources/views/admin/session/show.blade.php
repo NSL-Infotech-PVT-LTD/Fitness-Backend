@@ -39,7 +39,7 @@
                                 <tr><th>End Date</th><td> {{ $session->end_date }} </td></tr>
                                 <tr><th>Start Time</th><td> {{ $session->start_time }} </td></tr>
                                 <tr><th>End Time</th><td> {{ $session->end_time }} </td></tr>
-                                <tr><th>Hourly Rate</th><td> {{ $session->hourly_rate }} </td></tr>
+                                <tr><th>Hourly Rate</th><td> ${{ $session->hourly_rate }} </td></tr>
                                 <tr><th>Guest Allowed</th><td> {{ $session->guest_allowed }} </td></tr>
                                 <tr><th>Location</th><td> {{ $session->location }} </td></tr>
                                 <tr><th>Guest Allowed Left</th><td> {{ $session->guest_allowed_left}} </td></tr>
@@ -50,28 +50,28 @@
                                     <?php if (!empty($session->images_1)) { ?>
                                         <td><img width="50" src="{{url('uploads/session/'.$session->images_1)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/session/noimage.png')}}"></td>                           
+                                        <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
                                 <tr><th>Image 2.</th>
                                     <?php if (!empty($session->images_2)) { ?>
                                         <td><img width="50" src="{{url('uploads/session/'.$session->images_2)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/session/noimage.png')}}"></td>                           
+                                        <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
                                 <tr><th>Image 3.</th>
                                     <?php if (!empty($session->images_3)) { ?>
                                         <td><img width="50" src="{{url('uploads/session/'.$session->images_3)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/session/noimage.png')}}"></td>                           
+                                        <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
                                 <tr><th>Image 4.</th>
                                     <?php if (!empty($session->images_4)) { ?>
                                         <td><img width="50" src="{{url('uploads/session/'.$session->images_4)}}"></td>
                                     <?php } else { ?>
-                                        <td><img width="50" src="{{url('uploads/session/noimage.png')}}"></td>                           
+                                        <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                     <?php } ?>
                                 </tr>
 

@@ -90,6 +90,9 @@ new WOW().init();
                             <li>
                                 <a href="{{ url('/admin/contact') }}"><i class="fa fa-bars nav_icon"></i>Contact Portal</a>
                             </li>
+                            <li>
+                                <a href="{{ url('/admin/sports') }}"><i class="fa fa-bars nav_icon"></i>Sports</a>
+                            </li>
                         </ul>
                         <div class="clearfix"></div>
                         <!-- //sidebar-collapse -->
