@@ -178,7 +178,7 @@ new WOW().init();
                                 </a>
                                 <ul class="dropdown-menu drp-mnu">
                                     <!--<li> <a href="#"><i class="fa fa-cog"></i> Settings</a> </li>-->
-                                    <li> <a href="admin/users/role/1"><i class="fa fa-user"></i> Profile</a> </li>
+<!--                                    <li> <a href="admin/users/role/1"><i class="fa fa-user"></i> Profile</a> </li>-->
                                     <li>
                                         <a class="dropdown-item" href="{{ url('/logout') }}"
                                            onclick="event.preventDefault();
