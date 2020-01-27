@@ -68,28 +68,28 @@
                                 <?php if (!empty($space->images_1)) { ?>
                                     <td><img width="50" src="{{url('uploads/spaces/'.$space->images_1)}}"></td>
                                 <?php } else { ?>
-                                    <td><img width="50" src="{{url('uploads/spaces/noimage.png')}}"></td>                           
+                                    <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                 <?php } ?>
                             </tr>
                             <tr><th>Image 2.</th>
                                 <?php if (!empty($space->images_2)) { ?>
                                     <td><img width="50" src="{{url('uploads/spaces/'.$space->images_2)}}"></td>
                                 <?php } else { ?>
-                                    <td><img width="50" src="{{url('uploads/spaces/noimage.png')}}"></td>                           
+                                    <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                 <?php } ?>
                             </tr>
                             <tr><th>Image 3.</th>
                                 <?php if (!empty($space->images_3)) { ?>
                                     <td><img width="50" src="{{url('uploads/spaces/'.$space->images_3)}}"></td>
                                 <?php } else { ?>
-                                    <td><img width="50" src="{{url('uploads/spaces/noimage.png')}}"></td>                           
+                                    <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                 <?php } ?>
                             </tr>
                             <tr><th>Image 4.</th>
                                 <?php if (!empty($space->images_4)) { ?>
                                     <td><img width="50" src="{{url('uploads/spaces/'.$space->images_4)}}"></td>
                                 <?php } else { ?>
-                                    <td><img width="50" src="{{url('uploads/spaces/noimage.png')}}"></td>                           
+                                    <td><img width="50" src="{{url('noimage.png')}}"></td>                           
                                 <?php } ?>
                             </tr>
                         </table>
