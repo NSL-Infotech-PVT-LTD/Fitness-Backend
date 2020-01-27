@@ -23,6 +23,11 @@ class ContactController extends AdminCommonController {
             $contact = Contact::all();
             return Datatables::of($contact)
                             ->addIndexColumn()
+                            ->editColumn('message', function($item) {
+//                               $return = $item->message;
+                                $return = strlen($item->message) > 10 ? substr($item->message,0,10)."..." : $item->message;
+                                return $return;
+                            })
                             ->editColumn('created_by', function($item) {
                                 $return = \App\User::select('name')->where('id', $item->created_by)->first();
                                 return $return->name;
@@ -47,7 +52,7 @@ class ContactController extends AdminCommonController {
                                         . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/contact/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
                                 return $return;
                             })
-                            ->rawColumns(['action', 'media', 'created_by_email', 'created_by_phone'])
+                            ->rawColumns(['message','action', 'media', 'created_by_email', 'created_by_phone'])
                             ->make(true);
         }
         return view('admin.contact.index', ['rules' => array_keys($this->__rulesforindex)]);

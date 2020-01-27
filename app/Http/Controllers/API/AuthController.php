@@ -331,7 +331,7 @@ class AuthController extends ApiController {
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
 
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                    ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')
                     ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1', 'users.portfolio_image_2', 'users.portfolio_image_3', 'users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', 'users.state', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $perPage = isset($request->limit) ? $request->limit : 20;
@@ -377,7 +377,7 @@ class AuthController extends ApiController {
 
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                    ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')
                     ->Select('users.id', 'users.name', 'users.email', 'users.phone', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.sport_id', 'users.hourly_rate', 'users.service_ids', 'users.profession', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', 'users.state', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
 
@@ -427,7 +427,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                    ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')
                     ->Select('users.id', 'users.name', 'users.email', 'users.phone', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.sport_id', 'users.hourly_rate', 'users.service_ids', 'users.profession', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $model = $model->where('users.id', \Auth::id());
@@ -460,7 +460,7 @@ class AuthController extends ApiController {
             $model = new \App\User();
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
-                    ->leftJoin('bookings', 'bookings.user_id', '=', 'users.id')
+                    ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')
                     ->select('users.id', 'users.name', 'users.email', 'users.phone', 'users.created_at', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.hourly_rate', 'users.portfolio_image_1', 'users.portfolio_image_2', 'users.portfolio_image_3', 'users.portfolio_image_4', 'users.service_ids', 'users.sport_id', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', \DB::raw('AVG(bookings.rating) as rating'));
             $model = $model->groupBy('users.id');
             $model = $model->where('users.id', $request->id);
@@ -540,7 +540,7 @@ class AuthController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $rules = [$request->type => 'unique:users'];
+            $rules = ['data' => 'unique:users,'.$request->type];
             $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
             if ($validateAttributes):
                 return $validateAttributes;
