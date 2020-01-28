@@ -223,6 +223,14 @@ class ApiController extends \App\Http\Controllers\Controller {
         endforeach;
     }
 
+    public static function pushNotificationsUsers($data = [], $userIds, $saveNotification = true) {
+//        dd($userIds);
+        foreach ($userIds as $userId):
+            self::pushNotifications($data, $userId, $saveNotification);
+        endforeach;
+        return true;
+    }
+
     public static function pushNotifications($data = [], $userId, $saveNotification = true) {
         if ($saveNotification)
             self::savePushNotification($data, $userId);

@@ -503,7 +503,8 @@ class AuthController extends ApiController {
 
     public function logout(Request $request) {
         $rules = [];
-        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
+        $rules = array_merge($this->requiredParams, $rules);
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
@@ -511,6 +512,10 @@ class AuthController extends ApiController {
             $user = \App\User::findOrFail(\Auth::id());
             $user->is_login = '0';
             $user->save();
+            $device= \App\UserDevice::where('user_id', \Auth::id())->get();
+//            dd($device);
+             if ($device->isEmpty() === false)
+            \App\UserDevice::destroy($device->first()->id);
             return parent::success('Logout Successfully');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -535,26 +540,26 @@ class AuthController extends ApiController {
 
     public function AuthCheck(Request $request) {
         $rules = ['type' => 'required|in:email,phone'];
+
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
-            $rules = ['data' => 'unique:users,'.$request->type];
+            $rules = ['data' => 'unique:users,' . $request->type];
             $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
             if ($validateAttributes):
                 return $validateAttributes;
             endif;
-             try {
-                 
-             } catch (Exception $ex) {
-
-             }
+            try {
+                
+            } catch (Exception $ex) {
+                
+            }
             return parent::success('It is not available in database');
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
 
-    
 }
