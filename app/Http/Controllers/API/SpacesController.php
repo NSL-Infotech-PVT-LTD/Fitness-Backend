@@ -34,12 +34,21 @@ class SpacesController extends ApiController {
                     $input[$var] = parent::__uploadImage($request->file($var), public_path('uploads/spaces'), true);
             endfor;
 
-//            if (count($images) > 0)
+
+            $org = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id')->toArray();
+            $createdBy = \Auth::id();
+//            dd($org);
+            if (($key = array_search($createdBy, $org)) !== false ) {
+                unset($org[$key]);
+            }
+//            dd($org[$key]);
+
+            ////            if (count($images) > 0)
 //                $input['images'] = json_encode($images);
             $space = MyModel::create($input);
             parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $space->id, 'target_model' => 'space']], '2', true);
             parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $space->id, 'target_model' => 'space']], '3', true);
-            parent::pushNotificationsUserRoles(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $space->id, 'target_model' => 'space']], '4', true);
+            parent::pushNotificationsUsers(['title' => $this->_MSGCreate['title'], 'body' => $this->_MSGCreate['body'], 'data' => ['target_id' => $space->id, 'target_model' => 'space']], $org);
             return parent::successCreated(['message' => 'Created Successfully', 'space' => $space]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -53,9 +62,9 @@ class SpacesController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-             if (\App\Booking::where('target_id', $request->id)->get()->isEmpty() === false)
+            if (\App\Booking::where('target_id', $request->id)->get()->isEmpty() === false)
                 return parent::error('Sorry, cant update because booking is done');
-           
+
             if (MyModel::where('id', $request->id)->where('created_by', \Auth::id())->get()->isEmpty() === true)
                 return parent::error('Please use valid created_by id');
             $input = $request->all();
@@ -106,7 +115,7 @@ class SpacesController extends ApiController {
         // dd($category_id);
         try {
 //            $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images_1','images_2','images_3','images_4', 'images_5','description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
             if (isset($request->search))
                 $model = $model->Where('name', 'LIKE', "%$request->search%")
                         ->orWhere('description', 'LIKE', "%$request->search%");
@@ -132,7 +141,7 @@ class SpacesController extends ApiController {
             if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid token');
             $model = new MyModel();
-            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images_1','images_2','images_3','images_4','images_5', 'description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
+            $model = MyModel::where('created_by', \Auth::id())->Select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'location', 'latitude', 'longitude', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily');
 
 
             if (isset($request->search))
@@ -165,7 +174,7 @@ class SpacesController extends ApiController {
 
             $latKey = 'latitude';
             $lngKey = 'longitude';
-            $model = $model->select('id', 'name', 'images_1', 'images_2','images_3','images_4','images_5','description', 'price_hourly', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
+            $model = $model->select('id', 'name', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'description', 'price_hourly', 'availability_week', 'open_hours_from', 'open_hours_to', 'created_by', 'price_daily', 'location', 'latitude', 'longitude', \DB::raw('( 3959 * acos( cos( radians(' . $user->latitude . ') ) * cos( radians( ' . $latKey . ' ) ) * cos( radians( ' . $lngKey . ' ) - radians(' . $user->longitude . ') ) + sin( radians(' . $user->latitude . ') ) * sin( radians(' . $latKey . ') ) ) ) AS distance'));
 
 //            $model = $model->havingRaw('distance < ' . $request->radius . '');
             if (isset($request->search))
@@ -180,7 +189,7 @@ class SpacesController extends ApiController {
                 case 'latest':
                     $model = $model->orderBy('created_at', 'desc');
                 case 'distance':
-                     $model = $model->orderBy('distance', 'asc');
+                    $model = $model->orderBy('distance', 'asc');
                     break;
                 default :
                     $model = $model->orderBy('created_at', 'desc');

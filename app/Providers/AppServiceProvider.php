@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Collection;
 
 class AppServiceProvider extends ServiceProvider {
 
@@ -23,6 +24,11 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         Schema::defaultStringLength(191);
+        Collection::macro('toArrays', function () {
+            return $this->map(function ($value) {
+                        return (array) $value;
+                    })->toArray();
+        });
     }
 
 }

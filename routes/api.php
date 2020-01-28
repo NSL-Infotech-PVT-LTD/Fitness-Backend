@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('dashboard', 'API\NotificationController@getUserDashboard');
     Route::get('notification/read', 'API\NotificationController@MarkReadNotication');
     Route::get('terms', 'API\ConfigurationController@getTerms');
-    Route::get('logout', 'API\AuthController@logout');
+    Route::post('logout', 'API\AuthController@logout');
     Route::get('notify/toggle', 'API\AuthController@toggleNotifyUser');
     Route::post('availability', 'API\BookingController@getavailability');
     Route::get('configuration/{column}', 'API\ConfigurationController@getConfigurationColumn');
