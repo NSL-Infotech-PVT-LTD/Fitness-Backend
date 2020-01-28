@@ -69,29 +69,29 @@ new WOW().init();
                                 </ul>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/services') }}"><i class="fa fa-bars nav_icon"></i>Services</a>
+                                <a href="{{ url('/admin/services') }}"><i class="fa fa-globe"></i>&nbsp&nbsp&nbsp&nbsp Services</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/events') }}"><i class="fa fa-bars nav_icon"></i>Events</a>
+                                <a href="{{ url('/admin/events') }}"><i class="fa fa-calendar"></i> &nbsp&nbsp&nbsp&nbsp Events</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/spaces') }}"><i class="fa fa-bars nav_icon"></i>Spaces</a>
+                                <a href="{{ url('/admin/spaces') }}"><i class="fa fa-building-o"></i> &nbsp&nbsp&nbsp&nbsp Spaces</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/session') }}"><i class="fa fa-bars nav_icon"></i>Session</a>
+                                <a href="{{ url('/admin/session') }}"><i class="fa fa-clock-o"></i>&nbsp&nbsp&nbsp&nbsp Session</a>
                             </li>
 
                             <li>
-                                <a href="{{ url('/admin/bookings') }}"><i class="fa fa-bars nav_icon"></i>Bookings</a>
+                                <a href="{{ url('/admin/bookings') }}"><i class="fa fa-list-alt"></i>&nbsp&nbsp&nbsp&nbsp Bookings</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/configuration') }}"><i class="fa fa-bars nav_icon"></i>Configuration</a>
+                                <a href="{{ url('/admin/configuration') }}"><i class="fa fa-cog"></i> &nbsp&nbsp&nbsp&nbsp Configuration</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/contact') }}"><i class="fa fa-bars nav_icon"></i>Contact Portal</a>
+                                <a href="{{ url('/admin/contact') }}"><i class="fa fa-comments"></i>&nbsp&nbsp&nbsp&nbsp Contact Portal</a>
                             </li>
                             <li>
-                                <a href="{{ url('/admin/sports') }}"><i class="fa fa-bars nav_icon"></i>Sports</a>
+                                <a href="{{ url('/admin/sports') }}"><i class="fa fa-trophy"></i>&nbsp&nbsp&nbsp&nbsp Sports</a>
                             </li>
                         </ul>
                         <div class="clearfix"></div>
