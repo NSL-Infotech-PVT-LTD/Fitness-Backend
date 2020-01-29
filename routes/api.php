@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('password/change', 'API\AuthController@changePassword');
     Route::post('contact/store', 'API\ContactController@store');
 });
+
 Route::post('reset/password', 'API\AuthController@resetPassword');
 Route::post('coach/register', 'API\AuthController@CoachRegister');
 Route::post('athlete/register', 'API\AuthController@AtheleteRegister');
