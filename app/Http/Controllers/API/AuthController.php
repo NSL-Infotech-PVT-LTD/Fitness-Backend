@@ -503,8 +503,8 @@ class AuthController extends ApiController {
 
     public function logout(Request $request) {
         $rules = [];
-        $rules = array_merge($this->requiredParams, $rules);
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+//        $rules = array_merge($this->requiredParams, $rules);
+        $validateAttributes = parent::validateAttributes($request, 'GET', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;

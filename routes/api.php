@@ -66,13 +66,14 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('dashboard', 'API\NotificationController@getUserDashboard');
     Route::get('notification/read', 'API\NotificationController@MarkReadNotication');
     Route::get('terms', 'API\ConfigurationController@getTerms');
-    Route::post('logout', 'API\AuthController@logout');
+    Route::get('logout', 'API\AuthController@logout');
     Route::get('notify/toggle', 'API\AuthController@toggleNotifyUser');
     Route::post('availability', 'API\BookingController@getavailability');
     Route::get('configuration/{column}', 'API\ConfigurationController@getConfigurationColumn');
     Route::post('password/change', 'API\AuthController@changePassword');
     Route::post('contact/store', 'API\ContactController@store');
 });
+
 Route::post('reset/password', 'API\AuthController@resetPassword');
 Route::post('coach/register', 'API\AuthController@CoachRegister');
 Route::post('athlete/register', 'API\AuthController@AtheleteRegister');
