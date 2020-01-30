@@ -15,7 +15,7 @@ class AddNewFieldsToBookingsTable extends Migration
     {
         Schema::table('bookings', function (Blueprint $table) {
             $table->string('rating')->nullable()->after('price');
-            $table->string('payment_id')->after('payment_details');
+            $table->string('payment_id')->after('payment_details')->nullable();
         });
     }
 
