@@ -33,9 +33,9 @@ class CreateEventsTable extends Migration {
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             if (\App::VERSION() >= '5.8') {
-                $table->bigInteger('service_id')->unsigned()->index();
+                $table->bigInteger('service_id')->unsigned()->index()->nullable();
             } else {
-                $table->integer('service_id')->unsigned()->index();
+                $table->integer('service_id')->unsigned()->index()->nullable();
             }
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             if (\App::VERSION() >= '5.8') {
