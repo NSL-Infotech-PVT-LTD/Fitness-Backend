@@ -22,10 +22,9 @@
                                 </tr>
                                 <tr><th> Type </th><td> {{ $booking->type }} </td></tr>
                                 <tr><th> Target Name </th><td> {{ $targetId}} </td></tr>
-                                <tr><th> User Id </th><td> {{ $userId }} </td></tr>
-                                <tr><th> Owner Id </th><td> {{ $ownerId }} </td></tr>
+                                <tr><th> Booked By </th><td> {{ $userId }} </td></tr>
+                                <tr><th> Created By </th><td> {{ $ownerId }} </td></tr>
                                 <tr><th> Rating </th><td> {{ $booking->rating }} </td></tr>
-                                <tr><th> Payment Id </th><td> {{ $booking->payment_id }} </td></tr>
 
 
 

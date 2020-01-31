@@ -44,7 +44,7 @@
             {data: 'id', name: 'id'},
 <?php foreach ($rules as $rule): ?>
     <?php if ($rule == 'type'): ?>
-                    {data: 'type', name: 'type', orderable: false, searchable: false},
+                    {data: 'type', name: 'type', orderable: false},
     <?php else: ?>
                     {data: "{{$rule}}", name: "{{$rule}}"},
     <?php endif; ?>
