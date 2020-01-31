@@ -42,6 +42,7 @@ class BookingController extends AdminCommonController {
                                 $return = \App\User::select('name')->where('id', $item->owner_id)->first();
                                 return $return->name;
                             })
+                            
                             ->addColumn('action', function($item) {
                                 $return = '';
                                 $return .= " <a href=" . url('/admin/bookings/' . $item->id) . " title='View Booking'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
