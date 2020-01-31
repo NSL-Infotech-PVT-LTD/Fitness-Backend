@@ -93,8 +93,15 @@ new WOW().init();
                             <li>
                                 <a href="{{ url('/admin/sports') }}"><i class="fa fa-trophy"></i>&nbsp&nbsp&nbsp&nbsp Sports</a>
                             </li>
+                             <li>
+                                <a href="{{ url('/admin/sports') }}"><i></i>&nbsp&nbsp&nbsp&nbsp </a>
+                            </li>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
+                            <div class="clearfix"></div>
                         </ul>
-                        <div class="clearfix"></div>
+
+
                         <!-- //sidebar-collapse -->
                     </nav>
                 </div>
