@@ -390,7 +390,7 @@ class BookingController extends ApiController {
             endswitch;
             if ($targetModel->where('created_by', \Auth::id())->get()->isEmpty())
                 return parent::error('Not found');
-            $model = MyModel::where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $model = MyModel::where('type', $request->type)->where('owner_id',\Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with('userDetails')->with($request->type);
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
