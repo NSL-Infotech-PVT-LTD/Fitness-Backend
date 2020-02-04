@@ -96,7 +96,7 @@ class BookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            
+
             $params = json_decode($request->booking);
             if (!isset($request->token))
                 return parent::error('Please add token');
@@ -113,9 +113,9 @@ class BookingController extends ApiController {
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
-           
-            if(\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
-              return parent::error('Sorry, You cant book your own space');  
+
+            if (\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
+                return parent::error('Sorry, You cant book your own space');
             $booking = \App\Booking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -350,7 +350,7 @@ class BookingController extends ApiController {
         }
     }
 
-    public function getAlllBookingsCoach(Request $request) {
+    public function transactions(Request $request) {
         $rules = ['limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
@@ -358,8 +358,7 @@ class BookingController extends ApiController {
         endif;
         try {
             $user = \App\User::find(Auth::user()->id);
-            if ($user->hasRole('coach') === false)
-                return parent::error('Please use valid auth token');
+
             $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
@@ -369,18 +368,51 @@ class BookingController extends ApiController {
         }
     }
 
-    public function getAlllBookingsOrganiser(Request $request) {
-        $rules = ['limit' => ''];
+    public function receivedBookings(Request $request) {
+        $rules = ['search' => '','type' => 'required|in:event,session,space', 'order_by' => 'required_if:type,event|required_if:type,session', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
+
         try {
+            $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
-            if ($user->hasRole('organizer') === false)
-                return parent::error('Please use valid auth token');
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
-            $model = $model->with(['userDetails']);
+          
+//            $target = Event::where('created_by',\Auth::id())->pluck('id');
+            switch ($request->type):
+                case 'event':
+                    $targetModel = new \App\Event();
+                    break;
+                case 'session':
+                    $targetModel = new \App\Session();
+                    break;
+            endswitch;
+            if ($targetModel->where('created_by', \Auth::id())->get()->isEmpty())
+                return parent::error('Not found');
+            $model = MyModel::where('type', $request->type)->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $model = $model->with('userDetails')->with($request->type);
+            if ($request->type != 'space'):
+                $model = $model->whereHas($request->type, function ($query)use($request) {
+                    if ($request->type == 'event'):
+                        $targetOrderByKey = 'start_date';
+                    elseif ($request->type == 'session'):
+                        $targetOrderByKey = 'start_date';
+                    endif;
+                    if ($request->order_by == 'upcoming'):
+                        $query->whereDate($targetOrderByKey, '>', \Carbon\Carbon::now());
+                    elseif ($request->order_by == 'completed'):
+                        $query->whereDate($targetOrderByKey, '<=', \Carbon\Carbon::now());
+                    endif;
+                });
+            endif;
+
+            if (isset($request->search)):
+//                dd($request->search);
+                $model = $model->whereHas('userDetails', function ($query)use($request) {
+                    $query->Where('name', 'LIKE', "%$request->search%")->orWhere('email', 'LIKE', "%$request->search%");
+                });
+            endif;
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
         } catch (\Exception $ex) {
