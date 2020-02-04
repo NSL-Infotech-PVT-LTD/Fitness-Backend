@@ -43,8 +43,12 @@
             columns: [
             {data: 'id', name: 'id'},
 <?php foreach ($rules as $rule): ?>
-    <?php if ($rule == 'guest_allowed'): ?>
-                    {data: 'guest_allowed', name: 'guest_allowed', orderable: false, searchable: false},
+    <?php if ($rule == 'media'): ?>
+                    {data: 'media', name: 'media', orderable: false, searchable: false},
+    <?php elseif ($rule == 'message'): ?>
+                    {data: 'message', name: 'message', orderable: false, searchable: false},
+    <?php elseif ($rule == 'created_by'): ?>
+                    {data: 'created_by', name: 'created_by', orderable: false, searchable: false},
     <?php else: ?>
                     {data: "{{$rule}}", name: "{{$rule}}"},
     <?php endif; ?>

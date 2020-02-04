@@ -56,7 +56,8 @@
                                         <?php
                                         $services = [];
                                         foreach ($user->service_ids as $data):
-                                            $services[] = $data->name;
+                                            $services[] = '['.$data->name.'&nbsp;';
+                                            $services[] = $data->price.']&nbsp;&nbsp;';
                                         endforeach;
                                         echo (implode(',', $services));
                                         ?>

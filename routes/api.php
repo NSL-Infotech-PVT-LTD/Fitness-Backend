@@ -47,8 +47,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('booking/list/all', 'API\BookingController@getBookingsAll');
     Route::post('booking/space/list', 'API\BookingController@getSpaceBookings');
     Route::post('booking/all/list/all', 'API\BookingController@getBookingscoachOrg');
-    Route::post('all/coach/bookings', 'API\BookingController@getAlllBookingsCoach');
-    Route::post('all/organiser/bookings', 'API\BookingController@getAlllBookingsOrganiser');
+    Route::post('received/transactions', 'API\BookingController@transactions');
     Route::post('booking/organiser/list', 'API\BookingController@getBookingsOrganiser');
     Route::post('booking/coach/list', 'API\BookingController@getBookingsCoach');
     Route::post('booking/details', 'API\BookingController@getitem');
@@ -72,6 +71,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('configuration/{column}', 'API\ConfigurationController@getConfigurationColumn');
     Route::post('password/change', 'API\AuthController@changePassword');
     Route::post('contact/store', 'API\ContactController@store');
+    Route::post('received/bookings','API\BookingController@receivedBookings');
 });
 
 Route::post('reset/password', 'API\AuthController@resetPassword');
