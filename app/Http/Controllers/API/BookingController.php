@@ -384,8 +384,8 @@ class BookingController extends ApiController {
                 case 'event':
                     $targetModel = new \App\Event();
                     break;
-                case 'session':
-                    $targetModel = new \App\Session();
+                case 'space':
+                    $targetModel = new \App\Space();
                     break;
             endswitch;
             if ($targetModel->where('created_by', \Auth::id())->get()->isEmpty())
