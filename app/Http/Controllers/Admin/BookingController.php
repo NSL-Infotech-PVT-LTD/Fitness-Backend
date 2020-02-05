@@ -26,23 +26,23 @@ class BookingController extends AdminCommonController {
             $booking = Booking::all();
             return Datatables::of($booking)
                             ->addIndexColumn()
-//                            ->editColumn('target_id', function($item) {
-//
-//                                $event = \App\Event::select('name')->where('id', $item->target_id)->first();
-//                                $session = \App\Session::select('name')->where('id', $item->target_id)->first();
-//                                $space = \App\Space::select('name')->where('id', $item->target_id)->first();
-//                                if ('type' == 'event')
-//                                {
-//                                    return $event->name;
-//                                }
-//                                elseif ('type' == 'session'){
-//                                    return $session->name;
-//                                }
-//                                else
-//                                {
-//                                    return $space->name;
-//                                }
-//                            })
+                            ->editColumn('target_id', function($item) {
+
+                                $event = \App\Event::select('name')->where('id', $item->target_id)->first();
+                                $session = \App\Session::select('name')->where('id', $item->target_id)->first();
+                                $space = \App\Space::select('name')->where('id', $item->target_id)->first();
+                                if ( $item->type == 'event')
+                                {
+                                    return $event->name;
+                                }
+                                elseif ($item->type == 'session'){
+                                    return $session->name;
+                                }
+                                else
+                                {
+                                    return $space->name;
+                                }
+                            })
                             ->editColumn('user_id', function($item) {
                                 $return = \App\User::select('name')->where('id', $item->user_id)->first();
                                 return $return->name;
@@ -56,7 +56,7 @@ class BookingController extends AdminCommonController {
                                 $return .= " <a href=" . url('/admin/bookings/' . $item->id) . " title='View Booking'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['action', 'user_id', 'owner_id'])
+                            ->rawColumns(['action', 'target_id','user_id', 'owner_id'])
                             ->make(true);
         }
         return view('admin.bookings.index', ['rules' => array_keys($this->__rulesforindex)]);
