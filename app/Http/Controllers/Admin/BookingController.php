@@ -60,7 +60,7 @@ class BookingController extends AdminCommonController {
                             ->make(true);
         }
         return view('admin.bookings.index', ['rules' => array_keys($this->__rulesforindex)]);
-    }
+    } 
 
     /**
      * Show the form for creating a new resource.
