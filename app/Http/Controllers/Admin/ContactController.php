@@ -47,9 +47,7 @@ class ContactController extends AdminCommonController {
                                 $return = '';
 
 
-                                $return .= " <a href=" . url('/admin/contact/' . $item->id) . " title='View Query'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>"
-                                    
-                                        . " <button class='btn btn-danger btn-sm btnDelete' type='submit' data-remove='" . url('/admin/contact/' . $item->id) . "'><i class='fa fa-trash-o' aria-hidden='true'></i></button>";
+                                $return .= " <a href=" . url('/admin/contact/' . $item->id) . " title='View Query'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
                             ->rawColumns(['message','action', 'media', 'created_by_email', 'created_by_phone'])
