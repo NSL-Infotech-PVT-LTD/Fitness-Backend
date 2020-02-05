@@ -82,8 +82,9 @@
                                     <th>Training service details</th>
                                     <th>Hourly Rate</th>
                                     <th>Expertise years</th>
-                                    <th>Profile image.</th>
                                     <th>Created_at</th>
+                                    <th>Profile image.</th>
+                                    
 
 
 
