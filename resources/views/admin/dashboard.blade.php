@@ -35,19 +35,18 @@
 
                             </div>
                         </div>
-                        <div class="col-md-4 widget">
+                         <div class="col-md-4 widget">
                             <div class="stats-left ">
-                               <h5>Not yet started</h5>
-                                <h4>Sessions</h4>
+                                <h5>Expired</h5>
+                                <h4>Events</h4>
                             </div>
                             <div class="stats-right">
-                                <label>{{$session->where('id')->where('start_date','>', \Carbon\Carbon::now())->count()}}</label>
+                                <label>{{$events->where('id')->where('start_date','<=', \Carbon\Carbon::now())->count()}}</label>
 
                             </div>
                         </div>
-
-
-                        <div class="col-md-4 widget">
+                        
+                         <div class="col-md-4 widget">
                             <div class="stats-left ">
                                 <h5>All</h5>
                                 <h4>Spaces</h4>
@@ -58,21 +57,26 @@
                             </div>
                             <div class="clearfix"> </div>	
                         </div>
+<!--                        <div class="col-md-4 widget">
+                            <div class="stats-left ">
+                               <h5>Not yet started</h5>
+                                <h4>Sessions</h4>
+                            </div>
+                            <div class="stats-right">
+                                <label>{{$session->where('id')->where('start_date','>', \Carbon\Carbon::now())->count()}}</label>
+
+                            </div>
+                        </div>-->
+
+
+                       
                     </div>
                     <div class="clearfix"> </div>	
                     <br>
                     <div class="row-one">
-                        <div class="col-md-4 widget">
-                            <div class="stats-left ">
-                                <h5>Expired</h5>
-                                <h4>Events</h4>
-                            </div>
-                            <div class="stats-right">
-                                <label>{{$events->where('id')->where('start_date','<=', \Carbon\Carbon::now())->count()}}</label>
-
-                            </div>
-                        </div>
-                        <div class="col-md-4 widget">
+                       
+                       
+<!--                        <div class="col-md-4 widget">
                             <div class="stats-left ">
                                <h5>Expired</h5>
                                 <h4>Sessions</h4>
@@ -81,7 +85,7 @@
                                 <label>{{$session->where('id')->where('start_date','<=', \Carbon\Carbon::now())->count()}}</label>
 
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>

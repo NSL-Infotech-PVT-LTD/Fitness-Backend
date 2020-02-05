@@ -46,6 +46,8 @@
                                 <tr><th> Price </th><td> ${{ $event->price }} </td></tr>
                                 <tr><th> Created By</th><td>{{$createdBy}}</td></tr>
                                 <tr><th> Sport</th><td>{{$sport}}</td></tr>
+                                <tr><th> Created_at </th><td> {{ $event->created_at }} </td></tr>
+
 
 
 

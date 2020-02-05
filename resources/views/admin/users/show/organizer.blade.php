@@ -32,7 +32,7 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'name', 'email', 'phone', 'location', 'bio', 'expertise_years', 'hourly_rate', 'business_hour_starts', 'business_hour_ends', 'experience_detail', 'training_service_detail'] as $column): ?>
+                                <?php foreach (['id', 'name', 'email', 'phone', 'location', 'bio', 'expertise_years', 'hourly_rate', 'business_hour_starts', 'business_hour_ends', 'experience_detail', 'training_service_detail', 'created_at'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
                                         <td>{{ $user->$column }}</td>
@@ -56,8 +56,8 @@
                                         <?php
                                         $services = [];
                                         foreach ($user->service_ids as $data):
-                                            $services[] = '['.$data->name.'&nbsp;';
-                                            $services[] = $data->price.']&nbsp;&nbsp;';
+                                            $services[] = '[' . $data->name . '&nbsp;';
+                                            $services[] = $data->price . ']&nbsp;&nbsp;';
                                         endforeach;
                                         echo (implode(',', $services));
                                         ?>
@@ -84,8 +84,9 @@
                                     <th>Expertise years</th>
                                     <th>Profile image.</th>
                                     <th>Sports.</th>
-                                    
-                                   
+                                    <th>Created_at</th>
+
+
 
 
                                 </tr>
@@ -93,7 +94,6 @@
                             <tbody>
                                 <?php
                                 foreach ($orgcoach as $org):
-                                   
                                     ?>
                                     <tr>
                                         <td> {{ $org->id }} </td>
@@ -104,21 +104,23 @@
                                         <td> {{ $org->training_service_detail}} </td>
                                         <td> {{ $org->hourly_rate}} </td>
                                         <td> {{ $org->expertise_years}} </td>
-                                        
-                                    
-                                    <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
-                                    <td>
-                                        <?php
-                                        $sports = [];
-                                        foreach ($org->sport_id as $data):
-                                            $sports[] = $data->name;
-                                        endforeach;
-                                        echo (implode(',', $sports));
-                                        ?>
-                                    </td>
-                                </tr>
+                                        <td> {{ $org->created_at}} </td>
 
-                                  
+
+
+                                        <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
+                                        <td>
+                                            <?php
+                                            $sports = [];
+                                            foreach ($org->sport_id as $data):
+                                                $sports[] = $data->name;
+                                            endforeach;
+                                            echo (implode(',', $sports));
+                                            ?>
+                                        </td>
+                                    </tr>
+
+
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
