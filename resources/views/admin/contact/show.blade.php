@@ -36,7 +36,11 @@
                                 <tr><th> Message </th><td> {{ $contact->message }} </td></tr>
                                 <tr><th> Media </th>
                                     <?php if(!empty($contact->media)) { ?>
-                                    <td><img width="50" src="{{url('uploads/contact/'.$contact->media)}}"></td></tr>
+                                    <td><img width="50" src="{{url('uploads/contact/'.$contact->media)}}"></td>
+                                    <?php } else{ ?>
+                            <td><img width="50" src="{{url('noimage.png')}}"></td>  
+                                    <?php } ?>
+                                </tr>
                                 <tr><th> Created By </th><td> {{ $createdBy }} </td></tr>
                                 <tr><th> Created By Email </th><td> {{ $createdEmail }} </td></tr>
                                 <tr><th> Created By Phone</th><td> {{ $createdPhone }} </td></tr>

@@ -26,6 +26,11 @@ class SpacesController extends AdminCommonController {
                             ->editColumn('price_hourly', function($item) {
                                 return ' <i class="fa fa-' . config('app.stripe_default_currency') . '" aria-hidden="true"></i> ' . $item->price_hourly;
                             })
+                            ->editColumn('description', function($item) {
+//                               $return = $item->message;
+                                $return = strlen($item->description) > 10 ? substr($item->description,0,10)."..." : $item->description;
+                                return $return;
+                            })
                             ->addColumn('action', function($item) {
                                 $return = '';
 
@@ -37,7 +42,7 @@ class SpacesController extends AdminCommonController {
                                 $return .= "<a href=" . url('/admin/spaces/' . $item->id) . " title='View Space'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['action','price_hourly'])
+                            ->rawColumns(['action','price_hourly','description'])
                             ->make(true);
         }
         return view('admin.spaces.index', ['rules' => array_keys($this->__rulesforindex)]);
