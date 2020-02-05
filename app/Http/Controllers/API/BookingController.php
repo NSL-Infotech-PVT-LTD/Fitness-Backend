@@ -359,7 +359,7 @@ class BookingController extends ApiController {
         try {
             $user = \App\User::find(Auth::user()->id);
 
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating','created_at');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
@@ -450,7 +450,7 @@ class BookingController extends ApiController {
                 $dataSend[$k]['is_booking_my'] = true;
             endforeach;
 //dd($dataSend);
-            $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating','created_at');
             $booked = $booked->with(['userDetails']);
             $bookSend = [];
 //            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
