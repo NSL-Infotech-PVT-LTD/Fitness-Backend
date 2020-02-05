@@ -38,6 +38,7 @@
                             <tr><th>Open Hours From</th><td> {{ $space->open_hours_from }} </td></tr>
                             <tr><th>Open Hours To</th><td> {{ $space->open_hours_to }}
                             <tr><th> Created By</th><td>{{$createdBy}}</td></tr>
+                            <tr><th> Created_at </th><td> {{ $space->created_at }} </td></tr>
                             <tr><th>Availability Days</th>
                                 <td><?php
                                     $arr = $availability;

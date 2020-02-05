@@ -25,6 +25,8 @@
                                 <tr><th> Booked By </th><td> {{ $userId }} </td></tr>
                                 <tr><th> Created By </th><td> {{ $ownerId }} </td></tr>
                                 <tr><th> Rating </th><td> {{ $booking->rating }} </td></tr>
+                                <tr><th> Created_at </th><td> {{ $booking->created_at }} </td></tr>
+
 
 
 

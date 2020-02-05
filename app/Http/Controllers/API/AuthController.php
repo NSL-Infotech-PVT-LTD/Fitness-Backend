@@ -137,8 +137,9 @@ class AuthController extends ApiController {
             return parent::error('User Not found');
         if ($user->hasRole('athlete') === false)
             return parent::error('Please use valid token');
-        $rules = ['name' => '', 'phone' => 'unique:users,phone,' . $user->id, 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => ''];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        $rules = ['name' => '', 'phone' => 'unique:users,phone,' . $user->id, 'address' => '', 'latitude' => '', 'longitude' => '', 'profile_image' => '','sport_id'=>''];
+      
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;

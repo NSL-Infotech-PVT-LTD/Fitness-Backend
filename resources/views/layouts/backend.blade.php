@@ -77,9 +77,9 @@ new WOW().init();
                             <li>
                                 <a href="{{ url('/admin/spaces') }}"><i class="fa fa-building-o"></i> &nbsp&nbsp&nbsp&nbsp Spaces</a>
                             </li>
-                            <li>
+<!--                            <li>
                                 <a href="{{ url('/admin/session') }}"><i class="fa fa-clock-o"></i>&nbsp&nbsp&nbsp&nbsp Session</a>
-                            </li>
+                            </li>-->
 
                             <li>
                                 <a href="{{ url('/admin/bookings') }}"><i class="fa fa-list-alt"></i>&nbsp&nbsp&nbsp&nbsp Bookings</a>
