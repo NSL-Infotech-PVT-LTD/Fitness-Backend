@@ -83,7 +83,6 @@
                                     <th>Hourly Rate</th>
                                     <th>Expertise years</th>
                                     <th>Profile image.</th>
-                                    <th>Sports.</th>
                                     <th>Created_at</th>
 
 
