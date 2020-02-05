@@ -109,15 +109,7 @@
 
 
                                         <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
-                                        <td>
-                                            <?php
-                                            $sports = [];
-                                            foreach ($org->sport_id as $data):
-                                                $sports[] = $data->name;
-                                            endforeach;
-                                            echo (implode(',', $sports));
-                                            ?>
-                                        </td>
+                                       
                                     </tr>
 
 
