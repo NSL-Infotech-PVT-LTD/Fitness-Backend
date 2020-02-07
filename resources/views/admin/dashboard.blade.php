@@ -34,7 +34,7 @@
                                 <label>{{$events->where('id')->where('start_date','>', \Carbon\Carbon::now())->count()}}</label>
 
                             </div>
-                        </div>
+                        </div> 
                         <div class="col-md-4 widget">
                             <div class="stats-left ">
                                 <h5>Activate</h5>
