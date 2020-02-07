@@ -29,10 +29,11 @@
                             <td><img width="50" src="{{url('noimage.png')}}"></td>  
                                     <?php } ?>
                                 </tr>
-                                <tr><th> Created By </th><td> {{ $createdBy }} </td></tr>
-                                <tr><th> Created By Email </th><td> {{ $createdEmail }} </td></tr>
-                                <tr><th> Created By Phone</th><td> {{ $createdPhone }} </td></tr>
-                                <tr><th> Created At</th><td> {{ $contact->created_at }} </td></tr>
+                                <tr><th> Sender's Name </th><td> {{ $createdBy }} </td></tr>
+                                <tr><th> Sender's Email </th><td> {{ $createdEmail }} </td></tr>
+                                <tr><th> Sender's Phone</th><td> {{ $createdPhone }} </td></tr>
+                                <tr><th> Send At</th><td> {{ $contact->created_at }} </td></tr>
+                                <tr><th> Sender Type</th><td> {{ $createdType }} </td></tr>
 
                             </tbody>
                         </table>

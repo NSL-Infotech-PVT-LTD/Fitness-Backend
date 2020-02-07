@@ -9,6 +9,7 @@ use App\User;
 use App\Event;
 use App\Session;
 use App\Space;
+use App\BookingSpace;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -31,15 +32,11 @@ class BookingController extends AdminCommonController {
                                 $event = \App\Event::select('name')->where('id', $item->target_id)->first();
                                 $session = \App\Session::select('name')->where('id', $item->target_id)->first();
                                 $space = \App\Space::select('name')->where('id', $item->target_id)->first();
-                                if ( $item->type == 'event')
-                                {
+                                if ($item->type == 'event') {
                                     return $event->name;
-                                }
-                                elseif ($item->type == 'session'){
+                                } elseif ($item->type == 'session') {
                                     return $session->name;
-                                }
-                                else
-                                {
+                                } else {
                                     return $space->name;
                                 }
                             })
@@ -56,11 +53,11 @@ class BookingController extends AdminCommonController {
                                 $return .= " <a href=" . url('/admin/bookings/' . $item->id) . " title='View Booking'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['action', 'target_id','user_id', 'owner_id'])
+                            ->rawColumns(['action', 'target_id', 'user_id', 'owner_id'])
                             ->make(true);
         }
         return view('admin.bookings.index', ['rules' => array_keys($this->__rulesforindex)]);
-    } 
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -97,16 +94,25 @@ class BookingController extends AdminCommonController {
      */
     public function show($id) {
         $booking = Booking::findOrFail($id);
-        $targetId = Event::where('id', $booking->target_id)->value('name');
-        $targetId = Session::where('id', $booking->target_id)->value('name');
-        $targetId = Space::where('id', $booking->target_id)->value('name');
+        $targetIdEvent = Event::where('id', $booking->target_id)->value('name');
+        $targetIdSession = Session::where('id', $booking->target_id)->value('name');
+        $targetIdSpace = Space::where('id', $booking->target_id)->value('name');
         $userId = User::where('id', $booking->user_id)->value('name');
         $ownerId = User::where('id', $booking->owner_id)->value('name');
+        $price = Event::where('id', $booking->target_id)->value('price');
+        $spacedate = BookingSpace::where('booking_id', $booking->id)->value('booking_date');
+        $spacetimefrom = BookingSpace::where('booking_id', $booking->id)->value('from_time');
+        $spacetimeto = BookingSpace::where('booking_id', $booking->id)->value('to_time');
+        $spaceprice = Space::where('id', $booking->target_id)->value('price_hourly');
+
+
+
+
 
 
 
 //dd($createdBy);
-        return view('admin.bookings.show', compact('booking', 'targetId', 'userId', 'ownerId'));
+        return view('admin.bookings.show', compact('booking', 'targetIdEvent', 'targetIdSession', 'targetIdSpace', 'userId', 'ownerId', 'price', 'spacedate', 'spacetimefrom', 'spacetimeto','spaceprice'));
     }
 
     /**

@@ -84,7 +84,7 @@
                                     <th>Expertise years</th>
                                     <th>Created_at</th>
                                     <th>Profile image.</th>
-                                    
+
 
 
 
@@ -106,14 +106,14 @@
                                         <td> {{ $org->expertise_years}} </td>
                                         <td> {{ $org->created_at}} </td>
 
+                                
+
+                                <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
+
+                                </tr>
 
 
-                                        <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
-                                       
-                                    </tr>
-
-
-                                <?php endforeach; ?>
+                            <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

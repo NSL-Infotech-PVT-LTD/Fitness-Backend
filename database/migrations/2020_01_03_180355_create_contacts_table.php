@@ -15,8 +15,8 @@ class CreateContactsTable extends Migration {
             $table->increments('id');
             $table->text('message')->nullable();
             $table->text('media')->nullable();
-            $table->bigInteger('created_by')->unsigned()->index();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->bigInteger('sender_name')->unsigned()->index();
+            $table->foreign('sender_name')->references('id')->on('users')->onDelete('cascade');
             \App\Helpers\DbExtender::defaultParams($table);
         });
     }
