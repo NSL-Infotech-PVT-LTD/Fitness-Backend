@@ -2,6 +2,12 @@
 @section('content')
 <div class="container">
     <div class="row">
+        <?php
+        $current = \Carbon\Carbon::now();
+        $date = $current->toDateString();
+        $time = $current->toTimeString();
+//        dd($time);
+        ?>
         @include('admin.sidebar')
         <div class="col-md-9">
             <div class="card">
@@ -27,22 +33,22 @@
 
                         <div class="col-md-4 widget">
                             <div class="stats-left ">
-                                <h5>Not Yet Activate</h5>
+                                <h5>Not Yet Activated</h5>
                                 <h4>Events</h4>
                             </div>
                             <div class="stats-right">
-                                <label>{{$events->where('id')->where('start_date','>', \Carbon\Carbon::now())->count()}}</label>
+                                <label>{{$events->where('id')->where('start_date','>',$date)->count()}}</label>
 
                             </div>
                         </div> 
                         <div class="col-md-4 widget">
                             <div class="stats-left ">
-                                <h5>Activate</h5>
+                                <h5>Activated</h5>
                                 <h4>Events</h4>
                             </div>
                             <div class="stats-right">
-                                <label>{{$events->where('id')->where('start_date','=', \Carbon\Carbon::now())->count()}}</label>
-Runner.prototype.gameOver = function() {console.log("TechSpartan")}
+
+                                <label>{{$events->where('id')->where('start_date','=',$date)->count()}}</label>
                             </div>
                         </div>
                         <div class="col-md-4 widget">
@@ -51,11 +57,11 @@ Runner.prototype.gameOver = function() {console.log("TechSpartan")}
                                 <h4>Events</h4>
                             </div>
                             <div class="stats-right">
-                                <label>{{$events->where('id')->where('start_date','<=', \Carbon\Carbon::now())->count()}}</label>
+                                <label>{{$events->where('id')->where('start_date','<',$date)->count()}}</label>
 
                             </div>
                         </div>
-
+                        <div class="clearfix"> </div>
                         <div class="col-md-4 widget">
                             <div class="stats-left ">
                                 <h5>All</h5>
