@@ -6,6 +6,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Contact;
 use App\User;
+use App\Role;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -16,7 +17,7 @@ class ContactController extends AdminCommonController {
      *
      * @return \Illuminate\View\View
      */
-    protected $__rulesforindex = ['message' => 'required', 'media' => 'required', 'created_by' => 'required'];
+    protected $__rulesforindex = ['message' => 'required', 'media' => 'required', 'sender_name' => 'required'];
 
     public function index(Request $request) {
         if ($request->ajax()) {
@@ -25,19 +26,19 @@ class ContactController extends AdminCommonController {
                             ->addIndexColumn()
                             ->editColumn('message', function($item) {
 //                               $return = $item->message;
-                                $return = strlen($item->message) > 10 ? substr($item->message,0,10)."..." : $item->message;
+                                $return = strlen($item->message) > 10 ? substr($item->message, 0, 10) . "..." : $item->message;
                                 return $return;
                             })
-                            ->editColumn('created_by', function($item) {
-                                $return = \App\User::select('name')->where('id', $item->created_by)->first();
+                            ->editColumn('sender_name', function($item) {
+                                $return = \App\User::select('name')->where('id', $item->sender_name)->first();
                                 return $return->name;
                             })
-                            ->addColumn('created_by_email', function($item) {
-                                $return = \App\User::select('email')->where('id', $item->created_by)->first();
+                            ->addColumn('sender_email', function($item) {
+                                $return = \App\User::select('email')->where('id', $item->sender_name)->first();
                                 return $return->email;
                             })
-                            ->addColumn('created_by_phone', function($item) {
-                                $return = \App\User::select('phone')->where('id', $item->created_by)->first();
+                            ->addColumn('sender_phone', function($item) {
+                                $return = \App\User::select('phone')->where('id', $item->sender_name)->first();
                                 return $return->phone;
                             })
                             ->editColumn('media', function($item) {
@@ -50,7 +51,7 @@ class ContactController extends AdminCommonController {
                                 $return .= " <a href=" . url('/admin/contact/' . $item->id) . " title='View Query'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['message','action', 'media', 'created_by_email', 'created_by_phone'])
+                            ->rawColumns(['message', 'action', 'media', 'sender_email', 'sender_phone'])
                             ->make(true);
         }
         return view('admin.contact.index', ['rules' => array_keys($this->__rulesforindex)]);
@@ -93,13 +94,17 @@ class ContactController extends AdminCommonController {
      */
     public function show($id) {
         $contact = Contact::findOrFail($id);
-        $createdBy = User::where('id', $contact->created_by)->value('name');
-        $createdEmail = User::where('id', $contact->created_by)->value('email');
-        $createdPhone = User::where('id', $contact->created_by)->value('phone');
+        $createdBy = User::where('id', $contact->sender_name)->value('name');
+        $createdEmail = User::where('id', $contact->sender_name)->value('email');
+        $createdPhone = User::where('id', $contact->sender_name)->value('phone');
+        $roleusersSA = \DB::table('role_user')->where('user_id', User::where('id', $contact->sender_name)->first()->id)->pluck('role_id');
+        $createdType = Role::where('id', $roleusersSA)->value('name');
+//dd($createdType);
 
 
 
-        return view('admin.contact.show', compact('contact', 'createdBy', 'createdEmail', 'createdPhone'));
+
+        return view('admin.contact.show', compact('contact', 'createdBy', 'createdEmail', 'createdPhone', 'createdType'));
     }
 
     /**

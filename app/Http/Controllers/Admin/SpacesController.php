@@ -11,6 +11,7 @@ use DataTables;
 
 class SpacesController extends AdminCommonController {
 
+    
     /**
      * Display a listing of the resource.
      *

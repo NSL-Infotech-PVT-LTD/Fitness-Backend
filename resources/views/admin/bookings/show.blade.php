@@ -21,12 +21,41 @@
                                     <th>ID</th><td>{{ $booking->id }}</td>
                                 </tr>
                                 <tr><th> Type </th><td> {{ $booking->type }} </td></tr>
-                                <tr><th> Target Name </th><td> {{ $targetId}} </td></tr>
+                                <tr><th> Target Name </th> 
+                                    <?php
+                                    if ($booking->type == 'event') {
+                                        ?>
+                                        <td>{{$targetIdEvent}}</td>
+                                    <?php } elseif ($booking->type == 'session') {
+                                        ?>
+                                        <td>{{$targetIdSession}}</td>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <td>{{$targetIdSpace}}</td>
+                                    <?php }
+                                    ?>
+                                </tr>
                                 <tr><th> Booked By </th><td> {{ $userId }} </td></tr>
-                                <tr><th> Created By </th><td> {{ $ownerId }} </td></tr>
+                                <tr><th> Created By </th><td>{{$ownerId}}</td></tr>
                                 <tr><th> Rating </th><td> {{ $booking->rating }} </td></tr>
                                 <tr><th> Booked At </th><td> {{ $booking->created_at }} </td></tr>
-
+                                <?php
+                                if ($booking->type == 'event') {
+                                    ?>
+                                    <tr><th> Seats Booked </th><td> {{ $booking->tickets }} </td></tr>
+                                    <tr><th> Price </th><td> {{ $price }} </td></tr>
+                                <?php }
+                                ?>
+                                <?php
+                                if ($booking->type == 'space') {
+                                    ?>
+                                    <tr><th> Booked Date </th><td> {{ $spacedate }} </td></tr>
+                                    <tr><th> Booked From </th><td> {{ $spacetimefrom }} </td></tr>
+                                    <tr><th> Booked To </th><td> {{ $spacetimeto }} </td></tr>
+                                    <tr><th> Booking price hourly </th><td> {{ $spaceprice }} </td></tr>
+                                <?php }
+                                ?>
 
 
 

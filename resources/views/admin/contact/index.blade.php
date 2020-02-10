@@ -21,9 +21,9 @@
                                     <th>{{ucfirst($rule)}}</th>
                                 <?php endforeach; ?>
 
-                                <th>created_by_email</th>
+                                <th>Sender's Email</th>
 
-                                <th>created_by_phone</th>
+                                <th>Sender's Phone</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -47,17 +47,17 @@
                     {data: 'media', name: 'media', orderable: false, searchable: false},
     <?php elseif ($rule == 'message'): ?>
                     {data: 'message', name: 'message', orderable: false, searchable: false},
-    <?php elseif ($rule == 'created_by'): ?>
-                    {data: 'created_by', name: 'created_by', orderable: false, searchable: false},
+    <?php elseif ($rule == 'sender_name'): ?>
+                    {data: 'sender_name', name: 'sender_name', orderable: false, searchable: false},
     <?php else: ?>
                     {data: "{{$rule}}", name: "{{$rule}}"},
     <?php endif; ?>
 <?php endforeach; ?>
 
-            {data: 'created_by_email', name: 'action', orderable: false, searchable: false
+            {data: 'sender_email', name: 'action', orderable: false, searchable: false
             }
             ,
-            {data: 'created_by_phone', name: 'action', orderable: false, searchable: false
+            {data: 'sender_phone', name: 'action', orderable: false, searchable: false
             }
             ,
             {data: 'action', name: 'action', orderable: false, searchable: false

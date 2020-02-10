@@ -29,7 +29,7 @@ class Contact extends Model
      *
      * @var array
      */
-    protected $fillable = ['message', 'media', 'created_by'];
+    protected $fillable = ['message', 'media', 'sender_name'];
 
     
 

@@ -20,7 +20,7 @@ class ContactController extends ApiController {
         endif;
         try {
             $input = $request->all();
-            $input['created_by'] = \Auth::id();
+            $input['sender_name'] = \Auth::id();
             if (isset($request->media))
             $input['media'] = parent::__uploadImage($request->file('media'), public_path('uploads/contact'), false);
             $contact = MyModel::create($input);
