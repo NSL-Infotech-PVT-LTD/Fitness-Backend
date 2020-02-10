@@ -54,10 +54,10 @@
     <?php endif; ?>
 <?php endforeach; ?>
 
-            {data: 'sender_email', name: 'action', orderable: false, searchable: false
+            {data: 'sender_email', name: 'sender_email', orderable: false, searchable: false
             }
             ,
-            {data: 'sender_phone', name: 'action', orderable: false, searchable: false
+            {data: 'sender_phone', name: 'sender_phone', orderable: false, searchable: false
             }
             ,
             {data: 'action', name: 'action', orderable: false, searchable: false
