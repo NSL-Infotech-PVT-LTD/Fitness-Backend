@@ -51,7 +51,7 @@ class ContactController extends AdminCommonController {
                                 $return .= " <a href=" . url('/admin/contact/' . $item->id) . " title='View Query'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
-                            ->rawColumns(['message', 'action', 'media', 'sender_email', 'sender_phone'])
+                            ->rawColumns(['message', 'action', 'media','sender_name', 'sender_email', 'sender_phone'])
                             ->make(true);
         }
         return view('admin.contact.index', ['rules' => array_keys($this->__rulesforindex)]);
