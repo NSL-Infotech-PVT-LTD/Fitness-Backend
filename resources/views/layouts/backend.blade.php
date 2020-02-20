@@ -59,11 +59,11 @@ new WOW().init();
                                 <a href="{{ url('/admin') }}"><i class="fa fa-home nav_icon"></i>Dashboard</a>
                             </li>
                             <li>
-                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>users<span class=""></span></a>
+                                <a href="{{ url('admin/users/role/1') }}"><i class="fa fa-user nav_icon"></i>Users<span class=""></span></a>
                                 <ul class="nav nav-second-level collapse">
                                     <?php foreach (\App\Role::all() as $role): ?>
                                         <li>
-                                            <a href="{{ url('admin/users/role/'.$role->id) }}">{{$role->name}}<span class=""></span></a>
+                                            <a href="{{ url('admin/users/role/'.$role->id) }}">{{ucfirst($role->name)}}<span class=""></span></a>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>

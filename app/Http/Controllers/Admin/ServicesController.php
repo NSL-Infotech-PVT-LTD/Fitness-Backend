@@ -132,12 +132,8 @@ class ServicesController extends AdminCommonController {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id) {
-        if (Service::destroy($id)) {
-            $data = 'Success';
-        } else {
-            $data = 'Failed';
-        }
-        return response()->json($data);
+        if (Service::destroy($id)) 
+           return redirect('admin/events')->with('flash_message', 'Event deleted!');
     }
 
     public function changeStatus(Request $request) {

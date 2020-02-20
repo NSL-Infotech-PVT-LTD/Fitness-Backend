@@ -32,16 +32,39 @@
                             <thead>
                             </thead>
                             <tbody>
-                                <?php foreach (['id', 'full_name', 'email'] as $column): ?>
+                                <?php foreach (['id', 'name', 'bio', 'profession', 'experience_detail', 'training_service_detail', 'hourly_rate', 'expertise_years', 'created_at'] as $column): ?>
                                     <tr>
                                         <th>{{ucfirst(str_replace('_',' ',$column))}}.</th>
-                                        <td>{{ $user->$column }}</td>
+                                        <td>{{ $org->$column }}</td>
                                     </tr>
                                 <?php endforeach; ?>
+                                <tr>
+                                    <th>Profile Image.</th>
+                                    <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
+                                    <td>
+                                </tr>
+
+
+                                <tr>
+                                    <th>Sports.</th>
+
+                                    <td>
+                                        <?php
+                                        $sports = [];
+                                        foreach ($org->sport_id as $data):
+                                            $sports[] = $data->name;
+                                        endforeach;
+                                        echo (implode(',', $sports));
+                                        ?>
+                                    </td>
+                                </tr>
+
+
 
                             </tbody>
                         </table>
                     </div>
+
 
                 </div>
             </div>
