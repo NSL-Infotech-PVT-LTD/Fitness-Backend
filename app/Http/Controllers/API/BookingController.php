@@ -16,6 +16,7 @@ use Validator;
 use DB;
 use Auth;
 
+
 class BookingController extends ApiController {
 
     private $_MSGCreate = ['title' => 'Hurray!', 'body' => 'You got new Booking'];
