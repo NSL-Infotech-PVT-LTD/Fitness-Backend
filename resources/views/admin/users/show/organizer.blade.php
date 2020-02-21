@@ -50,14 +50,27 @@
                                 </tr>
 
                                 <tr>
-                                    <th>Service Id Name.</th>
+                                    <th>Service Name.</th>
 
                                     <td>
                                         <?php
                                         $services = [];
                                         foreach ($user->service_ids as $data):
-                                            $services[] = '[' . $data->name . '&nbsp;';
-                                            $services[] = $data->price . ']&nbsp;&nbsp;';
+                                            $services[] = $data->name;
+                                        endforeach;
+                                        echo (implode(',', $services));
+                                        ?>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Service Price.</th>
+
+                                    <td>
+                                        <?php
+                                        $services = [];
+                                        foreach ($user->service_ids as $data):
+                                            $services[] = '$' . $data->price;
                                         endforeach;
                                         echo (implode(',', $services));
                                         ?>
@@ -84,7 +97,7 @@
                                     <th>Expertise years</th>
                                     <th>Created_at</th>
                                     <th>Profile image.</th>
-
+                                    <th>Sports.</th>
 
 
 
@@ -106,14 +119,22 @@
                                         <td> {{ $org->expertise_years}} </td>
                                         <td> {{ $org->created_at}} </td>
 
-                                
-
-                                <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
-
-                                </tr>
 
 
-                            <?php endforeach; ?>
+                                        <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
+                                        <td>
+                                            <?php
+                                            $sports = [];
+                                            foreach ($org->sport_id as $data):
+                                                $sports[] =  $data->name;
+                                            endforeach;
+                                            echo (implode(',', $sports));
+                                            ?>
+                                        </td>
+                                    </tr>
+
+
+<?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

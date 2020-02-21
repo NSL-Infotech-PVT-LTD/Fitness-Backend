@@ -16,6 +16,7 @@ use Validator;
 use DB;
 use Auth;
 
+
 class BookingController extends ApiController {
 
     private $_MSGCreate = ['title' => 'Hurray!', 'body' => 'You got new Booking'];
@@ -89,8 +90,7 @@ class BookingController extends ApiController {
 
     public function spacestore(Request $request) {
 
-        $rules = ['type' => 'required|in:space', 'target_id' => 'required', 'user_id' => '', 'price' => 'required',
-            'payment_details' => '', 'token' => 'required', 'status' => 'required', 'booking' => 'required'];
+        $rules = ['type' => 'required|in:space', 'target_id' => 'required', 'user_id' => '', 'price' => 'required','token' => 'required', 'status' => 'required', 'booking' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
