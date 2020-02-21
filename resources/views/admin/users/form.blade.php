@@ -9,7 +9,7 @@
     {!! Form::email('email', null, ['class' => 'form-control', 'required' => 'required']) !!}
     {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
 </div>
-<!--<div class="form-group{{ $errors->has('password') ? ' has-error' : ''}}">
+<div class="form-group{{ $errors->has('password') ? ' has-error' : ''}}">
     {!! Form::label('password', 'Password: ', ['class' => 'control-label']) !!}
     @php
         $passwordOptions = ['class' => 'form-control'];
@@ -19,7 +19,7 @@
     @endphp
     {!! Form::password('password', $passwordOptions) !!}
     {!! $errors->first('password', '<p class="help-block">:message</p>') !!}
-</div>-->
+</div>
 
 
 <!--div class="form-group{{ $errors->has('experience') ? ' has-error' : ''}}">
