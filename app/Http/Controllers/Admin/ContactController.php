@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Contact;
 use App\User;
 use App\Role;
-use App\Contact;
 use Illuminate\Http\Request;
 use DataTables;
 
