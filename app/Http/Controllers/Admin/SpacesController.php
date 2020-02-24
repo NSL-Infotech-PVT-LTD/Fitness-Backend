@@ -17,7 +17,7 @@ class SpacesController extends AdminCommonController {
      *
      * @return \Illuminate\View\View
      */
-    protected $__rulesforindex = ['name' => 'required', 'description' => 'required', 'price_hourly' => 'required'];
+    protected $__rulesforindex = ['name' => 'required', 'description' => 'required', 'price_hourly' => 'required','price_daily'=>'required'];
 
     public function index(Request $request) {
         if ($request->ajax()) {

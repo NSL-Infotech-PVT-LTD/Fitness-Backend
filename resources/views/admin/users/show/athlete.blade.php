@@ -40,7 +40,7 @@
                                 <?php endforeach; ?>
                                 <tr>
                                     <th>Profile Image.</th>
-                                    <td><img width="100" src="{{url('uploads/athlete/profile_image/'.$user->profile_image)}}"></td>
+                                    <td><img width="150" src="{{url('uploads/athlete/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
 
                             </tbody>
