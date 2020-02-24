@@ -74,7 +74,10 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('received/bookings','API\BookingController@receivedBookings');
     Route::post('coach/availability', 'API\CoachBookingController@getavailable');
     Route::post('coach/booking', 'API\CoachBookingController@store');
+   
+    
 });
+Route::post('coach/detail/any','API\AuthController@getcoachdetail');
 
 Route::post('reset/password', 'API\AuthController@resetPassword');
 Route::post('coach/register', 'API\AuthController@CoachRegister');

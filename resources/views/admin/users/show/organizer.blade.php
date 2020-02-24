@@ -40,7 +40,7 @@
                                 <?php endforeach; ?>
                                 <tr>
                                     <th>Profile Image.</th>
-                                    <td><img width="100" src="{{url('uploads/organiser/profile_image/'.$user->profile_image)}}"></td>
+                                    <td><img width="150" src="{{url('uploads/organiser/profile_image/'.$user->profile_image)}}"></td>
                                 </tr>
 
                                 <tr>
@@ -121,7 +121,7 @@
 
 
 
-                                        <td><img width="100" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
+                                        <td><img width="150" src="{{url('uploads/organiserCoach/profile_image/'.$org->profile_image)}}"></td>
                                         <td>
                                             <?php
                                             $sports = [];

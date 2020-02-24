@@ -421,6 +421,7 @@ class AuthController extends ApiController {
         endif;
         // dd($category_id);
         try {
+           
             $user = \App\User::findOrFail(\Auth::id());
             if ($user->hasRole('coach') === false)
                 return parent::error('Please use valid auth token');
@@ -444,6 +445,35 @@ class AuthController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
+    
+     public function getcoachdetail(Request $request) {
+         
+  
+        $rules = ['id'=>'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+           
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+         
+            $model = new \App\User();
+         
+            $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
+            $model = $model->wherein('users.id', $roleusersSA)
+                    ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')
+                    ->Select('users.id', 'users.name', 'users.email', 'users.phone', 'users.location', 'users.latitude', 'users.longitude', 'users.profile_image', 'users.business_hour_starts', 'users.business_hour_ends', 'users.bio', 'users.expertise_years', 'users.sport_id', 'users.hourly_rate', 'users.service_ids', 'users.profession', 'users.experience_detail', 'users.training_service_detail', 'users.police_doc', \DB::raw('AVG(bookings.rating) as rating'));
+            $model = $model->groupBy('users.id');
+             $model = $model->where('users.id', $request->id);
+          
+          
+            return parent::success($model->first());
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
 
     public function getorganiser(Request $request) {
 
