@@ -177,9 +177,8 @@ class CoachBookingController extends ApiController {
 //            ->where('start_date', '<=', '2020-03-20')
 //            ->where('end_date', '>=', '2020-03-20');
              ->whereRaw('"'.$request->date.'" between `start_date` and `end_date`');
-    
             $events = $events->get();
-           
+//           dd();
 //            dd($events->pluck('start_date')->toarray());
             $bookedeventslotss = [];
 
@@ -192,10 +191,10 @@ class CoachBookingController extends ApiController {
             $eventslots = self::splitTimeWithBookedhours($event->first()->start_time, $event->first()->end_time, 1 * 60, $bookedeventslotss);
 //            dd($bookedeventslotss);
             //event slots end//
-            
+            $php = [$bookedeventslotss,$events->first()];
            
 
-            $c = array_merge($available, $bookedeventslotss);
+            $c = array_merge($available, $php);
 //dd($c);
 //            dd($c);
             return parent::success(['available_slot' => $c]);
