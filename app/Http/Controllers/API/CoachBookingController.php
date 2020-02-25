@@ -84,7 +84,7 @@ class CoachBookingController extends ApiController {
         return $rr;
     }
 
-    public function getavailable(Request $request) {
+    public function getavailablee(Request $request) {
 //        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
         $rules = ['coach_id' => 'required|exists:users,id', 'date' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
@@ -126,8 +126,82 @@ class CoachBookingController extends ApiController {
             return parent::error($ex->getMessage());
         }
     }
+
+    public function getavailable(Request $request) {
+//        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
+        $rules = ['coach_id' => 'required|exists:users,id', 'date' => 'required'];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $user = \App\User::find(Auth::user()->id);
+
+
+            //event slots start//
+            $eventbooking = new \App\Booking();
+            $eventbooking = $eventbooking->where('owner_id', $request->coach_id);
+            $eventbookingIds = $eventbooking->get()->pluck('target_id')->toarray();
+//             dd($eventbookingIds);
+            $events = new \App\Event();
+//            $events = \App\Event::whereIn('id', $eventbookingIds)->whereDate('start_date', $request->date);
+            $events = \App\Event::whereIn('id', $eventbookingIds)
+//            ->where('start_date', '<=', '2020-03-20')
+//            ->where('end_date', '>=', '2020-03-20');
+             ->whereRaw('"'.$request->date.'" between `start_date` and `end_date`');
     
-     public function store(Request $request) {
+            $events = $events->get();
+            if ($events->isEmpty())
+                return parent::error('sorry');
+
+//            dd($events->pluck('start_date')->toarray());
+            $bookedeventslotss = [];
+
+
+            foreach ($events as $event):
+                $bookedeventslotss[] = [$event->start_time, $event->end_time];
+//           dd($event);
+            endforeach;
+            $eventslots = self::splitTimeWithBookedhours($event->first()->start_time, $event->first()->end_time, 1 * 60, $bookedeventslotss);
+//            dd($bookedeventslotss);
+            //event slots end//
+            $model = new \App\User();
+            $model = $model->where('id', $request->coach_id);
+            $requestDay = date('N', strtotime($request->date));
+//            dd(json_decode($model->first()->availability_week));
+//            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
+
+            $booking = new \App\CoachBooking();
+            $booking = $booking->where('coach_id', $request->coach_id);
+            $bookingIds = $booking->get()->pluck('id')->toarray();
+//             dd($bookingIds);
+            $bookingspaces = \App\CoachBookingDetail::whereIn('booking_id', $bookingIds)->whereDate('booking_date', $request->date);
+            $bookingspaces = $bookingspaces->get();
+//            dd($bookingspace->pluck('from_time')->toarray());
+            $bookedslotss = [];
+
+
+            foreach ($bookingspaces as $bookingspace):
+                $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
+            endforeach;
+//            dd($bookingspaces);
+            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
+//            dd($slots);
+            $available = [];
+            foreach ($slots as $slot):
+                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
+            endforeach;
+            $c = array_merge($available, $bookedeventslotss);
+//dd($c);
+//            dd($c);
+            return parent::success(['available_slot' => $c]);
+        } catch (\Exception $ex) {
+
+            return parent::error($ex->getMessage());
+        }
+    }
+
+    public function store(Request $request) {
 
         $rules = ['coach_id' => 'required', 'service_id' => 'required', 'price' => '', 'token' => 'required', 'booking' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -141,7 +215,7 @@ class CoachBookingController extends ApiController {
                 return parent::error('Please add token');
             $input = $request->all();
             $input['athlete_id'] = \Auth::id();
-                $targetModel = new \App\User();
+            $targetModel = new \App\User();
             $targetModeldata = $targetModel->whereId($request->coach_id)->get();
             if ($targetModeldata->isEmpty())
                 return parent::error('Please use valid coach id');
@@ -151,9 +225,9 @@ class CoachBookingController extends ApiController {
 //            endif;
 //
 //            dd($targetModelupdate);
-          
 
-           
+
+
             $booking = \App\CoachBooking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -176,13 +250,12 @@ class CoachBookingController extends ApiController {
             $targetModelupdate = $targetModel->findOrFail($request->coach_id);
             $targetModelupdate->save();
             /*             * ***target model update end*** */
-           
+
 
             return parent::successCreated(['message' => 'Booked Successfully', 'booking' => $booking]);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-
 
 }
