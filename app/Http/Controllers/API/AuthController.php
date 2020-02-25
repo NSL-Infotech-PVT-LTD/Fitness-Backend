@@ -456,9 +456,8 @@ class AuthController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-         
+            
             $model = new \App\User();
-         
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'coach')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
                     ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')

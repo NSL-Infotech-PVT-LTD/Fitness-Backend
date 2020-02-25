@@ -23,7 +23,6 @@ class BookingController extends ApiController {
     private $_MSGAthCreate = ['title' => 'Hurray!', 'body' => 'Your Booking is confirmed'];
 
     public function store(Request $request) {
-
         $rules = ['type' => 'required|in:event,session', 'target_id' => 'required', 'user_id' => '', 'tickets' => '', 'price' => 'required',
             'payment_details' => '', 'token' => 'required', 'status' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
