@@ -138,33 +138,7 @@ class CoachBookingController extends ApiController {
             $user = \App\User::find(Auth::user()->id);
 
 
-            //event slots start//
-            $eventbooking = new \App\Booking();
-            $eventbooking = $eventbooking->where('owner_id', $request->coach_id);
-            $eventbookingIds = $eventbooking->get()->pluck('target_id')->toarray();
-//             dd($eventbookingIds);
-            $events = new \App\Event();
-//            $events = \App\Event::whereIn('id', $eventbookingIds)->whereDate('start_date', $request->date);
-            $events = \App\Event::whereIn('id', $eventbookingIds)
-//            ->where('start_date', '<=', '2020-03-20')
-//            ->where('end_date', '>=', '2020-03-20');
-             ->whereRaw('"'.$request->date.'" between `start_date` and `end_date`');
-    
-            $events = $events->get();
-            if ($events->isEmpty())
-                return parent::error('sorry');
-
-//            dd($events->pluck('start_date')->toarray());
-            $bookedeventslotss = [];
-
-
-            foreach ($events as $event):
-                $bookedeventslotss[] = [$event->start_time, $event->end_time];
-//           dd($event);
-            endforeach;
-            $eventslots = self::splitTimeWithBookedhours($event->first()->start_time, $event->first()->end_time, 1 * 60, $bookedeventslotss);
-//            dd($bookedeventslotss);
-            //event slots end//
+          
             $model = new \App\User();
             $model = $model->where('id', $request->coach_id);
             $requestDay = date('N', strtotime($request->date));
@@ -191,6 +165,36 @@ class CoachBookingController extends ApiController {
             foreach ($slots as $slot):
                 $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
             endforeach;
+            
+              //event slots start//
+            $eventbooking = new \App\Booking();
+            $eventbooking = $eventbooking->where('owner_id', $request->coach_id);
+            $eventbookingIds = $eventbooking->get()->pluck('target_id')->toarray();
+//             dd($eventbookingIds);
+            $events = new \App\Event();
+//            $events = \App\Event::whereIn('id', $eventbookingIds)->whereDate('start_date', $request->date);
+            $events = \App\Event::whereIn('id', $eventbookingIds)
+//            ->where('start_date', '<=', '2020-03-20')
+//            ->where('end_date', '>=', '2020-03-20');
+             ->whereRaw('"'.$request->date.'" between `start_date` and `end_date`');
+    
+            $events = $events->get();
+           
+//            dd($events->pluck('start_date')->toarray());
+            $bookedeventslotss = [];
+
+  if ($events->isEmpty())
+                return parent::success(['available_slot' => $available]);
+            foreach ($events as $event):
+                $bookedeventslotss[] = [$event->start_time, $event->end_time];
+//           dd($event);
+            endforeach;
+            $eventslots = self::splitTimeWithBookedhours($event->first()->start_time, $event->first()->end_time, 1 * 60, $bookedeventslotss);
+//            dd($bookedeventslotss);
+            //event slots end//
+            
+           
+
             $c = array_merge($available, $bookedeventslotss);
 //dd($c);
 //            dd($c);
