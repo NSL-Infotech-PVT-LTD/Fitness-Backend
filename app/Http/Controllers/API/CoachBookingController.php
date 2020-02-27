@@ -138,7 +138,7 @@ class CoachBookingController extends ApiController {
             $user = \App\User::find(Auth::user()->id);
 
 
-          
+
             $model = new \App\User();
             $model = $model->where('id', $request->coach_id);
             $requestDay = date('N', strtotime($request->date));
@@ -158,15 +158,15 @@ class CoachBookingController extends ApiController {
             foreach ($bookingspaces as $bookingspace):
                 $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
             endforeach;
-//            dd($bookingspaces);
-            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
-//            dd($slots);
-            $available = [];
-            foreach ($slots as $slot):
-                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
-            endforeach;
-            
-              //event slots start//
+//            dd(+$bookedslotss+
+//            );
+//            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
+////            dd($slots);
+//            $available = [];
+//            foreach ($slots as $slot):
+//                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
+//            endforeach;
+            //event slots start//
             $eventbooking = new \App\Booking();
             $eventbooking = $eventbooking->where('owner_id', $request->coach_id);
             $eventbookingIds = $eventbooking->get()->pluck('target_id')->toarray();
@@ -174,29 +174,30 @@ class CoachBookingController extends ApiController {
             $events = new \App\Event();
 //            $events = \App\Event::whereIn('id', $eventbookingIds)->whereDate('start_date', $request->date);
             $events = \App\Event::whereIn('id', $eventbookingIds)
-             ->whereRaw('"'.$request->date.'" between `start_date` and `end_date`')->get();
-         
-//           dd($events);
-//            dd($events->pluck('start_date')->toarray());
+                            ->whereRaw('"' . $request->date . '" between `start_date` and `end_date`')->get();
+
+            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
+
+//            dd($slots);
+            $available = [];
+            foreach ($slots as $slot):
+                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
+
+            endforeach;
+
+//ok
             $bookedeventslotss = [];
 
-  if ($events->isEmpty())
+            if ($events->isEmpty())
                 return parent::success(['available_slot' => $available]);
+
+//          
             foreach ($events as $event):
-                $bookedeventslotss[] = ['event_start_time'=>$event->start_time,'event_end_time'=> $event->end_time,'id'=>$event->id,'guest_allowed_left'=>$event->guest_allowed_left];
-//           dd($bookedeventslotss);
+                $bookedeventslotss[] = ['id' => $event->id, 'name' => $event->name,'description'=> $event->description,'start_date'=>$event->start_date,'end_date'=>$event->end_date,'start_time'=>$event->start_time,'end_time'=>$event->end_time,'price'=>$event->price,'images_1'=>$event->images_1,'images_2'=>$event->images_2,'images_3'=>$event->images_3,'images_4'=>$event->images_4,'images_5'=>$event->images_5,'location'=>$event->location,'latitude'=>$event->latitude,'longitude'=>$event->longitude,'service_id'=>$event->service_id,'created_by'=>$event->created_by,'guest_allowed'=>$event->guest_allowed,'equipment_required'=>$event->equipment_required,'guest_allowed_left'=>$event->guest_allowed_left,'sport_id'=>$event->sport_id];
             endforeach;
-//            $eventslots = self::splitTimeWithBookedhours($event->first()->start_time, $event->first()->end_time, 1 * 60, $bookedeventslotss);
-//            dd($bookedeventslotss);
-            //event slots end//
-//            dd($bookedeventslotss);
-           
            
 
-            $c = array_merge($available, $bookedeventslotss);
-//dd($c);
-//            dd($c);
-            return parent::success(['available_slot' => $c]);
+            return parent::success(['available_slot' => $available, 'event_slot' => $bookedeventslotss]);
         } catch (\Exception $ex) {
 
             return parent::error($ex->getMessage());
