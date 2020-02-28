@@ -84,8 +84,6 @@ class CoachBookingController extends ApiController {
         return $rr;
     }
 
-   
-
     public function getavailable(Request $request) {
 //        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
         $rules = ['coach_id' => 'required|exists:users,id', 'date' => 'required'];
@@ -152,9 +150,15 @@ class CoachBookingController extends ApiController {
 
 //          
             foreach ($events as $event):
-                $bookedeventslotss[] = ['id' => $event->id, 'name' => $event->name,'description'=> $event->description,'start_date'=>$event->start_date,'end_date'=>$event->end_date,'start_time'=>$event->start_time,'end_time'=>$event->end_time,'price'=>$event->price,'images_1'=>$event->images_1,'images_2'=>$event->images_2,'images_3'=>$event->images_3,'images_4'=>$event->images_4,'images_5'=>$event->images_5,'location'=>$event->location,'latitude'=>$event->latitude,'longitude'=>$event->longitude,'service_id'=>$event->service_id,'created_by'=>$event->created_by,'guest_allowed'=>$event->guest_allowed,'equipment_required'=>$event->equipment_required,'guest_allowed_left'=>$event->guest_allowed_left,'sport_id'=>$event->sport_id];
+
+                $abc = [$event->images_1, $event->images_2, $event->images_3, $event->images_4, $event->images_5];
+//            dd($abc);
+                $ab = array_filter($abc, 'strlen');
+                $abcd = json_encode($ab);
+//            dd($ab);  
+                $bookedeventslotss[] = ['id' => $event->id, 'name' => $event->name, 'description' => $event->description, 'start_date' => $event->start_date, 'end_date' => $event->end_date, 'start_time' => $event->start_time, 'end_time' => $event->end_time, 'price' => $event->price, 'images_1' => $event->images_1, 'images_2' => $event->images_2, 'images_3' => $event->images_3, 'images_4' => $event->images_4, 'images_5' => $event->images_5, 'location' => $event->location, 'latitude' => $event->latitude, 'longitude' => $event->longitude, 'service_id' => $event->service_id, 'created_by' => $event->created_by, 'guest_allowed' => $event->guest_allowed, 'equipment_required' => $event->equipment_required, 'guest_allowed_left' => $event->guest_allowed_left, 'sport_id' => $event->sport_id, 'images' => $abcd];
             endforeach;
-           
+
 
             return parent::success(['available_slot' => $available, 'event_slot' => $bookedeventslotss]);
         } catch (\Exception $ex) {
