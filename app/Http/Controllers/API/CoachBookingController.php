@@ -231,7 +231,7 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('userDetails')->get();
+            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('athleteDetails')->get();
            
             return parent::success($model);
         } catch (\Exception $ex) {
@@ -246,7 +246,7 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('userDetails')->get();
+            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('coachDetails')->get();
            
             return parent::success($model);
         } catch (\Exception $ex) {
