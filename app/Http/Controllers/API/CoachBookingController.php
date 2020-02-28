@@ -225,13 +225,28 @@ class CoachBookingController extends ApiController {
     }
 
     public function getCoachBookings(Request $request) {
-        $rules = ['search' => '', 'coach_id' => 'required', 'limit' => ''];
+        $rules = ['search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('athlete_id', \Auth::id())->where('coach_id', $request->coach_id)->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('userDetails')->get();
+            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('userDetails')->get();
+           
+            return parent::success($model);
+        } catch (\Exception $ex) {
+            return parent::error($ex->getMessage());
+        }
+    }
+    
+    public function getAtheleteCoachBookings(Request $request) {
+        $rules = ['search' => '', 'limit' => ''];
+        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('userDetails')->get();
            
             return parent::success($model);
         } catch (\Exception $ex) {
