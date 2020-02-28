@@ -75,6 +75,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::post('coach/availability', 'API\CoachBookingController@getavailable');
     Route::post('coach/booking', 'API\CoachBookingController@store');
     Route::post('booking/coach/list','API\CoachBookingController@getCoachBookings');
+   Route::post('getAtheleteCoachBookings','API\CoachBookingController@getAtheleteCoachBookings');
    
     
 });
