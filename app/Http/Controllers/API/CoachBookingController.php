@@ -84,48 +84,7 @@ class CoachBookingController extends ApiController {
         return $rr;
     }
 
-    public function getavailablee(Request $request) {
-//        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
-        $rules = ['coach_id' => 'required|exists:users,id', 'date' => 'required'];
-        $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), true);
-        if ($validateAttributes):
-            return $validateAttributes;
-        endif;
-        try {
-            $user = \App\User::find(Auth::user()->id);
-
-            $model = new \App\User();
-            $model = $model->where('id', $request->coach_id);
-            $requestDay = date('N', strtotime($request->date));
-//            dd(json_decode($model->first()->availability_week));
-//            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
-
-            $booking = new \App\CoachBooking();
-            $booking = $booking->where('coach_id', $request->coach_id);
-            $bookingIds = $booking->get()->pluck('id')->toarray();
-//             dd($bookingIds);
-            $bookingspaces = \App\CoachBookingDetail::whereIn('booking_id', $bookingIds)->whereDate('booking_date', $request->date);
-            $bookingspaces = $bookingspaces->get();
-//            dd($bookingspace->pluck('from_time')->toarray());
-            $bookedslotss = [];
-
-
-            foreach ($bookingspaces as $bookingspace):
-                $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
-            endforeach;
-            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
-//            dd($slots);
-            $available = [];
-            foreach ($slots as $slot):
-                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
-            endforeach;
-//            dd($available);
-            return parent::success(['available_slot' => $available]);
-        } catch (\Exception $ex) {
-
-            return parent::error($ex->getMessage());
-        }
-    }
+   
 
     public function getavailable(Request $request) {
 //        $rules = ['target_id' => 'required|exists:spaces,id', 'date' => 'required', 'from_time' => 'required', 'to_time' => 'required', 'hours' => 'required'];
@@ -189,7 +148,7 @@ class CoachBookingController extends ApiController {
             $bookedeventslotss = [];
 
             if ($events->isEmpty())
-                return parent::success(['available_slot' => $available]);
+                return parent::success(['available_slot' => $available, 'event_slot' => []]);
 
 //          
             foreach ($events as $event):
