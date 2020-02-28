@@ -126,13 +126,13 @@ class CoachBookingController extends ApiController {
 //                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
 //            endforeach;
             //event slots start//
-            $eventbooking = new \App\Booking();
-            $eventbooking = $eventbooking->where('owner_id', $request->coach_id);
-            $eventbookingIds = $eventbooking->get()->pluck('target_id')->toarray();
+//            $eventbooking = new \App\Booking();
+//            $eventbooking = $eventbooking->where('owner_id', $request->coach_id);
+//            $eventbookingIds = $eventbooking->get()->pluck('target_id')->toarray();
 //             dd($eventbookingIds);
             $events = new \App\Event();
 //            $events = \App\Event::whereIn('id', $eventbookingIds)->whereDate('start_date', $request->date);
-            $events = \App\Event::whereIn('id', $eventbookingIds)
+            $events = \App\Event::where('created_by', $request->coach_id)
                             ->whereRaw('"' . $request->date . '" between `start_date` and `end_date`')->get();
 
             $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
