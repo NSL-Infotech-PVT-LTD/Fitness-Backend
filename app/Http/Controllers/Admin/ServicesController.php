@@ -60,7 +60,7 @@ class ServicesController extends AdminCommonController {
     public function store(Request $request) {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required'
+            
         ]);
         $requestData = $request->all();
 //        $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
@@ -108,7 +108,7 @@ class ServicesController extends AdminCommonController {
     public function update(Request $request, $id) {
         $this->validate($request, [
             'name' => 'required',
-            'description' => 'required'
+            
         ]);
         $requestData = $request->all();
 
@@ -133,7 +133,7 @@ class ServicesController extends AdminCommonController {
      */
     public function destroy($id) {
         if (Service::destroy($id)) 
-           return redirect('admin/events')->with('flash_message', 'Event deleted!');
+           return redirect('admin/services')->with('flash_message', 'Service deleted!');
     }
 
     public function changeStatus(Request $request) {
