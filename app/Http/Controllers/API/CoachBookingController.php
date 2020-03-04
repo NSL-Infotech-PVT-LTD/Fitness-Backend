@@ -26,7 +26,7 @@ class CoachBookingController extends ApiController {
         $AddMins = $Duration * 60;
 
         while ($StartTime <= $EndTime) { //Run loop
-            $ReturnArray[] = date("G:i:s", $StartTime);
+            $ReturnArray[] = date("G:i", $StartTime);
             $StartTime += $AddMins; //Endtime check
         }
         return $ReturnArray;
@@ -175,25 +175,58 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+             $params = json_decode($request->booking);
+            foreach ($params as $param):
+                $date = $param->booking_date;
+                $start = $param->from_time;
+                $end = $param->to_time;
 
-            $params = json_decode($request->booking);
+            endforeach;
+              $user = \App\User::find(Auth::user()->id);
+            $model = new \App\User();
+            $model = $model->where('id', $request->coach_id);
+            $requestDay = date('N', strtotime($request->date));
+            $booking = new \App\CoachBooking();
+            $booking = $booking->where('coach_id', $request->coach_id);
+            $bookingIds = $booking->get()->pluck('id')->toarray();
+            $bookingspaces = \App\CoachBookingDetail::whereIn('booking_id', $bookingIds)->whereDate('booking_date', $date);
+            $bookingspaces = $bookingspaces->get();
+            $bookedslotss = [];
+            foreach ($bookingspaces as $bookingspace):
+                $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
+            endforeach;
+            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
+            $available = [];
+            foreach ($slots as $slot):
+                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
+            endforeach;
+            $checkslots = self::splitTime($start, $end, 1 * 60);
+//            dd($checkslots);
+            $result = array();
+            foreach ($slots as $key => $value) {
+                if (is_array($value)) {
+                    $result = array_merge($result, array_flatten($value));
+                } 
+            }
+           
+           
             if (!isset($request->token))
-                return parent::error('Please add token');
+             return parent::error('Please add token');
+              
             $input = $request->all();
             $input['athlete_id'] = \Auth::id();
             $targetModel = new \App\User();
+//            dd($targetModel);
             $targetModeldata = $targetModel->whereId($request->coach_id)->get();
+//            dd($targetModeldata);
             if ($targetModeldata->isEmpty())
                 return parent::error('Please use valid coach id');
-//            $checkData = MyModel::where('target_id', $request->target_id)->where('type', $request->type)->get();
-//            if ($checkData->isEmpty() === false):
-//                return parent::error(['message' => $request->target_id . ' already booked']);
-//            endif;
-//
-//            dd($targetModelupdate);
-
-
-
+            
+            for ($i = 0; $i <= count($checkslots); $i++) {
+//                dd($checkslots);
+                if (!in_array($checkslots[$i], $result))
+                   return parent::error('sorry,already booked');
+            }
             $booking = \App\CoachBooking::create($input);
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
