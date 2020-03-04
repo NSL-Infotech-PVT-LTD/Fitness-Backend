@@ -26,7 +26,7 @@ class CoachBookingController extends ApiController {
         $AddMins = $Duration * 60;
 
         while ($StartTime <= $EndTime) { //Run loop
-            $ReturnArray[] = date("G:i:s", $StartTime);
+            $ReturnArray[] = date("G:i", $StartTime);
             $StartTime += $AddMins; //Endtime check
         }
         return $ReturnArray;
@@ -175,6 +175,76 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
+            $params = json_decode($request->booking);
+//              dd($params);
+            foreach ($params as $param):
+                $date = $param->booking_date;
+                $start = $param->from_time;
+                $end = $param->to_time;
+
+            endforeach;
+//           dd($end);
+            //booking check booked slots start//
+            $user = \App\User::find(Auth::user()->id);
+//dd($user);
+
+
+            $model = new \App\User();
+            $model = $model->where('id', $request->coach_id);
+            $requestDay = date('N', strtotime($request->date));
+//            dd(json_decode($model->first()->availability_week));
+//            if (!in_array($requestDay, json_decode($model->first()->availability_week)))
+
+            $booking = new \App\CoachBooking();
+            $booking = $booking->where('coach_id', $request->coach_id);
+            $bookingIds = $booking->get()->pluck('id')->toarray();
+//             dd($bookingIds);
+            $bookingspaces = \App\CoachBookingDetail::whereIn('booking_id', $bookingIds)->whereDate('booking_date', $date);
+//            dd($params->booking_date);
+            $bookingspaces = $bookingspaces->get();
+            $bookedslotss = [];
+
+//dd($bookingspaces);
+            foreach ($bookingspaces as $bookingspace):
+                $bookedslotss[] = [$bookingspace->from_time, $bookingspace->to_time];
+            endforeach;
+
+            $slots = self::splitTimeWithBookedhours($model->first()->business_hour_starts, $model->first()->business_hour_ends, 1 * 60, $bookedslotss);
+
+//            dd($slots);
+            $available = [];
+            foreach ($slots as $slot):
+                $available[] = [$slot[0], date('H:i', strtotime($slot[count($slot) - 1] . '+ 1 hour'))];
+
+            endforeach;
+//            dd($available);
+            //booking check booked slots end//
+            //stop booking//
+            $checkslots = self::splitTime($start, $end, 1 * 60);
+//            dd($checkslots);
+//                   if($checkslots[$i] ==){
+//               }
+//            dd($checkslots[0]);   
+//            dd($available);
+
+
+//single array//
+            $result = array();
+            foreach ($slots as $key => $value) {
+                if (is_array($value)) {
+                    $result = array_merge($result, array_flatten($value));
+                } 
+            }
+//            dd($result);
+//            dd($checkslots[0]);
+
+            for ($i = 0; $i <= count($checkslots); $i++) {
+                if (!in_array($checkslots[$i], $result)) {
+                   return parent::error('sorry,already booked');
+               
+            }
+            }
+//stop booking//
 
             $params = json_decode($request->booking);
             if (!isset($request->token))
@@ -196,26 +266,40 @@ class CoachBookingController extends ApiController {
 
             $booking = \App\CoachBooking::create($input);
 
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            $stripe = \Stripe\Charge::create([
-                        "amount" => $booking->price * 100,
-                        "currency" => config('app.stripe_default_currency'),
-                        "source" => $request->token, // obtained with Stripe.js
-                        "description" => "Charge for the booking booked through utrain app"
-            ]);
-            /*             * ***target model update start*** */
-//            Booking::findorfail($booking->id);
-            $booking->payment_details = json_encode($stripe);
-            $booking->payment_id = $stripe->id;
-            $booking->save();
+//            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+//            $stripe = \Stripe\Charge::create([
+//                        "amount" => $booking->price * 100,
+//                        "currency" => config('app.stripe_default_currency'),
+//                        "source" => $request->token, // obtained with Stripe.js
+//                        "description" => "Charge for the booking booked through utrain app",
+//                        "shipping[name]" => "Jenny Rosen",
+//                        "shipping[address][line1]" => "510 Townsend St",
+//                        "shipping[address][postal_code]" => "510 Townsend St",
+//                        "shipping[address][city]" => "510 Townsend St",
+//            ]);
+//            /*             * ***target model update start*** */
+////            Booking::findorfail($booking->id);
+//            $booking->payment_details = json_encode($stripe);
+//            $booking->payment_id = $stripe->id;
+//            $booking->save();
             foreach ($params as $param):
                 \App\CoachBookingDetail::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time]);
             endforeach;
 //            $booking->payment_id = $stripe->id;
+
+
+
+
+
+
+
+
+
             /*             * ***target model update start*** */
             $targetModelupdate = $targetModel->findOrFail($request->coach_id);
             $targetModelupdate->save();
             /*             * ***target model update end*** */
+
 
 
             return parent::successCreated(['message' => 'Booked Successfully', 'booking' => $booking]);
@@ -232,13 +316,13 @@ class CoachBookingController extends ApiController {
         endif;
         try {
             $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('athleteDetails')->get();
-           
+
             return parent::success($model);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
         }
     }
-    
+
     public function getAtheleteCoachBookings(Request $request) {
         $rules = ['search' => '', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
@@ -247,7 +331,7 @@ class CoachBookingController extends ApiController {
         endif;
         try {
             $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('coachDetails')->get();
-           
+
             return parent::success($model);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
