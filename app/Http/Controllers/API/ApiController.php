@@ -166,9 +166,9 @@ class ApiController extends \App\Http\Controllers\Controller {
         if ($returnType == 'data')
             $data = $data;
         elseif ($returnType == 'array')
-            $data = (array) $data;
+            $data = $data;
         else
-            $data = (object) $data;
+            $data =  $data;
         return response()->json(['status' => true, 'code' => $code, 'data' => $data], $code);
     }
 
@@ -457,7 +457,7 @@ class ApiController extends \App\Http\Controllers\Controller {
                 'code' => $request->get('code'),
                 'grant_type' => 'authorization_code'
             ];
-            return self::success($data);
+            return self::success(['message'=>$data]);
         else:
             return self::error("Data Not Found");
         endif;

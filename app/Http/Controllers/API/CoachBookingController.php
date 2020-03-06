@@ -259,26 +259,31 @@ class CoachBookingController extends ApiController {
                 return parent::error('Please use valid coach id');
             $booking = \App\CoachBooking::create($input);
 // dd(env('STRIPE_SECRET'));
+            
+            //booking start
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-
+         $account =  \Stripe\Account::create([
+            'type' => 'custom',
+            'country' => 'US',
+            'email' => 'bob@example.com',
+            'requested_capabilities' => [
+            'card_payments',
+            'transfers',
+            ],
+            ]);
+//dd($account);
             $token = $request->token;
-//            $customer = \App\User::whereId(\Auth::id())->get();
-//          dd($customer);
-//            $customer = \Stripe\Customer::create([
-//                        'email' => 'paying.user@example.com',
-//                        'source' => 'tok_mastercard',
-//            ]);
-//            \Stripe\Customer::create([
-//                'description' => 'My First Test Customer (created for API docs)',
-//            ]);
-//            $vendor = \App\User::whereId($request->coach_id)->get();
-////            dd($vendor);
-//            $stripe = StripeConnect::transaction($token)
-//                    ->amount(1000, 'usd')
-//                    ->from($customer)
-//                    ->to($vendor)
-//                    ->create();
-//            dd($stripe);
+            $customer = \App\User::whereId(\Auth::id())->first();
+            $vendor = \App\User::whereId($request->coach_id)->first();
+            
+            
+            $stripe = StripeConnect::transaction($token)
+                    ->amount($booking->price, 'usd')
+                    ->useSavedCustomer()
+                    ->from($customer)
+                    ->to($vendor)
+                    ->create();
+
 //            $stripe = \Stripe\Charge::create([
 //                        "amount" => $booking->price * 100,
 //                        "currency" => config('app.stripe_default_currency'),
