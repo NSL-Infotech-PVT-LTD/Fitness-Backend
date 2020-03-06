@@ -29,16 +29,19 @@ return [
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
     ],
-   
     'linkedin' => [
         'client_id' => env('LINKEDIN_CLIENT_ID'),
         'client_secret' => env('LINKEDIN_CLIENT_SECRET'),
         'redirect' => env('LINKEDIN_CALLBACK_URL'),
     ],
-    
     'sendinblue' => [
         // api-key or partner-key
         'key_identifier' => env('SENDINBLUE_KEY_IDENTIFIER', 'api-key'),
         'key' => env('SENDINBLUE_KEY'),
+    ],
+   'stripe' => [
+        'model' => App\User::class,
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
     ],
 ];

@@ -14,14 +14,14 @@
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.5",
-        "laravel/cashier": "~9.3",
         "laravel/framework": "5.8.*",
         "laravel/passport": "^7.3",
         "laravel/socialite": "^4.1",
         "laravel/tinker": "^1.0",
+        "rap2hpoutre/laravel-stripe-connect": "^0.2.1",
+        "symfony/translation": "4.3.8",
         "twilio/sdk": "^5.34",
-        "yajra/laravel-datatables-oracle": "^9.6",
-         "symfony/translation": "4.3.8"
+        "yajra/laravel-datatables-oracle": "^9.6"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

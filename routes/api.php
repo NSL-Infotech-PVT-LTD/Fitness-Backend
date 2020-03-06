@@ -17,7 +17,15 @@ use Illuminate\Http\Request;
 //    return $request->user();
 //});
 
+
+
+Route::get('getStripeData', 'API\ApiController@getStripeData');
+
 Route::group(['middleware' => 'auth:api'], function() {
+
+
+    Route::post('connectWithStripe', 'API\ApiController@connectWithStripe');
+
     Route::post('coach/update', 'API\AuthController@CoachUpdate');
     Route::post('athlete/update', 'API\AuthController@AtheleteUpdate');
     Route::post('organiser/update', 'API\AuthController@OrganiserUpdate');
@@ -71,15 +79,13 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('configuration/{column}', 'API\ConfigurationController@getConfigurationColumn');
     Route::post('password/change', 'API\AuthController@changePassword');
     Route::post('contact/store', 'API\ContactController@store');
-    Route::post('received/bookings','API\BookingController@receivedBookings');
+    Route::post('received/bookings', 'API\BookingController@receivedBookings');
     Route::post('coach/availability', 'API\CoachBookingController@getavailable');
     Route::post('coach/booking', 'API\CoachBookingController@store');
-    Route::post('booking/coach/list','API\CoachBookingController@getCoachBookings');
-   Route::post('getAtheleteCoachBookings','API\CoachBookingController@getAtheleteCoachBookings');
-   
-    
+    Route::post('booking/coach/list', 'API\CoachBookingController@getCoachBookings');
+    Route::post('getAtheleteCoachBookings', 'API\CoachBookingController@getAtheleteCoachBookings');
 });
-Route::post('coach/detail/any','API\AuthController@getcoachdetail');
+Route::post('coach/detail/any', 'API\AuthController@getcoachdetail');
 
 Route::post('reset/password', 'API\AuthController@resetPassword');
 Route::post('coach/register', 'API\AuthController@CoachRegister');
@@ -89,7 +95,7 @@ Route::post('login', 'API\AuthController@Login');
 Route::post('services', 'API\ServicesController@getitems');
 Route::post('sports', 'API\SportController@getitems');
 Route::get('about/us', 'API\ConfigurationController@getaboutus');
-Route::post('auth/check','API\AuthController@AuthCheck');
+Route::post('auth/check', 'API\AuthController@AuthCheck');
 
 
 
