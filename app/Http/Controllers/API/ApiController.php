@@ -474,7 +474,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         try {
             if ($request->post('code') && $request->post('code') != ''):
                 $data = [
-                    'client_secret' => 'sk_test_K0xc0qyrTPfW8DA918NJRInu00ZPChh3gj',
+                    'client_secret' => env('STRIPE_SECRET'),
                     'code' => $request->post('code'),
                     'grant_type' => 'authorization_code'
                 ];
