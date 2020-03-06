@@ -7,7 +7,7 @@ use Validator;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client;
-//fcm
+//use Validator;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
@@ -196,7 +196,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $twilio = new Client($sid, $token);
-            //$return = $twilio->messages->create("" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
+//$return = $twilio->messages->create("" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
             $return = $twilio->messages->create("+91" . $to, ["body" => $message, "from" => env('TWILIO_FROM')]);
             return $return;
         } catch (\Twilio\Exceptions\TwilioException $ex) {
@@ -250,7 +250,7 @@ class ApiController extends \App\Http\Controllers\Controller {
     }
 
     public static function pushNotification($data = [], $deviceToken) {
-        // FCM
+// FCM
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60 * 20);
         $notificationBuilder = new PayloadNotificationBuilder($data['title']);
@@ -280,37 +280,37 @@ class ApiController extends \App\Http\Controllers\Controller {
     }
 
     private function pushNotifyiOS($data, $devicetoken, $customData = null) {
-        //return true;
+//return true;
         $deviceToken = $devicetoken;
         $ctx = stream_context_create();
-        // ck.pem is your certificate file
+// ck.pem is your certificate file
         stream_context_set_option($ctx, 'ssl', 'local_cert', public_path('apn/key.pem'));
         stream_context_set_option($ctx, 'ssl', 'passphrase', '');
-        // Open a connection to the APNS server
+// Open a connection to the APNS server
         $fp = stream_socket_client(
                 'ssl://gateway.sandbox.push.apple.com:2195', $err, $errstr, 60, STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
         if (!$fp)
             exit("Failed to connect: $err $errstr" . PHP_EOL);
-        // Create the payload body
+// Create the payload body
         $body['aps'] = ['alert' => ['title' => $data['title'], 'body' => $data['message']], 'sound' => 'default'];
         if ($customData !== null)
             $body['extraPayLoad'] = ['custom' => $customData];
-        // Encode the payload as JSON
+// Encode the payload as JSON
         $payload = json_encode($body);
-        // Build the binary notification
+// Build the binary notification
         $msg = chr(0) . pack('n', 32) . pack('H*', $deviceToken) . pack('n', strlen($payload)) . $payload;
-        // Send it to the server
+// Send it to the server
         $result = fwrite($fp, $msg, strlen($msg));
 
-        // Close the connection to the server
-        // $this->saveNotification($data);
+// Close the connection to the server
+// $this->saveNotification($data);
         fclose($fp);
 
         if (!$result)
             return 'Message not delivered' . PHP_EOL;
         else
             return 'Message successfully delivered' . PHP_EOL;
-        //die();
+//die();
     }
 
     /**
@@ -379,23 +379,23 @@ class ApiController extends \App\Http\Controllers\Controller {
     }
 
     protected function getTokenQuickBlox() {
-        // Application credentials - change to yours (found in QB Dashboard)
+// Application credentials - change to yours (found in QB Dashboard)
         DEFINE('APPLICATION_ID', 77979);
         DEFINE('AUTH_KEY', "xtvZ6Y3P7Sp4Z-Y");
         DEFINE('AUTH_SECRET', "N6KyLPtvWUqAyCn");
-        // User credentials
+// User credentials
         DEFINE('USER_LOGIN', "emma");
         DEFINE('USER_PASSWORD', "emma");
-        // Quickblox endpoints
+// Quickblox endpoints
         DEFINE('QB_API_ENDPOINT', "https://api.quickblox.com");
         DEFINE('QB_PATH_SESSION', "session.json");
-        // Generate signature
+// Generate signature
         $nonce = rand();
         $timestamp = time(); // time() method must return current timestamp in UTC but seems like hi is return timestamp in current time zone
         $signature_string = "application_id=" . APPLICATION_ID . "&auth_key=" . AUTH_KEY . "&nonce=" . $nonce . "&timestamp=" . $timestamp;
 //        echo "stringForSignature: " . $signature_string . "<br><br>";
         $signature = hash_hmac('sha1', $signature_string, AUTH_SECRET);
-        // Build post body
+// Build post body
         $post_body = http_build_query(array(
             'application_id' => APPLICATION_ID,
             'auth_key' => AUTH_KEY,
@@ -403,7 +403,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             'nonce' => $nonce,
             'signature' => $signature
         ));
-        // $post_body = "application_id=" . APPLICATION_ID . "&auth_key=" . AUTH_KEY . "&timestamp=" . $timestamp . "&nonce=" . $nonce . "&signature=" . $signature . "&user[login]=" . USER_LOGIN . "&user[password]=" . USER_PASSWORD;
+// $post_body = "application_id=" . APPLICATION_ID . "&auth_key=" . AUTH_KEY . "&timestamp=" . $timestamp . "&nonce=" . $nonce . "&signature=" . $signature . "&user[login]=" . USER_LOGIN . "&user[password]=" . USER_PASSWORD;
 //        echo "postBody: " . $post_body . "<br><br>";
 // Configure cURL
         $curl = curl_init();
@@ -414,10 +414,10 @@ class ApiController extends \App\Http\Controllers\Controller {
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curl, CURLOPT_POSTREDIR, true);
 
-        // Execute request and read response
+// Execute request and read response
         $response = curl_exec($curl);
 
-        // Check errors
+// Check errors
         if ($response) {
             
         } else {
@@ -425,7 +425,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             echo $error . "\n";
         }
 
-        // Close connection
+// Close connection
         curl_close($curl);
         return json_decode($response);
     }
@@ -466,35 +466,42 @@ class ApiController extends \App\Http\Controllers\Controller {
     }
 
     public function connectWithStripe(Request $request) {
-        if ($request->post('code') && $request->post('code') != ''):
-//die();
+        $rules = ['code' => 'required'];
+        $validateAttributes = self::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
+        if ($validateAttributes):
+            return $validateAttributes;
+        endif;
+        try {
+            if ($request->post('code') && $request->post('code') != ''):
+                $data = [
+                    'client_secret' => 'sk_test_K0xc0qyrTPfW8DA918NJRInu00ZPChh3gj',
+                    'code' => $request->post('code'),
+                    'grant_type' => 'authorization_code'
+                ];
 
-            $data = [
-                'client_secret' => 'sk_test_K0xc0qyrTPfW8DA918NJRInu00ZPChh3gj',
-                'code' => $request->post('code'),
-                'grant_type' => 'authorization_code'
-            ];
-    
 
-            $strieResposnes = json_decode(self::getStripeConnectAccount($data));
-            echo json_encode($strieResposnes);
-            if (!empty($strieResposnes->error)):
-                //$request->session()->flash('alert-danger', 'There was some issue while conneting your stripe account. Please try again.');
-                // $request->session()->flash('alert-danger', $strieResposnes->error_description);
-                return "failed";
-            else:
-                $updateAccountStripe = Stripe::create([
-                    'account_id' => $strieResposnes->stripe_user_id,
-                    'user_id'=>Auth::id()
-                ]);
-                //$request->session()->flash('alert-success', 'Your stripe account is successfully connected.');
+                $strieResposnes = json_decode(self::getStripeConnectAccount($data));
+//            echo json_encode($strieResposnes);
+                if (!empty($strieResposnes->error)):
+//$request->session()->flash('alert-danger', 'There was some issue while conneting your stripe account. Please try again.');
+// $request->session()->flash('alert-danger', $strieResposnes->error_description);
+                     return self::error('failed');
+                else:
+                    $updateAccountStripe = Stripe::create([
+                                'account_id' => $strieResposnes->stripe_user_id,
+                                'user_id' => Auth::id()
+                    ]);
+//$request->session()->flash('alert-success', 'Your stripe account is successfully connected.');
+//               echo "success";
 
-               echo "success";
+                endif;
+                return self::success('success');
 
             endif;
+        } catch (\Exception $ex) {
 
-
-        endif;
+            return parent::error($ex->getMessage());
+        }
     }
 
     protected static function getStripeConnectAccount($data) {
