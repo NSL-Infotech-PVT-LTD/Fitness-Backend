@@ -258,25 +258,21 @@ class CoachBookingController extends ApiController {
             if ($targetModeldata->isEmpty())
                 return parent::error('Please use valid coach id');
             $booking = \App\CoachBooking::create($input);
-
-            \Stripe\Stripe::setApiKey('sk_test_K0xc0qyrTPfW8DA918NJRInu00ZPChh3gj');
+ dd(env('STRIPE_SECRET'));
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+           
             $token = $request->token;
             $email = $targetModel->select('email')->whereId(\Auth::id())->first();
-//            $email = $targetModel->whereId(\Auth::id())->value('email');
-//          dd($email);
-//            dd('ss');
-         $d = StripeConnect::createCustomer($token, $email);
-          dd($d);
+          
+
 //            $customer = \Stripe\Customer::create([
-//                        'email' => 'abc@gmail.com',
+//                        'email' => $customer,
 //                        'source' => 'tok_mastercard',
 //            ]);
-          
             $vendor = $targetModel->whereId($request->coach_id)->get();
 //            dd($vendor);
-            StripeConnect::transaction()
+            StripeConnect::transaction($token)
                     ->amount(1000, 'usd')
-                    ->useSavedCustomer()
                     ->from($email)
                     ->to($vendor)
                     ->create();
