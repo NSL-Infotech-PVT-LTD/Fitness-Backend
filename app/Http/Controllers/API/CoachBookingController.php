@@ -258,25 +258,27 @@ class CoachBookingController extends ApiController {
             if ($targetModeldata->isEmpty())
                 return parent::error('Please use valid coach id');
             $booking = \App\CoachBooking::create($input);
- dd(env('STRIPE_SECRET'));
+// dd(env('STRIPE_SECRET'));
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-           
-            $token = $request->token;
-            $email = $targetModel->select('email')->whereId(\Auth::id())->first();
-          
 
+            $token = $request->token;
+//            $customer = \App\User::whereId(\Auth::id())->get();
+//          dd($customer);
 //            $customer = \Stripe\Customer::create([
-//                        'email' => $customer,
+//                        'email' => 'paying.user@example.com',
 //                        'source' => 'tok_mastercard',
 //            ]);
-            $vendor = $targetModel->whereId($request->coach_id)->get();
-//            dd($vendor);
-            StripeConnect::transaction($token)
-                    ->amount(1000, 'usd')
-                    ->from($email)
-                    ->to($vendor)
-                    ->create();
-//            
+//            \Stripe\Customer::create([
+//                'description' => 'My First Test Customer (created for API docs)',
+//            ]);
+//            $vendor = \App\User::whereId($request->coach_id)->get();
+////            dd($vendor);
+//            $stripe = StripeConnect::transaction($token)
+//                    ->amount(1000, 'usd')
+//                    ->from($customer)
+//                    ->to($vendor)
+//                    ->create();
+//            dd($stripe);
 //            $stripe = \Stripe\Charge::create([
 //                        "amount" => $booking->price * 100,
 //                        "currency" => config('app.stripe_default_currency'),
@@ -285,9 +287,9 @@ class CoachBookingController extends ApiController {
 //            ]);
 //            /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
-            $booking->payment_details = json_encode($stripe);
-            $booking->payment_id = $stripe->id;
-            $booking->save();
+//            $booking->payment_details = json_encode($stripe);
+//            $booking->payment_id = $stripe->id;
+//            $booking->save();
 
 
             foreach ($params as $param):
