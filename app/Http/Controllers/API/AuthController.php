@@ -274,7 +274,11 @@ class AuthController extends ApiController {
 
 //                $user = $user->with('roles');
                 // Add user device details for firbase
-                return parent::successCreated(['message' => 'Login Successfully', 'token' => $token, 'user' => $user]);
+                
+                 
+                $getUserStripe= \App\Stripe::where('user_id',$user->id)->first();
+              
+                return parent::successCreated(['message' => 'Login Successfully', 'token' => $token, 'user' => $user,'stripeDetails'=>$getUserStripe]);
             else:
                 return parent::error("User credentials doesn't matched");
             endif;

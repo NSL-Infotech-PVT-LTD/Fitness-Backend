@@ -278,7 +278,7 @@ class CoachBookingController extends ApiController {
             
             
             $stripe = StripeConnect::transaction($token)
-                    ->amount($booking->price, 'usd')
+                    ->amount($booking->price, 'ind')
                     ->useSavedCustomer()
                     ->from($customer)
                     ->to($vendor)
