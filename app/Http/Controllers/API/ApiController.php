@@ -486,11 +486,9 @@ class ApiController extends \App\Http\Controllers\Controller {
                 if (!empty($strieResposnes->error)):
 //$request->session()->flash('alert-danger', 'There was some issue while conneting your stripe account. Please try again.');
 // $request->session()->flash('alert-danger', $strieResposnes->error_description);
-<<<<<<< HEAD
+
                       return self::error($strieResposnes->error);
-=======
-                    return self::error($strieResposnes->error);
->>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
+
                 else:
                     $updateAccountStripe = Stripe::create([
                                 'account_id' => $strieResposnes->stripe_user_id,
@@ -500,21 +498,9 @@ class ApiController extends \App\Http\Controllers\Controller {
 //               echo "success";
 
                 endif;
-<<<<<<< HEAD
-<<<<<<< HEAD
-                
-                $getUserStripe= Stripe::where('user_id',Auth::id())->first();
-=======
-=======
-                
-                
-                
-                
-                
->>>>>>> ed8dd0454c477a6390f8eafca1a2c2866a267899
-
+                //$getUserStripe= Stripe::where('user_id',Auth::id())->first();
                 $getUserStripe = Stripe::where('user_id', Auth::id())->first();
->>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
+
                 $stripeDetails['stripeDetails'] = $getUserStripe;
                 return self::success($stripeDetails);
 
