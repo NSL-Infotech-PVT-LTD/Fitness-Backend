@@ -505,6 +505,8 @@ class ApiController extends \App\Http\Controllers\Controller {
                 return self::success($stripeDetails);
 
             endif;
+            
+            
         } catch (\Exception $ex) {
 
             return parent::error($ex->getMessage());
