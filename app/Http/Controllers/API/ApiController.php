@@ -501,9 +501,17 @@ class ApiController extends \App\Http\Controllers\Controller {
 
                 endif;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 
                 $getUserStripe= Stripe::where('user_id',Auth::id())->first();
 =======
+=======
+                
+                
+                
+                
+                
+>>>>>>> ed8dd0454c477a6390f8eafca1a2c2866a267899
 
                 $getUserStripe = Stripe::where('user_id', Auth::id())->first();
 >>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
@@ -557,7 +565,7 @@ class ApiController extends \App\Http\Controllers\Controller {
                                 'source' => $token,
                                 "address" => ["city" => 'delhi', "country" => 'india', "line1" => '301', "line2" => "", "postal_code" => '21321', "state" => 'hp']
                     ));
-                    dd($customer);
+//                    dd($customer);
                     \App\Stripe::create([
                         'user_id' => \Auth::id(),
                         'customer_id' => $customer->id
