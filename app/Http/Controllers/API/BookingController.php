@@ -111,7 +111,7 @@ class BookingController extends ApiController {
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
-            $createdBy= $targetModeldata->first()->value('created_by');
+            $createdBy= $targetModeldata->first()->created_by;
 //            dd($createdBy);
 
             if (\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
@@ -120,7 +120,7 @@ class BookingController extends ApiController {
 
             $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'qwerty');
             /*             * ***target model update start*** */
-            
+            dd($abc);
             $booking->payment_details = json_encode($abc);
             $booking->payment_id = $abc->id;
             $booking->save();
