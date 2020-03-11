@@ -121,6 +121,7 @@ class BookingController extends ApiController {
             $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'qwerty');
             /*             * ***target model update start*** */
             dd($abc);
+            
             $booking->payment_details = json_encode($abc);
             $booking->payment_id = $abc->id;
             $booking->save();
