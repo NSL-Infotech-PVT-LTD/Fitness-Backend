@@ -533,7 +533,7 @@ class ApiController extends \App\Http\Controllers\Controller {
     }
 
     public static function makePayment($token,$vendorid, $amount, $paymentType,$desc) {
-//        dd($token);
+        dd($token);
 //        dd($vendorid);
 //        dd($customerId);
 //        dd($amount);
