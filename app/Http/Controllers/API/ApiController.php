@@ -13,6 +13,7 @@ use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
 use \App\Stripe;
+use Rap2hpoutre\LaravelStripeConnect\StripeConnect;
 
 class ApiController extends \App\Http\Controllers\Controller {
 
@@ -168,7 +169,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         elseif ($returnType == 'array')
             $data = $data;
         else
-            $data =  $data;
+            $data = $data;
         return response()->json(['status' => true, 'code' => $code, 'data' => $data], $code);
     }
 
@@ -457,7 +458,7 @@ class ApiController extends \App\Http\Controllers\Controller {
                 'code' => $request->get('code'),
                 'grant_type' => 'authorization_code'
             ];
-            return self::success(['message'=>$data]);
+            return self::success(['message' => $data]);
         else:
             return self::error("Data Not Found");
         endif;
@@ -485,7 +486,11 @@ class ApiController extends \App\Http\Controllers\Controller {
                 if (!empty($strieResposnes->error)):
 //$request->session()->flash('alert-danger', 'There was some issue while conneting your stripe account. Please try again.');
 // $request->session()->flash('alert-danger', $strieResposnes->error_description);
+<<<<<<< HEAD
                       return self::error($strieResposnes->error);
+=======
+                    return self::error($strieResposnes->error);
+>>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
                 else:
                     $updateAccountStripe = Stripe::create([
                                 'account_id' => $strieResposnes->stripe_user_id,
@@ -495,8 +500,13 @@ class ApiController extends \App\Http\Controllers\Controller {
 //               echo "success";
 
                 endif;
+<<<<<<< HEAD
                 
                 $getUserStripe= Stripe::where('user_id',Auth::id())->first();
+=======
+
+                $getUserStripe = Stripe::where('user_id', Auth::id())->first();
+>>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
                 $stripeDetails['stripeDetails'] = $getUserStripe;
                 return self::success($stripeDetails);
 
@@ -524,6 +534,48 @@ class ApiController extends \App\Http\Controllers\Controller {
 
         curl_close($ch);
         return $server_output;
+    }
+
+    public static function makePayment($token,$vendorid, $amount, $paymentType,$desc) {
+//        dd($token);
+//        dd($vendorid);
+//        dd($customerId);
+//        dd($amount);
+//        dd($desc);
+        If ($vendorid=='') {
+            return error('failed');
+        } else {
+            try {
+
+                \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+                $getSavedCustomer = \App\Stripe::where('user_id',\Auth::id())->first();
+                if (!$getSavedCustomer) {
+                    $customer = \Stripe\Customer::create(array(
+                                'name' => 'test',
+                                'description' => $desc,
+                                'email' => 'bob@example.com',
+                                'source' => $token,
+                                "address" => ["city" => 'delhi', "country" => 'india', "line1" => '301', "line2" => "", "postal_code" => '21321', "state" => 'hp']
+                    ));
+                    dd($customer);
+                    \App\Stripe::create([
+                        'user_id' => \Auth::id(),
+                        'customer_id' => $customer->id
+                    ]);
+                }
+                $customer = \App\User::whereId(\Auth::id())->first();
+                $vendor = \App\User::whereId($vendorid)->first();
+                $stripe = StripeConnect::transaction()
+                        ->amount($amount, 'inr')
+                        ->useSavedCustomer()
+                        ->from($customer)
+                        ->to($vendor)
+                        ->create(['description' => 'bla blas']);
+                return $stripe;
+            } catch (\Exception $ex) {
+                
+            }
+        }
     }
 
 }
