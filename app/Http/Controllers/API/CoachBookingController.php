@@ -260,8 +260,40 @@ class CoachBookingController extends ApiController {
             $booking = \App\CoachBooking::create($input);
 // dd(env('STRIPE_SECRET'));
             //booking start
+<<<<<<< HEAD
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+         $account =  \Stripe\Account::create([
+            'type' => 'custom',
+            'country' => 'US',
+            'email' => 'bob@example.com',
+            'requested_capabilities' => [
+            'card_payments',
+            'transfers',
+            ],
+            ]);
+//dd($account);
+            $token = $request->token;
+            $customer = \App\User::whereId(\Auth::id())->first();
+            $vendor = \App\User::whereId($request->coach_id)->first();
+            
+            
+            $stripe = StripeConnect::transaction($token)
+                    ->amount($booking->price, 'ind')
+                    ->useSavedCustomer()
+                    ->from($customer)
+                    ->to($vendor)
+                    ->create();
+
+//            $stripe = \Stripe\Charge::create([
+//                        "amount" => $booking->price * 100,
+//                        "currency" => config('app.stripe_default_currency'),
+//                        "source" => $request->token, // obtained with Stripe.js
+//                        "description" => "Charge for the booking booked through utrain app"
+//            ]);
+=======
              $abc= parent::makePayment($request->token,$request->coach_id,300,'event','qwerty');
 //            dd($abc);
+>>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
 //            /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
             $booking->payment_details = json_encode($abc);
