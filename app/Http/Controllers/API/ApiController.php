@@ -537,7 +537,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //        dd($vendorid);
 //        dd($customerId);
 //        dd($amount);
-        dd($desc);
+//        dd($desc);
         If ($vendorid=='') {
             return error('failed');
         } else {
@@ -567,6 +567,7 @@ class ApiController extends \App\Http\Controllers\Controller {
                         ->from($customer)
                         ->to($vendor)
                         ->create(['description' => 'bla blas']);
+                dd($stripe);
                 return $stripe;
             } catch (\Exception $ex) {
                 
