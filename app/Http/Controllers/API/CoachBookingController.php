@@ -260,28 +260,28 @@ class CoachBookingController extends ApiController {
             $booking = \App\CoachBooking::create($input);
 // dd(env('STRIPE_SECRET'));
             //booking start
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-         $account =  \Stripe\Account::create([
-            'type' => 'custom',
-            'country' => 'US',
-            'email' => 'bob@example.com',
-            'requested_capabilities' => [
-            'card_payments',
-            'transfers',
-            ],
-            ]);
-
-            $token = $request->token;
-            $customer = \App\User::whereId(\Auth::id())->first();
-            $vendor = \App\User::whereId($request->coach_id)->first();
-            
-            
-            $stripe = StripeConnect::transaction($token)
-                    ->amount($booking->price, 'ind')
-                    ->useSavedCustomer()
-                    ->from($customer)
-                    ->to($vendor)
-                    ->create();
+//            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+//         $account =  \Stripe\Account::create([
+//            'type' => 'custom',
+//            'country' => 'US',
+//            'email' => 'bob@example.com',
+//            'requested_capabilities' => [
+//            'card_payments',
+//            'transfers',
+//            ],
+//            ]);
+//
+//            $token = $request->token;
+//            $customer = \App\User::whereId(\Auth::id())->first();
+//            $vendor = \App\User::whereId($request->coach_id)->first();
+//            
+//            
+//            $stripe = StripeConnect::transaction($token)
+//                    ->amount($booking->price, 'ind')
+//                    ->useSavedCustomer()
+//                    ->from($customer)
+//                    ->to($vendor)
+//                    ->create();
 
 //            $stripe = \Stripe\Charge::create([
 //                        "amount" => $booking->price * 100,
