@@ -16,7 +16,6 @@ use Validator;
 use DB;
 use Auth;
 
-
 class BookingController extends ApiController {
 
     private $_MSGCreate = ['title' => 'Hurray!', 'body' => 'You got new Booking'];
@@ -89,7 +88,7 @@ class BookingController extends ApiController {
 
     public function spacestore(Request $request) {
 
-        $rules = ['type' => 'required|in:space', 'target_id' => 'required', 'user_id' => '', 'price' => 'required','token' => 'required', 'status' => 'required', 'booking' => 'required'];
+        $rules = ['type' => 'required|in:space', 'target_id' => 'required', 'user_id' => '', 'price' => 'required', 'token' => 'required', 'status' => 'required', 'booking' => 'required'];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -112,22 +111,18 @@ class BookingController extends ApiController {
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
+            $createdBy= $targetModeldata->first()->value('created_by');
+//            dd($createdBy);
 
             if (\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
                 return parent::error('Sorry, You cant book your own space');
             $booking = \App\Booking::create($input);
 
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            $stripe = \Stripe\Charge::create([
-                        "amount" => $booking->price * 100,
-                        "currency" => config('app.stripe_default_currency'),
-                        "source" => $request->token, // obtained with Stripe.js
-                        "description" => "Charge for the booking booked through utrain app"
-            ]);
+            $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'qwerty');
             /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
-            $booking->payment_details = json_encode($stripe);
-            $booking->payment_id = $stripe->id;
+            $booking->payment_details = json_encode($abc);
+            $booking->payment_id = $abc->id;
             $booking->save();
             foreach ($params as $param):
                 \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time]);
@@ -358,7 +353,7 @@ class BookingController extends ApiController {
         try {
             $user = \App\User::find(Auth::user()->id);
 
-            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating','created_at');
+            $model = MyModel::where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating', 'created_at');
             $model = $model->with(['userDetails']);
             $perPage = isset($request->limit) ? $request->limit : 20;
             return parent::success($model->paginate($perPage));
@@ -368,7 +363,7 @@ class BookingController extends ApiController {
     }
 
     public function receivedBookings(Request $request) {
-        $rules = ['search' => '','type' => 'required|in:event,session,space', 'order_by' => 'required_if:type,event|required_if:type,session', 'limit' => ''];
+        $rules = ['search' => '', 'type' => 'required|in:event,session,space', 'order_by' => 'required_if:type,event|required_if:type,session', 'limit' => ''];
         $validateAttributes = parent::validateAttributes($request, 'POST', $rules, array_keys($rules), false);
         if ($validateAttributes):
             return $validateAttributes;
@@ -377,7 +372,7 @@ class BookingController extends ApiController {
         try {
             $model = new \App\Booking();
             $user = \App\User::find(Auth::user()->id);
-          
+
 //            $target = Event::where('created_by',\Auth::id())->pluck('id');
             switch ($request->type):
                 case 'event':
@@ -389,7 +384,7 @@ class BookingController extends ApiController {
             endswitch;
             if ($targetModel->where('created_by', \Auth::id())->get()->isEmpty())
                 return parent::error('Not found');
-            $model = MyModel::where('type', $request->type)->where('owner_id',\Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
+            $model = MyModel::where('type', $request->type)->where('owner_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating');
             $model = $model->with('userDetails')->with($request->type);
             if ($request->type != 'space'):
                 $model = $model->whereHas($request->type, function ($query)use($request) {
@@ -449,7 +444,7 @@ class BookingController extends ApiController {
                 $dataSend[$k]['is_booking_my'] = true;
             endforeach;
 //dd($dataSend);
-            $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating','created_at');
+            $booked = MyModel::where('user_id', \Auth::id())->Select('id', 'type', 'target_id', 'user_id', 'tickets', 'price', 'payment_id', 'status', 'rating', 'created_at');
             $booked = $booked->with(['userDetails']);
             $bookSend = [];
 //            $requestDate = \Carbon\Carbon::createFromFormat('Y-m', $request->filter_by);
