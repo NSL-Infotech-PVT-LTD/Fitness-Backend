@@ -534,7 +534,7 @@ class ApiController extends \App\Http\Controllers\Controller {
         die();
     }
 
-    public static function makePayment($token, $vendorid, $amount, $paymentType, $desc, $description) {
+    public static function makePayment($name,$email,$token, $vendorid, $amount, $paymentType, $desc, $description) {
 
 
 //        dd($vendor);
@@ -549,9 +549,9 @@ class ApiController extends \App\Http\Controllers\Controller {
             $getSavedCustomer = \App\Stripe::where('user_id', \Auth::id())->first();
             if (!$getSavedCustomer) {
                 $customer = \Stripe\Customer::create(array(
-                            'name' => 'test',
+                            'name' => $name,
                             'description' => $desc,
-                            'email' => 'bob@example.com',
+                            'email' => $email,
                             'source' => $token,
                             "address" => ["city" => 'delhi', "country" => 'india', "line1" => '301', "line2" => "", "postal_code" => '21321', "state" => 'hp']
                 ));

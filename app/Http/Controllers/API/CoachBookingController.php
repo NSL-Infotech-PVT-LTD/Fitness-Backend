@@ -272,7 +272,6 @@ class CoachBookingController extends ApiController {
 //            ]);
 //
 //            $token = $request->token;
-//            $customer = \App\User::whereId(\Auth::id())->first();
 //            $vendor = \App\User::whereId($request->coach_id)->first();
 //            
 //            
@@ -282,19 +281,21 @@ class CoachBookingController extends ApiController {
 //                    ->from($customer)
 //                    ->to($vendor)
 //                    ->create();
-
 //            $stripe = \Stripe\Charge::create([
 //                        "amount" => $booking->price * 100,
 //                        "currency" => config('app.stripe_default_currency'),
 //                        "source" => $request->token, // obtained with Stripe.js
 //                        "description" => "Charge for the booking booked through utrain app"
 //            ]);
+            $cust = \App\User::whereId(\Auth::id())->first();
+            $name = $cust->name;
+            $email = $cust->email;
+//            dd($name);
+            $payment = parent::makePayment($name,$email,$request->token, $request->coach_id, $request->price, 'coach', 'customer', 'for coach booking');
 
-             $payment= parent::makePayment($request->token,$request->coach_id,$request->price,'coach','customer','for coach booking');
-           
-             if(!$payment){
-                return parent::customError('failed'); 
-             }
+            if (!$payment) {
+                return parent::customError('failed');
+            }
 //            dd($payment);
             $booking->payment_details = json_encode($payment);
             $booking->payment_id = $payment->id;
@@ -324,8 +325,8 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('athleteDetails')->get();
-
+            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('athleteDetails');
+            $model = $model->orderBy('created_at', 'desc')->get();
             return parent::success($model);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -339,8 +340,8 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('coachDetails')->get();
-
+            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('coachDetails');
+            $model = $model->orderBy('created_at', 'desc')->get();
             return parent::success($model);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

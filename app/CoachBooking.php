@@ -8,6 +8,20 @@ use App\Event;
 class CoachBooking extends Model {
 
     protected $fillable = ['coach_id', 'athlete_id', 'service_id', 'price', 'status', 'payment_details'];
+    protected $appends = array('booking_date');
+    
+     public function getBookingDateAttribute() {
+                $targetModel = new \App\CoachBookingDetail();
+//                dd($targetModel);
+                $model = $targetModel->where('booking_id', $this->id)->get();
+//                dd($this->id);
+//                dd($model->first()->booking_date);
+                if ($model->isEmpty() !== true)
+                    return  $model->first()->booking_date;
+                
+        return [];
+    }
+
 
     public function getServiceIdAttribute($value) {
         return $value == null ? [] : json_decode($value);
@@ -18,12 +32,13 @@ class CoachBooking extends Model {
                         'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio',
                         'expertise_years', 'hourly_rate', 'portfolio_image_1', 'portfolio_image_2', 'portfolio_image_3', 'portfolio_image_4', 'latitude', 'longitude', 'id');
     }
-    
-      public function coachDetails() {
+
+    public function coachDetails() {
         return $this->hasOne(User::class, 'id', 'coach_id')->select('name', 'email', 'phone',
                         'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio',
                         'expertise_years', 'hourly_rate', 'portfolio_image_1', 'portfolio_image_2', 'portfolio_image_3', 'portfolio_image_4', 'latitude', 'longitude', 'id');
     }
+
     public function athleteDetails() {
         return $this->hasOne(User::class, 'id', 'athlete_id')->select('name', 'email', 'phone',
                         'address', 'profile_image', 'location', 'business_hour_starts', 'business_hour_ends', 'bio',
@@ -33,11 +48,5 @@ class CoachBooking extends Model {
     public function events() {
         return $this->hasOne(Event::class, 'created_by', 'coach_id')->select('id', 'name', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'price', 'images_1', 'images_2', 'images_3', 'images_4', 'images_5', 'location', 'latitude', 'longitude', 'service_id', 'created_by', 'guest_allowed', 'equipment_required', 'guest_allowed_left', 'sport_id');
     }
-
-   
-
-   
-
-   
 
 }
