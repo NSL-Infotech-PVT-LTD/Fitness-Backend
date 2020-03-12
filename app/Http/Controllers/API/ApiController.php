@@ -546,6 +546,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             dd('failed');
         try {
 
+            
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             $getSavedCustomer = \App\Stripe::where('user_id', \Auth::id())->first();
             if (!$getSavedCustomer) {
