@@ -295,7 +295,7 @@ class CoachBookingController extends ApiController {
              if(!$payment){
                 return parent::customError('failed'); 
              }
-            
+            dd($payment);
             $booking->payment_details = json_encode($payment);
             $booking->payment_id = $payment->id;
             $booking->save();
