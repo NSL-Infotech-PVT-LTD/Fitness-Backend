@@ -60,11 +60,11 @@ class BookingController extends ApiController {
             $booking = \App\Booking::create($input);
             $createdBy = $targetModeldata->first()->created_by;
             
-            $abc = parent::makePayment($request->token, $createdBy, $request->price, 'event', 'customer', 'for event booking');
+            $payment = parent::makePayment($request->token, $createdBy, $request->price, 'event', 'customer', 'for event booking');
             /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
-            $booking->payment_details = json_encode($abc);
-            $booking->payment_id = $abc->id;
+            $booking->payment_details = json_encode($payment);
+            $booking->payment_id = $payment->id;
             $booking->save();
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
             $targetModelupdate->guest_allowed_left = $targetModeldata->first()->guest_allowed_left - $request->tickets;
@@ -113,11 +113,11 @@ class BookingController extends ApiController {
                 return parent::error('Sorry, You cant book your own space');
             $booking = \App\Booking::create($input);
 
-            $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'customer', 'for space booking');
+            $payment = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'customer', 'for space booking');
             /*             * ***target model update start*** */
 
-            $booking->payment_details = json_encode($abc);
-            $booking->payment_id = $abc->id;
+            $booking->payment_details = json_encode($payment);
+            $booking->payment_id = $payment->id;
             $booking->save();
             foreach ($params as $param):
                 \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time]);

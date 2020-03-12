@@ -530,24 +530,23 @@ class ApiController extends \App\Http\Controllers\Controller {
         return $server_output;
     }
 
+    public static function customError($validatorMessage) {
+
+        echo json_encode(['status' => false, 'data' => (object) [], 'error' => $validatorMessage]);
+    }
+
     public static function makePayment($token, $vendorid, $amount, $paymentType, $desc, $description) {
 
 
-        $getVendor = \App\Stripe::where('user_id', $vendorid)->first();
-//        dd($getVendor);
-        if (!$getVendor){
-            dd('failed');
-        }
-        $vendor = \App\User::whereId($vendorid)->first();
 //        dd($vendor);
-        $acct = \App\Stripe::where('user_id', $vendor->id)->value('account_id');
-//        dd($acct);
-        if (!$acct)
-            dd('failed');
+        $acct = \App\Stripe::where('user_id', $vendorid)->where('account_id', '!=', null)->first();
+////        dd($acct);
+//       if (!$acct)
+//            self::customError('failed');
         try {
-
-            
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+           if($acct)
+           {
+                \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
             $getSavedCustomer = \App\Stripe::where('user_id', \Auth::id())->first();
             if (!$getSavedCustomer) {
                 $customer = \Stripe\Customer::create(array(
@@ -573,8 +572,10 @@ class ApiController extends \App\Http\Controllers\Controller {
                     ->create(['description' => $description]);
 //                dd($stripe);
             return $stripe;
-        } catch (\Exception $ex) {
-            return self::error($ex->getMessage());
+        
+        }
+        }catch (\Exception $ex) {
+            return self::customError($ex->getMessage());
         }
     }
 

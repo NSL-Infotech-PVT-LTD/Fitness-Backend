@@ -290,12 +290,14 @@ class CoachBookingController extends ApiController {
 //                        "description" => "Charge for the booking booked through utrain app"
 //            ]);
 
-             $abc= parent::makePayment($request->token,$request->coach_id,300,'coach','customer','for coach booking');
-              if($abc===false)
-            parent::error('failed');
+             $payment= parent::makePayment($request->token,$request->coach_id,300,'coach','customer','for coach booking');
+           
+             if(!$payment){
+                return parent::customError('failed'); 
+             }
             
-            $booking->payment_details = json_encode($abc);
-            $booking->payment_id = $abc->id;
+            $booking->payment_details = json_encode($payment);
+            $booking->payment_id = $payment->id;
             $booking->save();
 
 
