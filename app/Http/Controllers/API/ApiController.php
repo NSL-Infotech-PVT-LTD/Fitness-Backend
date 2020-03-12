@@ -534,14 +534,16 @@ class ApiController extends \App\Http\Controllers\Controller {
 
 
         $getVendor = \App\Stripe::where('user_id', $vendorid)->first();
-//        dd($vendorid);
-        if (!$getVendor)
-            return self::error("Failed");
+//        dd($getVendor);
+        if (!$getVendor){
+            dd('failed');
+        }
         $vendor = \App\User::whereId($vendorid)->first();
-        $acct = \App\Stripe::where('user_id', $vendor->id)->value('account_id')->first();
+//        dd($vendor);
+        $acct = \App\Stripe::where('user_id', $vendor->id)->value('account_id');
 //        dd($acct);
         if (!$acct)
-            return self::error("Failed");
+            dd('failed');
         try {
 
             \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
