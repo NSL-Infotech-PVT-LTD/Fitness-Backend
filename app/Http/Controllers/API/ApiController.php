@@ -531,6 +531,7 @@ class ApiController extends \App\Http\Controllers\Controller {
     public static function customError($validatorMessage) {
 
         echo json_encode(['status' => false, 'data' => (object) [], 'error' => $validatorMessage]);
+        die();
     }
 
     public static function makePayment($token, $vendorid, $amount, $paymentType, $desc, $description) {
@@ -563,7 +564,7 @@ class ApiController extends \App\Http\Controllers\Controller {
             $customer = \App\User::whereId(\Auth::id())->first();
             $vendor = \App\User::whereId($vendorid)->first();
             $stripe = StripeConnect::transaction()
-                    ->amount($amount, 'inr')
+                    ->amount($amount * 100, 'inr')
                     ->useSavedCustomer()
                     ->from($customer)
                     ->to($vendor)

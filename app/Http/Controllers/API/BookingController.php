@@ -57,10 +57,13 @@ class BookingController extends ApiController {
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
-            $booking = \App\Booking::create($input);
             $createdBy = $targetModeldata->first()->created_by;
             
+            $booking = \App\Booking::create($input);
+            
+             // dd('s');
             $payment = parent::makePayment($request->token, $createdBy, $request->price, 'event', 'customer', 'for event booking');
+//          dd($payment);
             /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
             $booking->payment_details = json_encode($payment);
