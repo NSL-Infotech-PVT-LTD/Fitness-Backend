@@ -58,18 +58,13 @@ class BookingController extends ApiController {
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
             $booking = \App\Booking::create($input);
-
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-            $stripe = \Stripe\Charge::create([
-                        "amount" => $booking->price * 100,
-                        "currency" => config('app.stripe_default_currency'),
-                        "source" => $request->token, // obtained with Stripe.js
-                        "description" => "Charge for the booking booked through utrain app"
-            ]);
+            $createdBy = $targetModeldata->first()->created_by;
+            
+            $abc = parent::makePayment($request->token, $createdBy, $request->price, 'event', 'customer', 'for event booking');
             /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
-            $booking->payment_details = json_encode($stripe);
-            $booking->payment_id = $stripe->id;
+            $booking->payment_details = json_encode($abc);
+            $booking->payment_id = $abc->id;
             $booking->save();
             $targetModelupdate = $targetModel->findOrFail($request->target_id);
             $targetModelupdate->guest_allowed_left = $targetModeldata->first()->guest_allowed_left - $request->tickets;
@@ -111,17 +106,16 @@ class BookingController extends ApiController {
 //
 //            dd($targetModelupdate);
             $input['owner_id'] = $targetModeldata->first()->created_by;
-            $createdBy= $targetModeldata->first()->created_by;
+            $createdBy = $targetModeldata->first()->created_by;
 //            dd($createdBy);
 
             if (\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
                 return parent::error('Sorry, You cant book your own space');
             $booking = \App\Booking::create($input);
 
-            $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'qwerty');
+            $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'customer', 'for space booking');
             /*             * ***target model update start*** */
-            dd($abc);
-            
+
             $booking->payment_details = json_encode($abc);
             $booking->payment_id = $abc->id;
             $booking->save();
