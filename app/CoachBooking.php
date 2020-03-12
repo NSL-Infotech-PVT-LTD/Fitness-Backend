@@ -9,19 +9,18 @@ class CoachBooking extends Model {
 
     protected $fillable = ['coach_id', 'athlete_id', 'service_id', 'price', 'status', 'payment_details'];
     protected $appends = array('booking_date');
-    
-     public function getBookingDateAttribute() {
-                $targetModel = new \App\CoachBookingDetail();
+
+    public function getBookingDateAttribute() {
+        $targetModel = new \App\CoachBookingDetail();
 //                dd($targetModel);
-                $model = $targetModel->where('booking_id', $this->id)->get();
+        $model = $targetModel->where('booking_id', $this->id)->get();
 //                dd($this->id);
 //                dd($model->first()->booking_date);
-                if ($model->isEmpty() !== true)
-                    return  $model->first()->booking_date;
-                
+        if ($model->isEmpty() !== true)
+            return $model->first()->booking_date;
+
         return [];
     }
-
 
     public function getServiceIdAttribute($value) {
         return $value == null ? [] : json_decode($value);

@@ -540,8 +540,8 @@ class ApiController extends \App\Http\Controllers\Controller {
 //        dd($vendor);
         $acct = \App\Stripe::where('user_id', $vendorid)->where('account_id', '!=', null)->first();
 ////        dd($acct);
-       if (!$acct)
-            self::customError('failed');
+//       if (!$acct)
+//            self::customError('failed');
         try {
            if($acct)
            {
