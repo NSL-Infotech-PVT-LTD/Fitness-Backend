@@ -60,6 +60,7 @@ class BookingController extends ApiController {
             $createdBy = $targetModeldata->first()->created_by;
 
             $booking = \App\Booking::create($input);
+            $cust = \App\User::whereId(\Auth::id())->first();
             $name = $cust->name;
             $email = $cust->email;
             // dd('s');
@@ -116,6 +117,7 @@ class BookingController extends ApiController {
             if (\App\Space::where('id', $request->target_id)->where('created_by', \Auth::id())->get()->isEmpty() != true)
                 return parent::error('Sorry, You cant book your own space');
             $booking = \App\Booking::create($input);
+            $cust = \App\User::whereId(\Auth::id())->first();
             $name = $cust->name;
             $email = $cust->email;
             $payment = parent::makePayment($name, $email, $request->token, $createdBy, $request->price, 'space', 'customer', 'for space booking');
