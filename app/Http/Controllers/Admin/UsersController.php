@@ -35,17 +35,6 @@ class UsersController extends AdminCommonController {
     }
 
     public function indexByRoleId(Request $request, $role_id) {
-//        $keyword = $request->get('search');
-//        $perPage = 5;
-//
-//        $roleusers = \DB::table('role_user')->where('role_id', $role_id)->pluck('user_id');
-//        if (!empty($keyword)) {
-//            $users = User::wherein('id', $roleusers)->where('firstname', 'LIKE', "%$keyword%")->orWhere('email', 'LIKE', "%$keyword%")->latest()->paginate($perPage);
-//        } else {
-//            $users = User::wherein('id', $roleusers)->latest()->paginate($perPage);
-//        }
-////        dd($role_id);
-//        return view('admin.users.index', compact('users', 'role_id'));
 
 
         if ($request->ajax()) {
