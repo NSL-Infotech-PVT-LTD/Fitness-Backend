@@ -121,10 +121,11 @@ class BookingController extends ApiController {
             $abc = parent::makePayment($request->token, $createdBy, $request->price, 'space', 'qwerty');
             /*             * ***target model update start*** */
 //            Booking::findorfail($booking->id);
-            
+//            dd($request->token);
             $booking->payment_details = json_encode($abc);
             $booking->payment_id = $abc->id;
             $booking->save();
+//            dd($booking);
             foreach ($params as $param):
                 \App\BookingSpace::create(['booking_id' => $booking->id, 'booking_date' => $param->booking_date, 'from_time' => $param->from_time, 'to_time' => $param->to_time]);
             endforeach;

@@ -69,10 +69,11 @@ class UsersController extends AdminCommonController {
      *
      * @return void
      */
-    public function create() {
+     public function create($role_id = null) {
         $roles = Role::select('id', 'name', 'label')->get();
         $roles = $roles->pluck('label', 'name');
-        return view('admin.users.create', compact('roles'));
+
+        return view('admin.users.create', compact('roles','role_id'));
     }
 
     /**

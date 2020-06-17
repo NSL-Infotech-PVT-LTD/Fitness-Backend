@@ -491,7 +491,7 @@ class AuthController extends ApiController {
             if ($user->hasRole('organizer') === false)
                 return parent::error('Please use valid auth token');
             $model = new \App\User();
-            $model = new \App\User();
+          
             $roleusersSA = \DB::table('role_user')->where('role_id', \App\Role::where('name', 'organizer')->first()->id)->pluck('user_id');
             $model = $model->wherein('users.id', $roleusersSA)
                     ->leftJoin('bookings', 'bookings.owner_id', '=', 'users.id')
