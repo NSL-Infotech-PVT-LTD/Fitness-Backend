@@ -260,44 +260,45 @@ class CoachBookingController extends ApiController {
             $booking = \App\CoachBooking::create($input);
 // dd(env('STRIPE_SECRET'));
             //booking start
-<<<<<<< HEAD
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-         $account =  \Stripe\Account::create([
-            'type' => 'custom',
-            'country' => 'US',
-            'email' => 'bob@example.com',
-            'requested_capabilities' => [
-            'card_payments',
-            'transfers',
-            ],
-            ]);
-//dd($account);
-            $token = $request->token;
-            $customer = \App\User::whereId(\Auth::id())->first();
-            $vendor = \App\User::whereId($request->coach_id)->first();
-            
-            
-            $stripe = StripeConnect::transaction($token)
-                    ->amount($booking->price, 'ind')
-                    ->useSavedCustomer()
-                    ->from($customer)
-                    ->to($vendor)
-                    ->create();
-
+//            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+//         $account =  \Stripe\Account::create([
+//            'type' => 'custom',
+//            'country' => 'US',
+//            'email' => 'bob@example.com',
+//            'requested_capabilities' => [
+//            'card_payments',
+//            'transfers',
+//            ],
+//            ]);
+//
+//            $token = $request->token;
+//            $vendor = \App\User::whereId($request->coach_id)->first();
+//            
+//            
+//            $stripe = StripeConnect::transaction($token)
+//                    ->amount($booking->price, 'ind')
+//                    ->useSavedCustomer()
+//                    ->from($customer)
+//                    ->to($vendor)
+//                    ->create();
 //            $stripe = \Stripe\Charge::create([
 //                        "amount" => $booking->price * 100,
 //                        "currency" => config('app.stripe_default_currency'),
 //                        "source" => $request->token, // obtained with Stripe.js
 //                        "description" => "Charge for the booking booked through utrain app"
 //            ]);
-=======
-             $abc= parent::makePayment($request->token,$request->coach_id,300,'event','qwerty');
-//            dd($abc);
->>>>>>> 09de9fe7244fba2c55e2bd2818c19ad943f49933
-//            /*             * ***target model update start*** */
-//            Booking::findorfail($booking->id);
-            $booking->payment_details = json_encode($abc);
-            $booking->payment_id = $abc->id;
+            $cust = \App\User::whereId(\Auth::id())->first();
+            $name = $cust->name;
+            $email = $cust->email;
+//            dd($name);
+            $payment = parent::makePayment($name,$email,$request->token, $request->coach_id, $request->price, 'coach', 'customer', 'for coach booking');
+
+            if (!$payment) {
+                return parent::customError('failed');
+            }
+//            dd($payment);
+            $booking->payment_details = json_encode($payment);
+            $booking->payment_id = $payment->id;
             $booking->save();
 
 
@@ -324,8 +325,8 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('athleteDetails')->get();
-
+            $model = MyModel::where('coach_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('athleteDetails');
+            $model = $model->orderBy('created_at', 'desc')->get();
             return parent::success($model);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());
@@ -339,8 +340,8 @@ class CoachBookingController extends ApiController {
             return $validateAttributes;
         endif;
         try {
-            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('coachDetails')->get();
-
+            $model = MyModel::where('athlete_id', \Auth::id())->Select('id', 'coach_id', 'athlete_id', 'service_id', 'price', 'payment_details', 'payment_id')->with('coachDetails');
+            $model = $model->orderBy('created_at', 'desc')->get();
             return parent::success($model);
         } catch (\Exception $ex) {
             return parent::error($ex->getMessage());

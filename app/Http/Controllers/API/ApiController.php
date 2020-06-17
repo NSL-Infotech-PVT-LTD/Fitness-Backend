@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\API;
-
 use Illuminate\Http\Request;
 use Validator;
 use App\User;
@@ -487,7 +485,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //$request->session()->flash('alert-danger', 'There was some issue while conneting your stripe account. Please try again.');
 // $request->session()->flash('alert-danger', $strieResposnes->error_description);
 
-                      return self::error($strieResposnes->error);
+                    return self::error($strieResposnes->error);
 
                 else:
                     $updateAccountStripe = Stripe::create([
@@ -498,7 +496,7 @@ class ApiController extends \App\Http\Controllers\Controller {
 //               echo "success";
 
                 endif;
-                //$getUserStripe= Stripe::where('user_id',Auth::id())->first();
+//$getUserStripe= Stripe::where('user_id',Auth::id())->first();
                 $getUserStripe = Stripe::where('user_id', Auth::id())->first();
 
                 $stripeDetails['stripeDetails'] = $getUserStripe;
@@ -530,45 +528,53 @@ class ApiController extends \App\Http\Controllers\Controller {
         return $server_output;
     }
 
-    public static function makePayment($token,$vendorid, $amount, $paymentType,$desc) {
-//        dd($token);
-//        dd($vendorid);
-//        dd($customerId);
-//        dd($amount);
-//        dd($desc);
-        If ($vendorid=='') {
-            return error('failed');
-        } else {
-            try {
+    public static function customError($validatorMessage) {
 
+        echo json_encode(['status' => false, 'data' => (object) [], 'error' => $validatorMessage]);
+        die();
+    }
+
+    public static function makePayment($name,$email,$token, $vendorid, $amount, $paymentType, $desc, $description) {
+
+
+//        dd($vendor);
+        $acct = \App\Stripe::where('user_id', $vendorid)->where('account_id', '!=', null)->first();
+////        dd($acct);
+       if (!$acct)
+            self::customError('failed');
+        try {
+           if($acct)
+           {
                 \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-                $getSavedCustomer = \App\Stripe::where('user_id',\Auth::id())->first();
-                if (!$getSavedCustomer) {
-                    $customer = \Stripe\Customer::create(array(
-                                'name' => 'test',
-                                'description' => $desc,
-                                'email' => 'bob@example.com',
-                                'source' => $token,
-                                "address" => ["city" => 'delhi', "country" => 'india', "line1" => '301', "line2" => "", "postal_code" => '21321', "state" => 'hp']
-                    ));
+            $getSavedCustomer = \App\Stripe::where('user_id', \Auth::id())->first();
+            if (!$getSavedCustomer) {
+                $customer = \Stripe\Customer::create(array(
+                            'name' => $name,
+                            'description' => $desc,
+                            'email' => $email,
+                            'source' => $token,
+                            "address" => ["city" => 'delhi', "country" => 'india', "line1" => '301', "line2" => "", "postal_code" => '21321', "state" => 'hp']
+                ));
 //                    dd($customer);
-                    \App\Stripe::create([
-                        'user_id' => \Auth::id(),
-                        'customer_id' => $customer->id
-                    ]);
-                }
-                $customer = \App\User::whereId(\Auth::id())->first();
-                $vendor = \App\User::whereId($vendorid)->first();
-                $stripe = StripeConnect::transaction()
-                        ->amount($amount, 'inr')
-                        ->useSavedCustomer()
-                        ->from($customer)
-                        ->to($vendor)
-                        ->create(['description' => 'bla blas']);
-                return $stripe;
-            } catch (\Exception $ex) {
-                
+                \App\Stripe::create([
+                    'user_id' => \Auth::id(),
+                    'customer_id' => $customer->id
+                ]);
             }
+            $customer = \App\User::whereId(\Auth::id())->first();
+            $vendor = \App\User::whereId($vendorid)->first();
+            $stripe = StripeConnect::transaction()
+                    ->amount($amount * 100, 'inr')
+                    ->useSavedCustomer()
+                    ->from($customer)
+                    ->to($vendor)
+                    ->create(['description' => $description]);
+//                dd($stripe);
+            return $stripe;
+        
+        }
+        }catch (\Exception $ex) {
+            return self::customError($ex->getMessage());
         }
     }
 
