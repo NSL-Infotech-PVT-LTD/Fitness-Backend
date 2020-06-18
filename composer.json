@@ -21,6 +21,7 @@
         "rap2hpoutre/laravel-stripe-connect": "^0.2.1",
         "symfony/translation": "4.3.8",
         "twilio/sdk": "^5.34",
+        "webup/laravel-sendinblue": "^2.0",
         "yajra/laravel-datatables-oracle": "^9.6"
     },
     "require-dev": {
@@ -34,7 +35,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true
-        
+
     },
     "extra": {
         "laravel": {
