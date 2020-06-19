@@ -60,9 +60,10 @@ class SportsController extends Controller {
         $this->validate($request, [
             'name' => 'required',
         ]);
-        $requestData = $request->all();
+        $input = $request->all();
         $input['state'] = '1';
-        Sport::create($requestData);
+
+        Sport::create($input);
 
         return redirect('admin/sports')->with('flash_message', 'Sports added!');
     }

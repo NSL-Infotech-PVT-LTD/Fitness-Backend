@@ -60,14 +60,14 @@ class ServicesController extends AdminCommonController {
     public function store(Request $request) {
         $this->validate($request, [
             'name' => 'required',
-            
         ]);
-        $requestData = $request->all();
-        $input['state']='1';
+        $input = $request->all();
+        $input['state'] = '1';
+
 //        $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
 //        $request->file('image')->move(base_path() . '/public/uploads/services/', $imageName);
 //        $requestData['image'] = $imageName;
-        Service::create($requestData);
+        Service::create($input);
 
         return redirect('admin/services')->with('flash_message', 'Service added!');
     }
@@ -109,7 +109,6 @@ class ServicesController extends AdminCommonController {
     public function update(Request $request, $id) {
         $this->validate($request, [
             'name' => 'required',
-            
         ]);
         $requestData = $request->all();
 
@@ -133,8 +132,8 @@ class ServicesController extends AdminCommonController {
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id) {
-        if (Service::destroy($id)) 
-           return redirect('admin/services')->with('flash_message', 'Service deleted!');
+        if (Service::destroy($id))
+            return redirect('admin/services')->with('flash_message', 'Service deleted!');
     }
 
     public function changeStatus(Request $request) {
