@@ -30,7 +30,7 @@ class SportsController extends Controller {
                                 else:
                                     $return .= "<button class='btn btn-success btn-sm changeStatus' title='Block' data-id=" . $item->id . " data-status='Block' >Block / Inactive</button>";
                                 endif;
-                                
+
                                 $return .= "<a href=" . url('/admin/sports/' . $item->id) . " title='View Sports'><button class='btn btn-info btn-sm'><i class='fa fa-eye' aria-hidden='true'></i></button></a>";
                                 return $return;
                             })
@@ -61,7 +61,7 @@ class SportsController extends Controller {
             'name' => 'required',
         ]);
         $requestData = $request->all();
-
+        $input['state'] = '1';
         Sport::create($requestData);
 
         return redirect('admin/sports')->with('flash_message', 'Sports added!');

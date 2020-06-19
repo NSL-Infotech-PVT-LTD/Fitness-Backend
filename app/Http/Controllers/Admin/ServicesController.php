@@ -63,7 +63,7 @@ class ServicesController extends AdminCommonController {
             
         ]);
         $requestData = $request->all();
-        $input['state']='0';
+        $input['state']='1';
 //        $imageName = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
 //        $request->file('image')->move(base_path() . '/public/uploads/services/', $imageName);
 //        $requestData['image'] = $imageName;
