@@ -30,7 +30,7 @@ class Service extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name', 'price', 'image', 'description'];
+    protected $fillable = ['name', 'price', 'image', 'description','state'];
 
     /**
      * Change activity log event description

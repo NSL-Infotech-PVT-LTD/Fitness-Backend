@@ -30,7 +30,7 @@ class Sport extends Model {
      *
      * @var array
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name','state'];
 
     /**
      * Change activity log event description
